@@ -1,7 +1,8 @@
 ﻿using System;
 
 using DesktopApp.ViewModels;
-
+using Windows.ApplicationModel;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml.Controls;
 
 namespace DesktopApp.Views
@@ -16,6 +17,14 @@ namespace DesktopApp.Views
         public OperationsPage()
         {
             InitializeComponent();
+        }
+
+        private async void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
         }
     }
 }

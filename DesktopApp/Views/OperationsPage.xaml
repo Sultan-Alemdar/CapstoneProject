@@ -4,28 +4,69 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vs ="clr-namespace:DesktopApp.ViewModels"
-
-    Style="{StaticResource PageStyle}"
+    Height="500"
+    Width="600"
+    MaxHeight="500"
+    MaxWidth="600"
+    MinHeight="500"
+    MinWidth="600"
+    Background="DarkSlateGray"
+    
     mc:Ignorable="d">
-    <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
-            <RowDefinition Height="*" />
+    <Grid x:Name="ContentArea">
+        <Grid.RowDefinitions >
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock
-            Grid.Row="0"
-            x:Uid="Operations_Title"
-            Style="{StaticResource PageTitleStyle}" />
-        <Grid
-            Grid.Row="1" 
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <Button Name="OpSetBut"  Content="{Binding Path=OpSetButNam, Mode=OneWay}" Command="{Binding Path=OpenSettingsPageMethod, Mode=OneWay}" HorizontalAlignment="Left" Height="197" Margin="490,279,0,0" VerticalAlignment="Top" Width="317"/>
-            <!--
-                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
-                Place your content here.
-            -->
+        <StackPanel x:Name="Top" Grid.Row="0" Width="600"  Background="Transparent" Orientation="Horizontal" CornerRadius="2">
+            <Button  x:Name="BackButton" Width="50" Height="50"  Foreground="Black"  BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White">
+                <SymbolIcon Symbol="Back" />
+            </Button>
+            <Button  x:Name="ForwardButton" Width="50" Height="50"  Foreground="Black" BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White">
+                <SymbolIcon Symbol="Forward" />
+            </Button>
+            <Button Margin="449,0,0,0" x:Name="SettingsButton" Width="50" Height="50"  Foreground="Black" BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White">
+                <SymbolIcon Symbol="Setting" />
+            </Button>
+        </StackPanel>
+
+
+        <Grid x:Name="Center" Grid.Row="1" Background="Transparent">
+            <Grid.ColumnDefinitions >
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel  x:Name="Left" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+                <StackPanel x:Name="IDPanel" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock FontWeight="Bold" Height="30" Width="Auto">ID :</TextBlock>
+                    <TextBlock Height="30" Width="Auto" Text="6556545" Margin="10"/>
+                </StackPanel>
+
+                <StackPanel x:Name="PasswordPanel" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Height="30" Width="Auto">Password :</TextBlock>
+                    <TextBlock Height="30" Width="Auto" Text="645646554" Margin="10"/>
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel x:Name="Right" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel x:Name="ConnectionID" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Height="30" Width="Auto">Remote ID :</TextBlock>
+                    <TextBox Height="30" Width="Auto" Text="ID" Margin="10"/>
+                </StackPanel>
+
+                <StackPanel x:Name="ConnectionPassword" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <TextBlock Height="30" Width="Auto">Remote Password :</TextBlock>
+                    <TextBox Height="30" Width="Auto" Text="Passaword" Margin="10"/>
+                </StackPanel>
+                <Button x:Name="ConnectButton" Width="50" Height="50"  Foreground="Black" BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White">
+                    <SymbolIcon Symbol="Accept" />
+                </Button>
+            </StackPanel>
         </Grid>
+
+
     </Grid>
 </Page>

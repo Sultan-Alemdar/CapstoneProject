@@ -34,6 +34,7 @@ namespace DesktopApp
             if (!args.PrelaunchActivated)
             {
                 await ActivationService.ActivateAsync(args);
+                
             }
         }
 

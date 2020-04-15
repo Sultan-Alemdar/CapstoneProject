@@ -17,6 +17,7 @@ namespace DesktopApp.Views
         public OperationsPage()
         {
             InitializeComponent();
+            DataContext = ViewModelLocator.Current.OperationsViewModel;
         }
 
         private async void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)

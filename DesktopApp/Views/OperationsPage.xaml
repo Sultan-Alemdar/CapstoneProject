@@ -4,6 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vs ="clr-namespace:DesktopApp.ViewModels"
+
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
     <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
@@ -19,7 +21,7 @@
         <Grid
             Grid.Row="1" 
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <Button Content="Button" HorizontalAlignment="Left" Height="337" Margin="343,271,0,0" VerticalAlignment="Top" Width="739" Click="Button_Click"/>
+            <Button Name="OpSetBut"  Content="{Binding Path=OpSetButNam, Mode=OneWay}" Command="{Binding Path=OpenSettingsPageMethod, Mode=OneWay}" HorizontalAlignment="Left" Height="197" Margin="490,279,0,0" VerticalAlignment="Top" Width="317"/>
             <!--
                 The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.

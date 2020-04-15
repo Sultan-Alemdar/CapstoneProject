@@ -134,6 +134,7 @@
     <Compile Include="BackgroundTasks\BackgroundTask.cs" />
     <Compile Include="BackgroundTasks\FramePoolTask.cs" />
     <Compile Include="BackgroundTasks\PeerConnectionTask.cs" />
+    <Compile Include="Constants\MyConstants.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Services\ActivationService.cs" />

@@ -12,7 +12,7 @@ namespace DesktopApp
     public sealed partial class App : Application
     {
         private Lazy<ActivationService> _activationService;
-
+       
         private ActivationService ActivationService
         {
             get { return _activationService.Value; }

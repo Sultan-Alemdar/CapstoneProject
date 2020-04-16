@@ -16,7 +16,10 @@ namespace DesktopApp.ViewModels
     // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings.md
     public class SettingsViewModel : ViewModelBase
     {
+        private ViewModelLocator _viewModelLocator = ViewModelLocator.Current;
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
+        public ICommand OnBackCommand { get; set; }
+        public ICommand OnForwardCommand { get; set; }
 
         public ElementTheme ElementTheme
         {
@@ -56,6 +59,9 @@ namespace DesktopApp.ViewModels
 
         public SettingsViewModel()
         {
+           
+            OnBackCommand = new RelayCommand(OnGoBackMethod, CanGoBack);
+            OnForwardCommand = new RelayCommand(OnGoForwardMethod, CanGoForward);
         }
 
         public async Task InitializeAsync()
@@ -72,6 +78,22 @@ namespace DesktopApp.ViewModels
             var version = packageId.Version;
 
             return $"{appName} - {version.Major}.{version.Minor}.{version.Build}.{version.Revision}";
+        }
+        public bool CanGoBack()
+        {
+            return _viewModelLocator.NavigationService.CanGoBack;
+        }
+        public bool CanGoForward()
+        {
+            return _viewModelLocator.NavigationService.CanGoForward;
+        }
+        public void OnGoBackMethod()
+        {
+            _viewModelLocator.NavigationService.GoBack();
+        }
+        public void OnGoForwardMethod()
+        {
+            _viewModelLocator.NavigationService.GoForward();
         }
     }
 }

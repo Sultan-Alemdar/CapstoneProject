@@ -24,5 +24,6 @@ namespace DesktopApp.Views
         {
             await ViewModel.InitializeAsync();
         }
+
     }
 }

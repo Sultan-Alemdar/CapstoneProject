@@ -13,11 +13,10 @@ namespace DesktopApp.Views
         {
             get { return ViewModelLocator.Current.OperationsViewModel; }
         }
-
         public OperationsPage()
         {
             InitializeComponent();
-            DataContext = ViewModelLocator.Current.OperationsViewModel;
+
         }
 
         private async void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -27,5 +26,8 @@ namespace DesktopApp.Views
                 await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
             }
         }
+
+
+
     }
 }

@@ -6,8 +6,10 @@ namespace DesktopApp.ViewModels
 {
     public class RemoteConnectionViewModel : ViewModelBase
     {
+        
         public RemoteConnectionViewModel()
         {
+            
         }
     }
 }

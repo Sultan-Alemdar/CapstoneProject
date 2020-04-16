@@ -19,12 +19,13 @@ namespace DesktopApp.Views
 
         }
 
-        private async void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private  void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
-            {
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-            }
+            //if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            //{
+            //    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            //}
+            ViewModelLocator.Current.NavigationService.Navigate(Constants.MyConstants.REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME);
         }
 
 

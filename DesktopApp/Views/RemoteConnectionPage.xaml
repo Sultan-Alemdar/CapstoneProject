@@ -40,21 +40,23 @@
             </Grid.ColumnDefinitions>
 
 
-            <ScrollViewer  x:Name="TexHistory" Height="{Binding ElementName=Row2, Path=ActualHeight}" Grid.Column="1" Margin="0,0,0,80" ZoomMode="Disabled" VerticalAlignment="Bottom"  IsVerticalScrollChainingEnabled="True" ManipulationCompleted="ScrollViewer_ManipulationCompleted" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
-                <RichTextBlock VerticalAlignment="Bottom" SelectionHighlightColor="Green">
-                    <Paragraph>RichTextBlock provides a rich text display container that supports
-                        <Run  FontStyle="Italic" FontWeight="Bold">formatted text</Run> ,
-                        <Hyperlink NavigateUri="https://docs.microsoft.com/uwp/api/Windows.UI.Xaml.Documents.Hyperlink">hyperlinks</Hyperlink> , inline images, and other rich content.
-                    </Paragraph>
-                    <Paragraph>RichTextBlock also supports a built-in overflow model.asljhdskjahdjsashdaskjdhaskjhdksadjashdskjhjdsahjksahdkjsadsahasd assada</Paragraph>
-                </RichTextBlock>
+            <ScrollViewer  x:Name="TexHistory" Height="{Binding ElementName=Row2, Path=ActualHeight}" Grid.Column="1"  ZoomMode="Disabled" Margin="0,0,0,60" VerticalAlignment="Bottom"  IsVerticalScrollChainingEnabled="True" ManipulationCompleted="ScrollViewer_ManipulationCompleted" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel VerticalAlignment="Bottom" Height="auto" Width="auto" >
+                    <RichTextBlock VerticalAlignment="Bottom" SelectionHighlightColor="Green">
+                        <Paragraph>RichTextBlock provides a rich text display container that supports
+                            <Run  FontStyle="Italic" FontWeight="Bold">formatted text</Run> ,
+                            <Hyperlink NavigateUri="https://docs.microsoft.com/uwp/api/Windows.UI.Xaml.Documents.Hyperlink">hyperlinks</Hyperlink> , inline images, and other rich content.
+                        </Paragraph>
+                        <Paragraph>RichTextBlock also supports a built-in overflow model.asljhdskjahdjsashdaskjdhaskjhdksadjashdskjhjdsahjksahdkjsadsahasd assada</Paragraph>
+                    </RichTextBlock>
+                </StackPanel>
             </ScrollViewer>
 
             <Grid VerticalAlignment="Bottom" Name="MassengerPanel" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid Width="{Binding ElementName=Cp_Column2, Path=ActualWidth}">
+                <Grid >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="10*"/>
@@ -65,7 +67,7 @@
                         <SymbolIcon Symbol="Favorite"/>
                     </Button>
                     <ScrollViewer Height="auto" Grid.Column="1"  ZoomMode="Disabled" VerticalAlignment="Center"  IsVerticalScrollChainingEnabled="True" ManipulationCompleted="ScrollViewer_ManipulationCompleted" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
-                        <RichEditBox FontSize="20" Margin="4" MinHeight="20" MaxHeight="400"  />
+                        <RichEditBox FontSize="20" Margin="4" MinHeight="20" MaxHeight="400" MinWidth="300" />
                     </ScrollViewer>
                     <Button Grid.Column="2" Margin="2" Width="auto" Height="40">
                         <SymbolIcon Symbol="Attach"/>

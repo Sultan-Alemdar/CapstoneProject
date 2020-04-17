@@ -41,7 +41,8 @@
 
 
             <ScrollViewer  x:Name="TexHistory" Height="{Binding ElementName=Row2, Path=ActualHeight}" Grid.Column="1"  ZoomMode="Disabled" Margin="0,0,0,60" VerticalAlignment="Bottom"  IsVerticalScrollChainingEnabled="True" ManipulationCompleted="ScrollViewer_ManipulationCompleted" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
-                <StackPanel VerticalAlignment="Bottom" Height="auto" Width="auto" >
+                <StackPanel  x:Name="PastInteractionStackPanel" VerticalAlignment="Bottom" Height="auto" Width="auto">
+                    
                     <RichTextBlock VerticalAlignment="Bottom" SelectionHighlightColor="Green">
                         <Paragraph>RichTextBlock provides a rich text display container that supports
                             <Run  FontStyle="Italic" FontWeight="Bold">formatted text</Run> ,

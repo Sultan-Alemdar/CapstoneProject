@@ -20,6 +20,7 @@ namespace DesktopApp.ViewModels
             Register<OperationsViewModel, OperationsPage>();
             Register<RemoteConnectionViewModel, RemoteConnectionPage>();
             Register<SettingsViewModel, SettingsPage>();
+            Register<InteractionsPanelViewModel, InteractionsPanelPage>();
         }
 
         public SettingsViewModel SettingsViewModel => SimpleIoc.Default.GetInstance<SettingsViewModel>();
@@ -29,6 +30,8 @@ namespace DesktopApp.ViewModels
         public OperationsViewModel OperationsViewModel => SimpleIoc.Default.GetInstance<OperationsViewModel>();
 
         public NavigationServiceEx NavigationService => SimpleIoc.Default.GetInstance<NavigationServiceEx>();
+
+        public InteractionsPanelViewModel InteractionsPanelViewModel => SimpleIoc.Default.GetInstance<InteractionsPanelViewModel>();
 
         public void Register<VM, V>()
             where VM : class

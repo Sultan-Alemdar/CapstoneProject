@@ -36,23 +36,14 @@
         <Grid x:Name="CenterPanel" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="2.5*" x:Name="Cp_Column2"/>
+                <ColumnDefinition Width="2.5*"/>
             </Grid.ColumnDefinitions>
 
 
             <ScrollViewer  x:Name="TexHistory" Height="{Binding ElementName=Row2, Path=ActualHeight}" Grid.Column="1"  ZoomMode="Disabled" Margin="0,0,0,60" VerticalAlignment="Bottom"  IsVerticalScrollChainingEnabled="True" ManipulationCompleted="ScrollViewer_ManipulationCompleted" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
-                <StackPanel  x:Name="PastInteractionStackPanel" VerticalAlignment="Bottom" Height="auto" Width="auto">
-                    
-                    <RichTextBlock VerticalAlignment="Bottom" SelectionHighlightColor="Green">
-                        <Paragraph>RichTextBlock provides a rich text display container that supports
-                            <Run  FontStyle="Italic" FontWeight="Bold">formatted text</Run> ,
-                            <Hyperlink NavigateUri="https://docs.microsoft.com/uwp/api/Windows.UI.Xaml.Documents.Hyperlink">hyperlinks</Hyperlink> , inline images, and other rich content.
-                        </Paragraph>
-                        <Paragraph>RichTextBlock also supports a built-in overflow model.asljhdskjahdjsashdaskjdhaskjhdksadjashdskjhjdsahjksahdkjsadsahasd assada</Paragraph>
-                    </RichTextBlock>
-                </StackPanel>
+                <ContentControl Content="{Binding PastInteractionStackPanel, Mode=TwoWay}" VerticalAlignment="Bottom" Height="auto" Width="auto"/>
             </ScrollViewer>
-
+            
             <Grid VerticalAlignment="Bottom" Name="MassengerPanel" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

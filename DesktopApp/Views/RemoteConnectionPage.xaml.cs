@@ -17,7 +17,7 @@ namespace DesktopApp.Views
         public RemoteConnectionPage()
         {
             InitializeComponent();
-            ViewModelLocator.Current.RemoteConnectionViewModel.PastInteractionStackPanel = PastInteractionStackPanel;
+            //ViewModelLocator.Current.RemoteConnectionViewModel.PastInteractionStackPanel = PastInteractionStackPanel;
 
         }
 
@@ -29,7 +29,7 @@ namespace DesktopApp.Views
 
         private void Button_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModelLocator.Current.RemoteConnectionViewModel.ndk();
+            //ViewModelLocator.Current.RemoteConnectionViewModel.ndk();
         }
     }
 }

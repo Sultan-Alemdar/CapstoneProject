@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+
 using System.Threading.Tasks;
 using DesktopApp.ViewModels;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -15,9 +17,8 @@ namespace DesktopApp.Views
         private const bool RUNNING = true, NOT_RUNNING = false;
         private Visibility closeButonVisibility = Visibility.Visible;
         private Visibility openButtonVisibility = Visibility.Collapsed;
-
-        private bool running = false;
-
+        private bool pinned = false;
+        private bool isInside = false;
         public event PropertyChangedEventHandler PropertyChanged;
 
         private RemoteConnectionViewModel ViewModel
@@ -25,28 +26,19 @@ namespace DesktopApp.Views
             get { return ViewModelLocator.Current.RemoteConnectionViewModel; }
         }
 
-        public Visibility CloseButonVisibility { get => closeButonVisibility; set { closeButonVisibility = value; OnPropertyChanged("CloseButonVisibility"); } }
-        public Visibility OpenButtonVisibility { get => openButtonVisibility; set { openButtonVisibility = value; OnPropertyChanged("OpenButtonVisibility"); } }
+        public Visibility UnPinButtonVisibility { get => closeButonVisibility; set { closeButonVisibility = value; OnPropertyChanged("UnPinButtonVisibility"); } }
+        public Visibility PinButtonVisibility { get => openButtonVisibility; set { openButtonVisibility = value; OnPropertyChanged("PinButtonVisibility"); } }
 
 
         public RemoteConnectionPage()
         {
             InitializeComponent();
             //ViewModelLocator.Current.RemoteConnectionViewModel.PastInteractionStackPanel = PastInteractionStackPanel;
-            AppBarClose.Completed += AppBarClose_Completed;
-            AppBarOpen.Completed += AppBarClose_Completed;
-            
+
         }
         private void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void AppBarClose_Completed(object sender, object e)
-        {
-            running = false;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private void ScrollViewer_ManipulationCompleted(object sender, Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
@@ -71,58 +63,87 @@ namespace DesktopApp.Views
             }
 
         }
-        private void OpenButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void PinButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (running)
-            {
-                running = false;
-                AppBarClose.Stop();
-                Debug.WriteLine("Close.Stop");
-            }
-            else
-            {
-                running = true;
-                AppBarOpen.Begin();
-                Debug.WriteLine("Open.Start");
-            }
-
+            SwichVisibility();
+            pinned = true;
+        }
+        private void UnpinButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            pinned = false;
             SwichVisibility();
         }
-        private void CloseButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            if (running)
-            {
-                running = false;
-                AppBarOpen.Stop();
-                Debug.WriteLine("Open.Stop");
-            }
-            else
-            {
-                running = true;
-                AppBarClose.Begin();
-                Debug.WriteLine("Close.Start");
-            }
 
-            SwichVisibility();
+        private void Border_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            //Debug.WriteLine("ENt");
+            //if (pinned == false)
+            //{
+            //    if (isInside)
+            //        AppBarOpen.Begin();
+            //    else
+            //    {
+            //        isInside = false;
+            //        AppBarClose.Begin();
+            //    }
+
+            //}
+        }
+
+        private void Border_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+
+        }
+
+
+        private void Border_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            Debug.WriteLine("Exit");
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
+            var wp_x = pointerPosition.X - Window.Current.Bounds.X;
+            var wp_y = pointerPosition.Y - Window.Current.Bounds.Y;
+            var ttv = AppBarGrid.TransformToVisual(Window.Current.Content);
+            Point screenCoords = ttv.TransformPoint(new Point(0, 0));
+            var x1 = screenCoords.X;
+            var y1 = screenCoords.Y;
+            var x2 = x1 + AppBarGrid.ActualWidth;
+            var y2= y1 + AppBarGrid.ActualHeight;
+            Debug.WriteLine("Pointer.x :"+pointerPosition.X);
+            Debug.WriteLine("Pointer.y :" + pointerPosition.Y);
+            Debug.WriteLine("Pointer.x on window :" + wp_x);
+            Debug.WriteLine("Pointer.y on window :" + wp_y);
+            Debug.WriteLine("screenCoords.x1 :" + x1);
+            Debug.WriteLine("screenCoords.y1 :" + y1);
+            Debug.WriteLine("screenCoords.x2 :" + x2);
+            Debug.WriteLine("screenCoords.y2 :" + y2);
+            if ( (wp_x >= x1 && wp_x <= x2) && (wp_y >= y1 && wp_y <= y2))
+            {
+
+                Debug.WriteLine("Boooooom");
+            }
+        }
+
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void SwichVisibility()
         {
-
             if (openButtonVisibility == Visibility.Collapsed)
             {
-                CloseButonVisibility = Visibility.Collapsed;
-                OpenButtonVisibility = Visibility.Visible;
+                UnPinButtonVisibility = Visibility.Collapsed;
+                PinButtonVisibility = Visibility.Visible;
             }
             else
             {
-                OpenButtonVisibility = Visibility.Collapsed;
-                CloseButonVisibility = Visibility.Visible;
+                PinButtonVisibility = Visibility.Collapsed;
+                UnPinButtonVisibility = Visibility.Visible;
             }
-        }
-        private void AppBarStoryBoard_Completed(object sender, object e)
-        {
-            Debug.WriteLine("Trans X : " + Translate.X);
         }
 
     }

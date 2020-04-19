@@ -13,7 +13,7 @@
     <Grid  x:Name="ContentArea">
         <Grid.Resources>
             <Storyboard x:Name="AppBarClose" >
-                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.X)" From="0" To="-427">
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"  To="-20">
                     <DoubleAnimation.EasingFunction>
                         <CircleEase EasingMode="EaseOut" />
                     </DoubleAnimation.EasingFunction>
@@ -21,7 +21,7 @@
 
             </Storyboard>
             <Storyboard x:Name="AppBarOpen" >
-                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.X)" From="-427" To="0">
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)" To="0">
                     <DoubleAnimation.EasingFunction>
                         <CircleEase EasingMode="EaseOut" />
                     </DoubleAnimation.EasingFunction>
@@ -36,29 +36,33 @@
             RelativePanel.AlignTopWithPanel="True"
             RelativePanel.AlignBottomWithPanel="True"
             MediaFailed="PeerVideo_MediaFailed" />
-
-        <Grid  x:Name="AppBarGrid"  HorizontalAlignment="Left" VerticalAlignment="Top" >
+        <Border Width="200" Height="200" BorderThickness="20" BorderBrush="Red" PointerEntered="Border_PointerEntered"></Border>
+        <Grid  x:Name="AppBarGrid"  Background="Red" HorizontalAlignment="Center" VerticalAlignment="Top"  >
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="Translate"  ></TranslateTransform>
             </Grid.RenderTransform>
 
-            <Border  x:Name="Border" Margin="20,15,0,0"  BorderThickness="2" BorderBrush="White" CornerRadius="17">
-                <StackPanel Margin="10" CornerRadius="17" Height="Auto" Width="Auto" Orientation="Horizontal">
+            <Border  x:Name="AppBorder" Margin="20,15,0,0"  BorderThickness="2" BorderBrush="White" CornerRadius="17"  PointerEntered="Border_PointerEntered">
+                <StackPanel Margin="10,0,0,10" CornerRadius="17" Height="Auto" Width="Auto" Orientation="Horizontal" >
 
-                    <AppBarButton  Icon="GoToStart" Label="Başlat" />
+                    <AppBarToggleButton Label="aslşkdak" Icon="Accept"></AppBarToggleButton>
+                    <AppBarToggleButton Label="aslşkdak" Icon="Accept"></AppBarToggleButton>
+                    <AppBarButton  Icon="GoToStart" Label="Başlat" Click="Button_Click" />
                     <AppBarButton  Icon="Stop" Label="Durdur" Visibility="Visible" IsEnabled="False"/>
                     <AppBarButton Icon="Clear" Label="Sonlandır"/>
                     <AppBarSeparator />
                     <AppBarButton Icon="Keyboard"  Label="Yakala"/>
                     <AppBarButton Icon="Orientation" Label="Yönlendir"/>
                     <AppBarSeparator  />
-                    <AppBarButton Icon="ClosePane" Label="Kapat" Click="CloseButton_Click" Visibility="{x:Bind CloseButonVisibility, Mode=OneWay}"/>
-                    <AppBarButton Icon="OpenPane" Label="Aç"  Click="OpenButton_Click" Visibility="{x:Bind OpenButtonVisibility, Mode=OneWay}"/>
+                    <AppBarButton Icon="UnPin" Label="Kapat" Click="UnpinButton_Click" Visibility="{x:Bind UnPinButtonVisibility, Mode=OneWay}"/>
+                    <AppBarButton Icon="Pin" Label="Sabitle"  Click="PinButton_Click" Visibility="{x:Bind PinButtonVisibility, Mode=OneWay}"/>
 
 
                 </StackPanel>
             </Border>
         </Grid>
+        <Button x:Name="btn" Content="Button" HorizontalAlignment="Left" Height="105" Margin="364,0,0,0" VerticalAlignment="Top" Width="817" Click="Button_Click"/>
+
 
     </Grid>
 

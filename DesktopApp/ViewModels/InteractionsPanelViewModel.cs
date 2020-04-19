@@ -14,7 +14,7 @@ namespace DesktopApp.ViewModels
     {
         private StackPanel _pastInteractionStackPanel;
         public StackPanel PastInteractionStackPanel { get => _pastInteractionStackPanel; set => Set<StackPanel>("PastInteractionStackPanel", ref this._pastInteractionStackPanel, value); }
-        public new double Height
+        public double Height
         {
             get;set;
         }

@@ -10,37 +10,56 @@
     xmlns:v="using:DesktopApp.Views"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*" x:Name="Row2"/>
-        </Grid.RowDefinitions>
-        <muxc:MenuBar Grid.Row="0">
-            <muxc:MenuBarItem Title="File">
-                <MenuFlyoutItem Text="New"/>
-                <MenuFlyoutItem Text="Open..."/>
-                <MenuFlyoutItem Text="Save"/>
-                <MenuFlyoutItem Text="Exit"/>
-            </muxc:MenuBarItem>
+    <Grid  x:Name="ContentArea">
+        <Grid.Resources>
+            <Storyboard x:Name="AppBarClose" >
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.X)" From="0" To="-427">
+                    <DoubleAnimation.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
 
-            <muxc:MenuBarItem Title="Edit">
-                <MenuFlyoutItem Text="Undo"/>
-                <MenuFlyoutItem Text="Cut"/>
-                <MenuFlyoutItem Text="Copy"/>
-                <MenuFlyoutItem Text="Paste"/>
-            </muxc:MenuBarItem>
+            </Storyboard>
+            <Storyboard x:Name="AppBarOpen" >
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.X)" From="-427" To="0">
+                    <DoubleAnimation.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
 
-            <muxc:MenuBarItem Title="Help">
-                <MenuFlyoutItem Text="About"/>
-            </muxc:MenuBarItem>
-        </muxc:MenuBar>
-        <Grid x:Name="CenterPanel" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="5*"/>
-                <ColumnDefinition Width="2.5*"/>
-            </Grid.ColumnDefinitions>
-            <v:InteractionsPanelPage Height="{Binding ElementName=Row2,Path=ActualHeight}" VerticalAlignment="Bottom" Background="Red"   Grid.Column="1"/>
-            
+        </Grid.Resources>
+        <MediaElement
+            Name="PeerVideo" RealTimePlayback="True"
+            RelativePanel.AlignLeftWithPanel="True"
+            RelativePanel.AlignRightWithPanel="True"
+            RelativePanel.AlignTopWithPanel="True"
+            RelativePanel.AlignBottomWithPanel="True"
+            MediaFailed="PeerVideo_MediaFailed" />
+
+        <Grid  x:Name="AppBarGrid"  HorizontalAlignment="Left" VerticalAlignment="Top" >
+            <Grid.RenderTransform>
+                <TranslateTransform x:Name="Translate"  ></TranslateTransform>
+            </Grid.RenderTransform>
+
+            <Border  x:Name="Border" Margin="20,15,0,0"  BorderThickness="2" BorderBrush="White" CornerRadius="17">
+                <StackPanel Margin="10" CornerRadius="17" Height="Auto" Width="Auto" Orientation="Horizontal">
+
+                    <AppBarButton  Icon="GoToStart" Label="Başlat" />
+                    <AppBarButton  Icon="Stop" Label="Durdur" Visibility="Visible" IsEnabled="False"/>
+                    <AppBarButton Icon="Clear" Label="Sonlandır"/>
+                    <AppBarSeparator />
+                    <AppBarButton Icon="Keyboard"  Label="Yakala"/>
+                    <AppBarButton Icon="Orientation" Label="Yönlendir"/>
+                    <AppBarSeparator  />
+                    <AppBarButton Icon="ClosePane" Label="Kapat" Click="CloseButton_Click" Visibility="{x:Bind CloseButonVisibility, Mode=OneWay}"/>
+                    <AppBarButton Icon="OpenPane" Label="Aç"  Click="OpenButton_Click" Visibility="{x:Bind OpenButtonVisibility, Mode=OneWay}"/>
+
+
+                </StackPanel>
+            </Border>
         </Grid>
+
     </Grid>
+
 </Page>

@@ -59,5 +59,10 @@ namespace DesktopApp.ViewModels
             // Add the RichTextBlock to the visual tree (assumes stackPanel is decalred in XAML).
             return richTextBlock;
         }
+        public void PeerVideo_MediaFailed(object sender, Windows.UI.Xaml.ExceptionRoutedEventArgs e)
+        {
+            ///TODO WTS: RemoteConnectionPage için PeerVideo_MediaFailed implement et.
+            throw new NotImplementedException();
+        }
     }
 }

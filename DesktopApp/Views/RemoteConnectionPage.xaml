@@ -37,7 +37,7 @@
             RelativePanel.AlignBottomWithPanel="True"
             MediaFailed="PeerVideo_MediaFailed" />
 
-        <Grid Background="Red" x:Name="AppBarGrid"   HorizontalAlignment="Center" VerticalAlignment="Top" Width="auto" Height="auto" PointerEntered="AppBarGrid_PointerEntered" PointerExited="AppBarGrid_PointerEntered">
+        <Grid Background="Transparent" x:Name="AppBarGrid"   HorizontalAlignment="Center" VerticalAlignment="Top" Width="auto" Height="auto" PointerEntered="AppBarGrid_PointerEntered" PointerExited="AppBarGrid_PointerExited">
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="Translate"  ></TranslateTransform>
             </Grid.RenderTransform>

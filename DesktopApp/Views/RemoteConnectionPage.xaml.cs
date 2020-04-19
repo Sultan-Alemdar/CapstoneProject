@@ -78,44 +78,48 @@ namespace DesktopApp.Views
 
         private void AppBarGrid_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            Debug.WriteLine("Ent");
+            //Debug.WriteLine("Ent");
+            //if (pinned == false)
+            //{
+            //    if (DecideInOrOut(AppBarGrid) ==true && isOpen==false)
+            //    {
+            //        AppBarClose.Pause();
+            //        isOpen = true;
+            //        AppBarOpen.Begin();
+            //        Debug.WriteLine("Opened");
+            //    }
+            //    else if(DecideInOrOut(AppBarGrid) ==false && isOpen==true)
+            //    {
+            //        AppBarOpen.Pause();
+            //        isOpen = false;
+            //        AppBarClose.Begin();
+            //        Debug.WriteLine("Closed");
+            //    }
+            //}
             if (pinned == false)
-            {
-                if (DecideInOrOut(AppBarGrid) ==true && isOpen==false)
-                {
-                    AppBarClose.Pause();
-                    isOpen = true;
-                    AppBarOpen.Begin();
-                    Debug.WriteLine("Opened");
-                }
-                else if(DecideInOrOut(AppBarGrid) ==false && isOpen==true)
-                {
-                    AppBarOpen.Pause();
-                    isOpen = false;
-                    AppBarClose.Begin();
-                    Debug.WriteLine("Closed");
-                }
-            }
+                AppBarOpen.Begin();
         }
         private void AppBarGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            Debug.WriteLine("Exit");
+            //Debug.WriteLine("Exit");
+            //if (pinned == false)
+            //{
+            //    if (DecideInOrOut(AppBarGrid) == true && isOpen == false)
+            //    {
+            //        isOpen = true;
+            //        AppBarOpen.Begin();
+            //        Debug.WriteLine("Opened");
+            //    }
+            //    else if (DecideInOrOut(AppBarGrid) == false && isOpen == true)
+            //    {
+            //        isOpen = false;
+            //        AppBarClose.Begin();
+            //        Debug.WriteLine("Closed");
+            //    }
+            //}
             if (pinned == false)
-            {
-                if (DecideInOrOut(AppBarGrid) == true && isOpen == false)
-                {
-                    isOpen = true;
-                    AppBarOpen.Begin();
-                    Debug.WriteLine("Opened");
-                }
-                else if (DecideInOrOut(AppBarGrid) == false && isOpen == true)
-                {
-                    isOpen = false;
-                    AppBarClose.Begin();
-                    Debug.WriteLine("Closed");
-                }
-            }
-        }
+                AppBarClose.Begin();
+        }       
 
         private bool DecideInOrOut(Grid element, bool writeToOut=false, double bufferPxs = 0)
         {

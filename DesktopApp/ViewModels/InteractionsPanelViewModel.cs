@@ -22,11 +22,11 @@ namespace DesktopApp.ViewModels
         {
 
             PastInteractionStackPanel = new StackPanel();
-            PastInteractionStackPanel.Children.Add(createMessage());
+            PastInteractionStackPanel.Children.Add(CreateMessage());
             // RichTextBlock asd = PastInteractionStackPanel.Children.Move(0)
         }
 
-        public RichTextBlock createMessage(Dictionary<string, string> parameters = null, bool received = false)
+        public RichTextBlock CreateMessage(Dictionary<string, string> parameters = null, bool received = false)
         {
             ///TODO WTS:Create message metodunu implement et
             //throw new NotImplementedException();

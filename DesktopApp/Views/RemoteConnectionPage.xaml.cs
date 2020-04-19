@@ -15,10 +15,11 @@ namespace DesktopApp.Views
     {
 
         private const bool RUNNING = true, NOT_RUNNING = false;
-        private Visibility closeButonVisibility = Visibility.Visible;
-        private Visibility openButtonVisibility = Visibility.Collapsed;
+        private Visibility closeButonVisibility = Visibility.Collapsed;
+        private Visibility openButtonVisibility = Visibility.Visible;
         private bool pinned = false;
-        private bool isInside = false;
+        private bool isOpen = false;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private RemoteConnectionViewModel ViewModel
@@ -34,7 +35,7 @@ namespace DesktopApp.Views
         {
             InitializeComponent();
             //ViewModelLocator.Current.RemoteConnectionViewModel.PastInteractionStackPanel = PastInteractionStackPanel;
-
+            AppBarClose.Begin();
         }
         private void OnPropertyChanged(string propertyName)
         {
@@ -65,8 +66,9 @@ namespace DesktopApp.Views
         }
         private void PinButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            SwichVisibility();
             pinned = true;
+            SwichVisibility();
+
         }
         private void UnpinButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
@@ -74,63 +76,83 @@ namespace DesktopApp.Views
             SwichVisibility();
         }
 
-        private void Border_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void AppBarGrid_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            //Debug.WriteLine("ENt");
-            //if (pinned == false)
-            //{
-            //    if (isInside)
-            //        AppBarOpen.Begin();
-            //    else
-            //    {
-            //        isInside = false;
-            //        AppBarClose.Begin();
-            //    }
-
-            //}
+            Debug.WriteLine("Ent");
+            if (pinned == false)
+            {
+                if (DecideInOrOut(AppBarGrid) ==true && isOpen==false)
+                {
+                    AppBarClose.Pause();
+                    isOpen = true;
+                    AppBarOpen.Begin();
+                    Debug.WriteLine("Opened");
+                }
+                else if(DecideInOrOut(AppBarGrid) ==false && isOpen==true)
+                {
+                    AppBarOpen.Pause();
+                    isOpen = false;
+                    AppBarClose.Begin();
+                    Debug.WriteLine("Closed");
+                }
+            }
         }
-
-        private void Border_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-
-        }
-
-
-        private void Border_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void AppBarGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             Debug.WriteLine("Exit");
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
-            var wp_x = pointerPosition.X - Window.Current.Bounds.X;
-            var wp_y = pointerPosition.Y - Window.Current.Bounds.Y;
-            var ttv = AppBarGrid.TransformToVisual(Window.Current.Content);
-            Point screenCoords = ttv.TransformPoint(new Point(0, 0));
-            var x1 = screenCoords.X;
-            var y1 = screenCoords.Y;
-            var x2 = x1 + AppBarGrid.ActualWidth;
-            var y2= y1 + AppBarGrid.ActualHeight;
-            Debug.WriteLine("Pointer.x :"+pointerPosition.X);
-            Debug.WriteLine("Pointer.y :" + pointerPosition.Y);
-            Debug.WriteLine("Pointer.x on window :" + wp_x);
-            Debug.WriteLine("Pointer.y on window :" + wp_y);
-            Debug.WriteLine("screenCoords.x1 :" + x1);
-            Debug.WriteLine("screenCoords.y1 :" + y1);
-            Debug.WriteLine("screenCoords.x2 :" + x2);
-            Debug.WriteLine("screenCoords.y2 :" + y2);
-            if ( (wp_x >= x1 && wp_x <= x2) && (wp_y >= y1 && wp_y <= y2))
+            if (pinned == false)
             {
-
-                Debug.WriteLine("Boooooom");
+                if (DecideInOrOut(AppBarGrid) == true && isOpen == false)
+                {
+                    isOpen = true;
+                    AppBarOpen.Begin();
+                    Debug.WriteLine("Opened");
+                }
+                else if (DecideInOrOut(AppBarGrid) == false && isOpen == true)
+                {
+                    isOpen = false;
+                    AppBarClose.Begin();
+                    Debug.WriteLine("Closed");
+                }
             }
         }
 
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private bool DecideInOrOut(Grid element, bool writeToOut=false, double bufferPxs = 0)
         {
-
+            writeToOut = true;
+            var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
+            var wp_x = pointerPosition.X - Window.Current.Bounds.X;
+            var wp_y = pointerPosition.Y - Window.Current.Bounds.Y;
+            var ttv = element.TransformToVisual(Window.Current.Content);
+            Point screenCoords = ttv.TransformPoint(new Point(0, 0));
+            var x1 = screenCoords.X - bufferPxs;
+            var y1 = screenCoords.Y - bufferPxs;
+            var x2 = x1 + element.ActualWidth + bufferPxs;
+            var y2 = y1 + element.ActualHeight + bufferPxs;
+            #region WriteToDebug
+            if (writeToOut)
+            {
+                Debug.WriteLine("Pointer.x :" + pointerPosition.X);
+                Debug.WriteLine("Pointer.y :" + pointerPosition.Y);
+                Debug.WriteLine("Pointer.x on window :" + wp_x);
+                Debug.WriteLine("Pointer.y on window :" + wp_y);
+                Debug.WriteLine("screenCoords.x1 :" + x1);
+                Debug.WriteLine("screenCoords.y1 :" + y1);
+                Debug.WriteLine("screenCoords.x2 :" + x2);
+                Debug.WriteLine("screenCoords.y2 :" + y2);
+            }
+            #endregion
+          
+            if ((wp_x >= x1 && wp_x <= x2) && (wp_y >= y1 && wp_y <= y2))
+            {
+                //Debug.WriteLine("Boooooom");
+                return true;
+            }
+            return false;
         }
+       
+
+       
 
         private void SwichVisibility()
         {

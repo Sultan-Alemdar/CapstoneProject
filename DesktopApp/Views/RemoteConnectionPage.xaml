@@ -13,7 +13,7 @@
     <Grid  x:Name="ContentArea">
         <Grid.Resources>
             <Storyboard x:Name="AppBarClose" >
-                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"  To="-20">
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"  To="-73">
                     <DoubleAnimation.EasingFunction>
                         <CircleEase EasingMode="EaseOut" />
                     </DoubleAnimation.EasingFunction>
@@ -36,18 +36,27 @@
             RelativePanel.AlignTopWithPanel="True"
             RelativePanel.AlignBottomWithPanel="True"
             MediaFailed="PeerVideo_MediaFailed" />
-        <Border Width="200" Height="200" BorderThickness="20" BorderBrush="Red" PointerEntered="Border_PointerEntered"></Border>
-        <Grid  x:Name="AppBarGrid"  Background="Red" HorizontalAlignment="Center" VerticalAlignment="Top"  >
+
+        <Grid Background="Red" x:Name="AppBarGrid"   HorizontalAlignment="Center" VerticalAlignment="Top" Width="auto" Height="auto" PointerEntered="AppBarGrid_PointerEntered" PointerExited="AppBarGrid_PointerEntered">
             <Grid.RenderTransform>
                 <TranslateTransform x:Name="Translate"  ></TranslateTransform>
             </Grid.RenderTransform>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="60" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Column="1" Grid.Row="0" x:Name="AppBorder"  Margin="20,15,0,0"  BorderThickness="2" BorderBrush="White" CornerRadius="17"    >
+                <StackPanel  Margin="5,8,5,8" CornerRadius="17" Height="Auto" Width="Auto" Orientation="Horizontal" d:IsHidden="True" >
 
-            <Border  x:Name="AppBorder" Margin="20,15,0,0"  BorderThickness="2" BorderBrush="White" CornerRadius="17"  PointerEntered="Border_PointerEntered">
-                <StackPanel Margin="10,0,0,10" CornerRadius="17" Height="Auto" Width="Auto" Orientation="Horizontal" >
-
+                    <AppBarToggleButton Label="aslşkdak" Icon="Accept"  ></AppBarToggleButton>
                     <AppBarToggleButton Label="aslşkdak" Icon="Accept"></AppBarToggleButton>
-                    <AppBarToggleButton Label="aslşkdak" Icon="Accept"></AppBarToggleButton>
-                    <AppBarButton  Icon="GoToStart" Label="Başlat" Click="Button_Click" />
+                    <AppBarButton  Icon="GoToStart" Label="Başlat" />
                     <AppBarButton  Icon="Stop" Label="Durdur" Visibility="Visible" IsEnabled="False"/>
                     <AppBarButton Icon="Clear" Label="Sonlandır"/>
                     <AppBarSeparator />
@@ -61,7 +70,6 @@
                 </StackPanel>
             </Border>
         </Grid>
-        <Button x:Name="btn" Content="Button" HorizontalAlignment="Left" Height="105" Margin="364,0,0,0" VerticalAlignment="Top" Width="817" Click="Button_Click"/>
 
 
     </Grid>

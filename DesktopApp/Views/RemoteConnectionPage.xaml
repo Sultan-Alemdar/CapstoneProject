@@ -47,31 +47,95 @@
                 <ColumnDefinition Width="60" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                
+
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
             <Border Grid.Column="1" Grid.Row="0" x:Name="AppBorder"  Margin="20,15,0,0"  BorderThickness="2" BorderBrush="White" CornerRadius="17"    >
-                <StackPanel  Margin="5,8,5,8" CornerRadius="17" Height="Auto" Width="Auto" Orientation="Horizontal" d:IsHidden="True" >
-
-                    <AppBarToggleButton Label="aslşkdak" Icon="Accept"  ></AppBarToggleButton>
-                    <AppBarToggleButton Label="aslşkdak" Icon="Accept"></AppBarToggleButton>
-                    <AppBarButton  Icon="GoToStart" Label="Başlat" />
-                    <AppBarButton  Icon="Stop" Label="Durdur" Visibility="Visible" IsEnabled="False"/>
-                    <AppBarButton Icon="Clear" Label="Sonlandır"/>
+               
+                    
+                <StackPanel  Margin="5,8,5,8" CornerRadius="17" Height="Auto" Width="Auto" Orientation="Horizontal" >
+                    <AppBarToggleButton Icon="GoToStart" Label="Başlat" Visibility="Visible" />
+                    <AppBarToggleButton IsChecked="False"  Icon="Stop" Label="Durdur"  IsEnabled="False" Foreground="DarkRed" />
+                    <AppBarButton Icon="Clear" Label="Sonlandır" IsEnabled="False"/>
                     <AppBarSeparator />
-                    <AppBarButton Icon="Keyboard"  Label="Yakala"/>
+                    <AppBarToggleButton Icon="Keyboard"  Label="Yakala"/>
                     <AppBarButton Icon="Orientation" Label="Yönlendir"/>
+                    <AppBarSeparator  />
+                    <AppBarToggleButton Icon="Message"  Label="İletiler"/>
+                    <AppBarToggleButton Icon="Download" Label="İndirmeler"/>
                     <AppBarSeparator  />
                     <AppBarButton Icon="UnPin" Label="Kapat" Click="UnpinButton_Click" Visibility="{x:Bind UnPinButtonVisibility, Mode=OneWay}"/>
                     <AppBarButton Icon="Pin" Label="Sabitle"  Click="PinButton_Click" Visibility="{x:Bind PinButtonVisibility, Mode=OneWay}"/>
-
-
                 </StackPanel>
+               
+                   
             </Border>
         </Grid>
+        <Grid CornerRadius="20"
+            VerticalAlignment="Bottom"
+            Margin="0,0,10,50"
+            HorizontalAlignment="Right"
+            Background="Yellow">
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="auto" />
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions >
+            <CommandBar VerticalAlignment="Center"
+                        Height="40"
+                        Background="#14619C" CornerRadius="10" ClosedDisplayMode="Compact">
+                <AppBarButton CornerRadius="10" Icon="BackToWindow"></AppBarButton>
+            </CommandBar>
+            <ScrollViewer
+                x:Name="TexHistory"
+                Height="250"
+                Margin="0,0,0,52"
+                VerticalAlignment="Bottom"
+                Background="#14619C"
+                
+                Grid.Row="1"
+                ZoomMode="Disabled"
+                IsVerticalScrollChainingEnabled="True"
+                ManipulationCompleted="ScrollViewer_ManipulationCompleted"
+                HorizontalScrollMode="Disabled"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollMode="Enabled"
+                VerticalScrollBarVisibility="Auto">
+                <ContentControl Margin="4" Content="{Binding PastInteractionStackPanel, Mode=OneWay}" VerticalAlignment="Bottom" Height="auto" Width="auto"/>
+            </ScrollViewer>
 
+            <Grid
+                x:Name="MassengerPanel"
+               
+                VerticalAlignment="Bottom" 
+                Background="Red"
+                Grid.Row="1">
 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="10*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Background="Transparent" Margin="2" Width="auto" Height="40">
+                        <SymbolIcon Symbol="Favorite"/>
+                    </Button>
+                    <ScrollViewer Background="Transparent" Height="auto" Grid.Column="1"  ZoomMode="Disabled" VerticalAlignment="Center"  IsVerticalScrollChainingEnabled="True" ManipulationCompleted="ScrollViewer_ManipulationCompleted" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
+                        <RichEditBox FontSize="20" Margin="4" MinHeight="20" MaxHeight="400" MinWidth="300" />
+                    </ScrollViewer>
+                    <Button  Background="Transparent" Grid.Column="2" Margin="2" Width="auto" Height="40">
+                        <SymbolIcon Symbol="Attach"/>
+                    </Button>
+                    <Button Background="Transparent" Grid.Column="3" Margin="6" Width="auto" Height="40">
+                        <SymbolIcon Symbol="Send"/>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 
 </Page>

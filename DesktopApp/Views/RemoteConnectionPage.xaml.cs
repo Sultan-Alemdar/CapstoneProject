@@ -13,13 +13,10 @@ namespace DesktopApp.Views
 {
     public sealed partial class RemoteConnectionPage : Page, INotifyPropertyChanged
     {
-
-        private const bool RUNNING = true, NOT_RUNNING = false;
         private Visibility closeButonVisibility = Visibility.Collapsed;
         private Visibility openButtonVisibility = Visibility.Visible;
         private bool pinned = false;
-        private bool isOpen = false;
-
+     
         public event PropertyChangedEventHandler PropertyChanged;
 
         private RemoteConnectionViewModel ViewModel
@@ -29,7 +26,6 @@ namespace DesktopApp.Views
 
         public Visibility UnPinButtonVisibility { get => closeButonVisibility; set { closeButonVisibility = value; OnPropertyChanged("UnPinButtonVisibility"); } }
         public Visibility PinButtonVisibility { get => openButtonVisibility; set { openButtonVisibility = value; OnPropertyChanged("PinButtonVisibility"); } }
-
 
         public RemoteConnectionPage()
         {
@@ -47,7 +43,6 @@ namespace DesktopApp.Views
             System.Diagnostics.Debug.WriteLine("Manipualitaon Worked");
 
         }
-
 
         /// <summary>
         /// Media Failed event handler for remote/peer video.
@@ -78,6 +73,7 @@ namespace DesktopApp.Views
 
         private void AppBarGrid_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
+            #region eski kod
             //Debug.WriteLine("Ent");
             //if (pinned == false)
             //{
@@ -95,28 +91,33 @@ namespace DesktopApp.Views
             //        AppBarClose.Begin();
             //        Debug.WriteLine("Closed");
             //    }
-            //}
+            //} 
+            #endregion
             if (pinned == false)
                 AppBarOpen.Begin();
         }
         private void AppBarGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            //Debug.WriteLine("Exit");
+            #region eski kod
+            //Debug.WriteLine("Ext");
             //if (pinned == false)
             //{
-            //    if (DecideInOrOut(AppBarGrid) == true && isOpen == false)
+            //    if (DecideInOrOut(AppBarGrid) ==true && isOpen==false)
             //    {
+            //        AppBarClose.Pause();
             //        isOpen = true;
             //        AppBarOpen.Begin();
             //        Debug.WriteLine("Opened");
             //    }
-            //    else if (DecideInOrOut(AppBarGrid) == false && isOpen == true)
+            //    else if(DecideInOrOut(AppBarGrid) ==false && isOpen==true)
             //    {
+            //        AppBarOpen.Pause();
             //        isOpen = false;
             //        AppBarClose.Begin();
             //        Debug.WriteLine("Closed");
             //    }
-            //}
+            //} 
+            #endregion
             if (pinned == false)
                 AppBarClose.Begin();
         }       
@@ -154,9 +155,6 @@ namespace DesktopApp.Views
             }
             return false;
         }
-       
-
-       
 
         private void SwichVisibility()
         {
@@ -172,5 +170,6 @@ namespace DesktopApp.Views
             }
         }
 
+       
     }
 }

@@ -67,6 +67,7 @@
                 <Button Name="ConnectButton"  Width="50" Height="50"  Foreground="Black" BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White" Click="Button_Click">
                     <SymbolIcon Symbol="Accept" />
                 </Button>
+                
             </StackPanel>
         </Grid>
 

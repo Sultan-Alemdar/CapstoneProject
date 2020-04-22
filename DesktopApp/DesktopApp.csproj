@@ -173,6 +173,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Styles\DefaultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\Page.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -219,6 +223,52 @@
     <Compile Include="Helpers\ResourceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\File_Operations_Svg\cancel.svg" />
+    <Content Include="Assets\File_Operations_Svg\check.svg" />
+    <Content Include="Assets\File_Operations_Svg\down.svg" />
+    <Content Include="Assets\File_Operations_Svg\refresh.svg" />
+    <Content Include="Assets\File_Operations_Svg\up.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\after-effects.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\ai.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\audition.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\avi.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\bridge.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\css.png" />
+    <Content Include="Assets\File_Type_Icons_Svg\css.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\csv.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\dbf.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\doc.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\dreamweaver.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\dwg.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\exe.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\file.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\fireworks.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\fla.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\flash.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\html.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\illustrator.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\indesign.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\iso.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\javascript.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\jpg.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\json-file.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\mp3.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\mp4.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\pdf.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\photoshop.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\png.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\ppt.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\prelude.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\premiere.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\psd.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\rtf.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\search.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\svg.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\txt.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\xls.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\xml.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\zip-1.svg" />
+    <Content Include="Assets\File_Type_Icons_Svg\zip.svg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -249,6 +299,7 @@
       <Name>Windows Desktop Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

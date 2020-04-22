@@ -1,27 +1,38 @@
-﻿<Page
-    x:Class="DesktopApp.Views.RemoteConnectionPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="DarkSlateGray"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
-    DataContext="{x:Bind ViewModel}"
-    xmlns:v="using:DesktopApp.Views"
-    mc:Ignorable="d">
+﻿<Page x:Class="DesktopApp.Views.RemoteConnectionPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:v="using:DesktopApp.Views"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      Background="{ThemeResource RegionBrush}"
+      DataContext="{x:Bind ViewModel}"
+      mc:Ignorable="d">
+    <Page.Resources>
 
+        <Style TargetType="Button">
+            <Setter Property="CornerRadius"
+                    Value="{StaticResource ControlCornerRadius}" />
+        </Style>
+    </Page.Resources>
     <Grid  x:Name="ContentArea">
         <Grid.Resources>
-            <Storyboard x:Name="AppBarClose" >
-                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"  To="-73">
+            <Storyboard x:Name="AppBarClose">
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid"
+                                 FillBehavior="HoldEnd"
+                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"
+                                 To="-73">
                     <DoubleAnimation.EasingFunction>
                         <CircleEase EasingMode="EaseOut" />
                     </DoubleAnimation.EasingFunction>
                 </DoubleAnimation>
 
             </Storyboard>
-            <Storyboard x:Name="AppBarOpen" >
-                <DoubleAnimation Storyboard.TargetName="AppBarGrid" FillBehavior="HoldEnd" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)" To="0">
+            <Storyboard x:Name="AppBarOpen">
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid"
+                                 FillBehavior="HoldEnd"
+                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"
+                                 To="0">
                     <DoubleAnimation.EasingFunction>
                         <CircleEase EasingMode="EaseOut" />
                     </DoubleAnimation.EasingFunction>
@@ -29,17 +40,26 @@
             </Storyboard>
 
         </Grid.Resources>
-        <MediaElement
-            Name="PeerVideo" RealTimePlayback="True"
-            RelativePanel.AlignLeftWithPanel="True"
-            RelativePanel.AlignRightWithPanel="True"
-            RelativePanel.AlignTopWithPanel="True"
-            RelativePanel.AlignBottomWithPanel="True"
-            MediaFailed="PeerVideo_MediaFailed" />
 
-        <Grid Background="Transparent" x:Name="AppBarGrid"   HorizontalAlignment="Center" VerticalAlignment="Top" Width="auto" Height="auto" PointerEntered="AppBarGrid_PointerEntered" PointerExited="AppBarGrid_PointerExited">
+
+        <MediaElement Name="PeerVideo"
+                      RealTimePlayback="True"
+                      RelativePanel.AlignLeftWithPanel="True"
+                      RelativePanel.AlignRightWithPanel="True"
+                      RelativePanel.AlignTopWithPanel="True"
+                      RelativePanel.AlignBottomWithPanel="True"
+                      MediaFailed="PeerVideo_MediaFailed" />
+
+        <Grid x:Name="AppBarGrid"
+              Background="Transparent"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Top"
+              Width="auto"
+              Height="auto"
+              PointerEntered="AppBarGrid_PointerEntered"
+              PointerExited="AppBarGrid_PointerExited">
             <Grid.RenderTransform>
-                <TranslateTransform x:Name="Translate"  ></TranslateTransform>
+                <TranslateTransform x:Name="Translate"></TranslateTransform>
             </Grid.RenderTransform>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="60" />
@@ -48,94 +68,384 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
 
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="60" />
             </Grid.RowDefinitions>
-            <Border Grid.Column="1" Grid.Row="0" x:Name="AppBorder"  Margin="20,15,0,0"  BorderThickness="2" BorderBrush="White" CornerRadius="17"    >
-               
-                    
-                <StackPanel  Margin="5,8,5,8" CornerRadius="17" Height="Auto" Width="Auto" Orientation="Horizontal" >
-                    <AppBarToggleButton Icon="GoToStart" Label="Başlat" Visibility="Visible" />
-                    <AppBarToggleButton IsChecked="False"  Icon="Stop" Label="Durdur"  IsEnabled="False" Foreground="DarkRed" />
-                    <AppBarButton Icon="Clear" Label="Sonlandır" IsEnabled="False"/>
+            <Border Grid.Column="1"
+                    Grid.Row="0"
+                    x:Name="AppBorder"
+                    Margin="20,15,0,0"
+                    BorderThickness="2"
+                    BorderBrush="White"
+                    CornerRadius="17">
+
+
+                <StackPanel  Margin="5,8,5,8"
+                             CornerRadius="17"
+                             Height="Auto"
+                             Width="Auto"
+                             Orientation="Horizontal">
+                    <AppBarToggleButton Icon="GoToStart"
+                                        Label="Başlat"
+                                        Visibility="Visible" />
+                    <AppBarToggleButton IsChecked="False"
+                                        Icon="Stop"
+                                        Label="Durdur"
+                                        IsEnabled="False"
+                                        Foreground="DarkRed" />
+                    <AppBarButton Icon="Clear"
+                                  Label="Sonlandır"
+                                  IsEnabled="False" />
                     <AppBarSeparator />
-                    <AppBarToggleButton Icon="Keyboard"  Label="Yakala"/>
-                    <AppBarButton Icon="Orientation" Label="Yönlendir"/>
-                    <AppBarSeparator  />
-                    <AppBarToggleButton Icon="Message"  Label="İletiler"/>
-                    <AppBarToggleButton Icon="Download" Label="İndirmeler"/>
-                    <AppBarSeparator  />
-                    <AppBarButton Icon="UnPin" Label="Kapat" Click="UnpinButton_Click" Visibility="{x:Bind UnPinButtonVisibility, Mode=OneWay}"/>
-                    <AppBarButton Icon="Pin" Label="Sabitle"  Click="PinButton_Click" Visibility="{x:Bind PinButtonVisibility, Mode=OneWay}"/>
+                    <AppBarToggleButton Icon="Keyboard"
+                                        Label="Yakala" />
+                    <AppBarButton Icon="Orientation"
+                                  Label="Yönlendir" />
+                    <AppBarSeparator />
+                    <AppBarToggleButton Icon="Message"
+                                        Label="İletiler" />
+                    <AppBarToggleButton Icon="Download"
+                                        Label="İndirmeler" />
+                    <AppBarSeparator />
+                    <AppBarButton Icon="UnPin"
+                                  Label="Kapat"
+                                  Click="UnpinButton_Click"
+                                  Visibility="{x:Bind UnPinButtonVisibility, Mode=OneWay}" />
+                    <AppBarButton Icon="Pin"
+                                  Label="Sabitle"
+                                  Click="PinButton_Click"
+                                  Visibility="{x:Bind PinButtonVisibility, Mode=OneWay}" />
                 </StackPanel>
-               
-                   
+
+
             </Border>
         </Grid>
-        <Grid CornerRadius="20"
-            VerticalAlignment="Bottom"
-            Margin="0,0,10,50"
-            HorizontalAlignment="Right"
-            Background="Yellow">
+
+        <Grid Name="MessangerPanel"
+              BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
+              BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
+              Background="Black"
+              CornerRadius="{StaticResource ControlCornerRadius}"
+              VerticalAlignment="Bottom"
+              Margin="0,0,10,50"
+              HorizontalAlignment="Right">
+
             <Grid.RowDefinitions>
                 <RowDefinition  Height="auto" />
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions >
+
             <CommandBar VerticalAlignment="Center"
                         Height="40"
-                        Background="#14619C" CornerRadius="10" ClosedDisplayMode="Compact">
-                <AppBarButton CornerRadius="10" Icon="BackToWindow"></AppBarButton>
+                        ClosedDisplayMode="Compact">
+                <AppBarButton  Icon="BackToWindow"></AppBarButton>
             </CommandBar>
-            <ScrollViewer
-                x:Name="TexHistory"
-                Height="250"
-                Margin="0,0,0,52"
-                VerticalAlignment="Bottom"
-                Background="#14619C"
-                
-                Grid.Row="1"
-                ZoomMode="Disabled"
-                IsVerticalScrollChainingEnabled="True"
-                ManipulationCompleted="ScrollViewer_ManipulationCompleted"
-                HorizontalScrollMode="Disabled"
-                HorizontalScrollBarVisibility="Disabled"
-                VerticalScrollMode="Enabled"
-                VerticalScrollBarVisibility="Auto">
-                <ContentControl Margin="4" Content="{Binding PastInteractionStackPanel, Mode=OneWay}" VerticalAlignment="Bottom" Height="auto" Width="auto"/>
+
+
+            <ScrollViewer x:Name="TextHistory"
+                          Height="250"
+                          VerticalAlignment="Bottom"
+                          Grid.Row="1"
+                          ZoomMode="Disabled"
+                          IsVerticalScrollChainingEnabled="True"
+                          ManipulationCompleted="ScrollViewer_ManipulationCompleted"
+                          HorizontalScrollMode="Disabled"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollMode="Enabled"
+                          VerticalScrollBarVisibility="Auto">
+                <ContentControl Margin="4"
+                                Content="{Binding PastInteractionStackPanel, Mode=OneWay}"
+                                VerticalAlignment="Bottom"
+                                Height="auto"
+                                Width="auto" />
             </ScrollViewer>
 
-            <Grid
-                x:Name="MassengerPanel"
-               
-                VerticalAlignment="Bottom" 
-                Background="Red"
-                Grid.Row="1">
+
+            <Grid x:Name="SenderPanel"
+                  Background="#2D92BD"
+                  VerticalAlignment="Bottom"
+                  Grid.Row="1">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid >
+                <Grid  Background="Transparent">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="10*"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="10*" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <Button Background="Transparent" Margin="2" Width="auto" Height="40">
-                        <SymbolIcon Symbol="Favorite"/>
+                    <Button  Margin="2"
+                             Width="auto"
+                             Height="40">
+                        <SymbolIcon Symbol="Message" />
                     </Button>
-                    <ScrollViewer Background="Transparent" Height="auto" Grid.Column="1"  ZoomMode="Disabled" VerticalAlignment="Center"  IsVerticalScrollChainingEnabled="True" ManipulationCompleted="ScrollViewer_ManipulationCompleted" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
-                        <RichEditBox FontSize="20" Margin="4" MinHeight="20" MaxHeight="400" MinWidth="300" />
+                    <ScrollViewer Height="auto"
+                                  Grid.Column="1"
+                                  ZoomMode="Disabled"
+                                  VerticalAlignment="Center"
+                                  IsVerticalScrollChainingEnabled="True"
+                                  ManipulationCompleted="ScrollViewer_ManipulationCompleted"
+                                  HorizontalScrollMode="Disabled"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollMode="Enabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <RichEditBox  FontSize="20"
+                                      Margin="4"
+                                      MinHeight="20"
+                                      MaxHeight="400"
+                                      MinWidth="300" />
                     </ScrollViewer>
-                    <Button  Background="Transparent" Grid.Column="2" Margin="2" Width="auto" Height="40">
-                        <SymbolIcon Symbol="Attach"/>
+                    <Button  Grid.Column="2"
+                             Margin="2"
+                             Width="auto"
+                             Height="40">
+                        <SymbolIcon Symbol="Attach" />
                     </Button>
-                    <Button Background="Transparent" Grid.Column="3" Margin="6" Width="auto" Height="40">
-                        <SymbolIcon Symbol="Send"/>
+                    <Button  Grid.Column="3"
+                             Margin="6"
+                             Width="auto"
+                             Height="40">
+                        <SymbolIcon Symbol="Send" />
                     </Button>
                 </Grid>
             </Grid>
         </Grid>
+
+        <Grid x:Name="FileHistoryPanel"
+              Background="Red"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Right"
+              Width="450"
+              Height="330"
+              Margin="0,50,10,0"
+              CornerRadius="{StaticResource ControlCornerRadius}"
+              BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
+              BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ScrollViewer x:Name="FileHistory"
+                          Width="450"
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"
+                          Grid.Row="1"
+                          ZoomMode="Disabled"
+                          Background="Yellow"
+                          IsVerticalScrollChainingEnabled="True"
+                          ManipulationCompleted="ScrollViewer_ManipulationCompleted"
+                          HorizontalScrollMode="Disabled"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollMode="Enabled"
+                          VerticalScrollBarVisibility="Auto">
+                <ContentControl Margin="4"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Center"
+                                Background="White">
+                    <StackPanel Orientation="Vertical"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Center">
+
+
+                        <Grid Background="{StaticResource RegionBrush}"
+                              CornerRadius="{StaticResource ControlCornerRadius}"
+                              BorderBrush="red"
+                              BorderThickness="5"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              Margin="3">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="90" />
+
+                            </Grid.RowDefinitions>
+
+                            <Grid Margin="9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="250" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0"
+                                       Stretch="Fill"
+                                       HorizontalAlignment="Left"
+                                       Height="70"
+                                       Source="../Assets/File_Type_Icons_Svg/css.svg" />
+
+                                <Grid Grid.Column="1"
+                                      Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="2*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock  FontWeight="Black"
+                                                Text="File Name : "
+                                                Grid.Row="0" />
+
+                                    <StackPanel Grid.Row="2"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+
+                                        <Image Height="20"
+                                               Width="20"
+                                               Grid.Row="2"
+                                               Source="../Assets/File_Operations_Svg/down.svg" />
+
+                                        <TextBlock Margin="3,0,0,0"
+                                                   Text="DowdloadStatus" />
+                                    </StackPanel>
+                                </Grid>
+
+
+                                <Button Height="auto"
+                                        Grid.Column="2"
+                                        Background="Transparent"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch">
+
+                                    <Image Stretch="Fill"
+                                           Source="../Assets/File_Operations_Svg/check.svg" />
+
+                                </Button>
+
+                            </Grid>
+                        </Grid>
+
+                        <Grid Background="{StaticResource RegionBrush}"
+                              CornerRadius="{StaticResource ControlCornerRadius}"
+                              BorderBrush="red"
+                              BorderThickness="5"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              Margin="3">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="90" />
+
+                            </Grid.RowDefinitions>
+
+                            <Grid Margin="9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="250" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0"
+                                       Stretch="Fill"
+                                       HorizontalAlignment="Left"
+                                       Height="70"
+                                       Source="../Assets/File_Type_Icons_Svg/css.svg" />
+
+                                <Grid Grid.Column="1"
+                                      Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="2*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock  FontWeight="Black"
+                                                Text="File Name : "
+                                                Grid.Row="0" />
+
+                                    <StackPanel Grid.Row="2"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+
+                                        <Image Height="20"
+                                               Width="20"
+                                               Grid.Row="2"
+                                               Source="../Assets/File_Operations_Svg/down.svg" />
+
+                                        <TextBlock Margin="3,0,0,0"
+                                                   Text="DowdloadStatus" />
+                                    </StackPanel>
+                                </Grid>
+
+
+                                <Button Height="auto"
+                                        Grid.Column="2"
+                                        Background="Transparent"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch">
+
+                                    <Image Stretch="Fill"
+                                           Source="../Assets/File_Operations_Svg/check.svg" />
+
+                                </Button>
+
+                            </Grid>
+                        </Grid>
+                        <Grid Background="{StaticResource RegionBrush}"
+                              CornerRadius="{StaticResource ControlCornerRadius}"
+                              BorderBrush="red"
+                              BorderThickness="5"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              Margin="3">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="90" />
+
+                            </Grid.RowDefinitions>
+
+                            <Grid Margin="9">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="250" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Grid.Column="0"
+                                       Stretch="Fill"
+                                       HorizontalAlignment="Left"
+                                       Height="70"
+                                       Source="../Assets/File_Type_Icons_Svg/css.svg" />
+
+                                <Grid Grid.Column="1"
+                                      Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="2*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock  FontWeight="Black"
+                                                Text="File Name : "
+                                                Grid.Row="0" />
+
+                                    <StackPanel Grid.Row="2"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+
+                                        <Image Height="20"
+                                               Width="20"
+                                               Grid.Row="2"
+                                               Source="../Assets/File_Operations_Svg/down.svg" />
+
+                                        <TextBlock Margin="3,0,0,0"
+                                                   Text="DowdloadStatus" />
+                                    </StackPanel>
+                                </Grid>
+
+
+                                <Button Height="auto"
+                                        Grid.Column="2"
+                                        Background="Transparent"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch">
+
+                                    <Image Stretch="Fill"
+                                           Source="../Assets/File_Operations_Svg/check.svg" />
+
+                                </Button>
+
+                            </Grid>
+                        </Grid>
+                    </StackPanel>
+
+
+                </ContentControl>
+
+            </ScrollViewer>
+        </Grid>
+
     </Grid>
 
 </Page>

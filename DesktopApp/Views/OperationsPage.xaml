@@ -1,74 +1,125 @@
-﻿<Page
-    x:Class="DesktopApp.Views.OperationsPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:DesktopApp.ViewModels"
-    xmlns:hl="using:DesktopApp.Helpers"
-    Height="500"
-    Width="600"
-    MaxHeight="500"
-    MaxWidth="600"
-    MinHeight="500"
-    MinWidth="600"
-    Background="DarkSlateGray"
-    DataContext="{x:Bind Path=ViewModel}"
-    mc:Ignorable="d vm">
-    
+﻿<Page x:Class="DesktopApp.Views.OperationsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:vm="using:DesktopApp.ViewModels"
+      xmlns:hl="using:DesktopApp.Helpers"
+      Background="{ThemeResource RegionBrush}"
+      DataContext="{x:Bind Path=ViewModel}"
+      mc:Ignorable="d vm">
     <Grid x:Name="ContentArea">
-        <Grid.RowDefinitions >
-            <RowDefinition Height="52"/>
-            <RowDefinition Height="*"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Name="Top" Grid.Row="0" Width="600"  Background="Transparent" Orientation="Horizontal" CornerRadius="2">
-            <Button  Name="BackButton" Command="{Binding OnBackCommand, Mode=OneTime}" Width="50" Height="50"  Foreground="Black"  BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White">
+        <StackPanel Name="Top"
+                    Grid.Row="0"
+                    Width="600"
+                    Orientation="Horizontal">
+            <Button  Name="BackButton"
+                     Command="{Binding OnBackCommand, Mode=OneTime}"
+                     Width="50"
+                     Height="50">
                 <SymbolIcon Symbol="Back" />
             </Button>
-            <Button  Name="ForwardButton" Command="{Binding OnForwardCommand, Mode=OneTime}" Width="50" Height="50"  Foreground="Black" BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White">
+            <Button  Name="ForwardButton"
+                     Command="{Binding OnForwardCommand, Mode=OneTime}"
+                     Width="50"
+                     Height="50">
                 <SymbolIcon Symbol="Forward" />
             </Button>
-            <Button Margin="449,0,0,0" Command="{Binding OnOpenSettingsPageCommand, Mode=OneTime}" Name="SettingsButton" Width="50" Height="50"  Foreground="Black" BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White">
+            <Button Margin="449,0,0,0"
+                    Command="{Binding OnOpenSettingsPageCommand, Mode=OneTime}"
+                    Name="SettingsButton"
+                    Width="50"
+                    Height="50">
                 <SymbolIcon Symbol="Setting" />
             </Button>
         </StackPanel>
 
 
-        <Grid Name="Center" Grid.Row="1" Background="Transparent">
-            <Grid.ColumnDefinitions >
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+        <Grid Name="Center"
+              Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel  Name="Left" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel  Name="Left"
+                         Grid.Column="0"
+                         Orientation="Vertical"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center">
 
-                <StackPanel Name="IDPanel" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock FontWeight="Bold" Height="30" Width="Auto">ID :</TextBlock>
-                    <TextBlock Height="30" Width="Auto" Text="{Binding ID, Mode=OneWay}" Margin="10"/>
+                <StackPanel Name="IDPanel"
+                            Grid.Column="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <TextBlock FontWeight="Bold"
+                               Height="30"
+                               Width="Auto">ID :</TextBlock>
+                    <TextBlock Height="30"
+                               Width="Auto"
+                               Text="{Binding ID, Mode=OneWay}"
+                               Margin="10" />
                 </StackPanel>
 
-                <StackPanel Name="PasswordPanel" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Height="30" Width="Auto">Password :</TextBlock>
-                    <TextBlock Height="30" Width="Auto" Text="{Binding Password, Mode=OneWay}" Margin="10"/>
+                <StackPanel Name="PasswordPanel"
+                            Grid.Column="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <TextBlock Height="30"
+                               Width="Auto">Password :</TextBlock>
+                    <TextBlock Height="30"
+                               Width="Auto"
+                               Text="{Binding Password, Mode=OneWay}"
+                               Margin="10" />
                 </StackPanel>
 
             </StackPanel>
-            <StackPanel Name="Right" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <StackPanel Name="ConnectionID" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Height="30" Width="Auto">Remote ID :</TextBlock>
-                    <TextBox Height="30" Width="Auto" Text="{Binding RemoteID, Mode=TwoWay}" Margin="10"/>
+            <StackPanel Name="Right"
+                        Grid.Column="1"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <StackPanel Name="ConnectionID"
+                            Grid.Column="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <TextBlock Height="30"
+                               Width="Auto">Remote ID :</TextBlock>
+                    <TextBox Height="30"
+                             Width="Auto"
+                             Text="{Binding RemoteID, Mode=TwoWay}"
+                             Margin="10" />
                 </StackPanel>
 
-                <StackPanel Name="ConnectionPassword" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Height="30" Width="Auto">Remote Password :</TextBlock>
-                    <TextBox Height="30" Width="Auto" Text="{Binding RemotePassword, Mode=TwoWay}" Margin="10"/>
+                <StackPanel Name="ConnectionPassword"
+                            Grid.Column="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <TextBlock Height="30"
+                               Width="Auto">Remote Password :</TextBlock>
+                    <TextBox Height="30"
+                             Width="Auto"
+                             Text="{Binding RemotePassword, Mode=TwoWay}"
+                             Margin="10" />
                 </StackPanel>
-                <Button Name="ConnectButton"  Width="50" Height="50"  Foreground="Black" BorderBrush="DarkBlue" BorderThickness="3" CornerRadius="60" Background="White" Click="Button_Click">
+                <Button Name="ConnectButton"
+                        Width="50"
+                        Height="50"
+                        Click="Button_Click">
                     <SymbolIcon Symbol="Accept" />
                 </Button>
-                
+
             </StackPanel>
+
         </Grid>
 
 

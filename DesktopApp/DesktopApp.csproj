@@ -223,6 +223,8 @@
     <Compile Include="Helpers\ResourceExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Arrows\filled_minimize.svg" />
+    <Content Include="Assets\Arrows\minimize.svg" />
     <Content Include="Assets\File_Operations_Svg\cancel.svg" />
     <Content Include="Assets\File_Operations_Svg\check.svg" />
     <Content Include="Assets\File_Operations_Svg\down.svg" />

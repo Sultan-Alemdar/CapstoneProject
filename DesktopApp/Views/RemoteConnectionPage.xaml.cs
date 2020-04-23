@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 
 using System.Threading.Tasks;
 using DesktopApp.ViewModels;
 using Windows.Foundation;
+using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -16,7 +18,7 @@ namespace DesktopApp.Views
         private Visibility closeButonVisibility = Visibility.Collapsed;
         private Visibility openButtonVisibility = Visibility.Visible;
         private bool pinned = false;
-     
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private RemoteConnectionViewModel ViewModel
@@ -120,9 +122,9 @@ namespace DesktopApp.Views
             #endregion
             if (pinned == false)
                 AppBarClose.Begin();
-        }       
+        }
 
-        private bool DecideInOrOut(Grid element, bool writeToOut=false, double bufferPxs = 0)
+        private bool DecideInOrOut(Grid element, bool writeToOut = false, double bufferPxs = 0)
         {
             writeToOut = true;
             var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
@@ -147,7 +149,7 @@ namespace DesktopApp.Views
                 Debug.WriteLine("screenCoords.y2 :" + y2);
             }
             #endregion
-          
+
             if ((wp_x >= x1 && wp_x <= x2) && (wp_y >= y1 && wp_y <= y2))
             {
                 //Debug.WriteLine("Boooooom");
@@ -174,5 +176,23 @@ namespace DesktopApp.Views
         {
 
         }
+
+        private void MessengerPanel_LayoutUpdated(object sender, object e)
+        {
+            Debug.WriteLine("Boooooom");
+        }
+
+        //private void Button_Click_1(object sender, RoutedEventArgs e)
+        //{
+        //    List<string> attrNames = new List<string>();//({ "DeviceFamily", "OSVersionFull", "FlightRing" });
+        //    attrNames.Add("DeviceFamily");
+        //    attrNames.Add("OSVersionFull");
+        //    attrNames.Add("FlightRing");
+        //    var attrData = AnalyticsInfo.GetSystemPropertiesAsync(attrNames).AsTask().GetAwaiter().GetResult();
+        //    foreach (var item in attrData)
+        //    {
+        //        Debug.WriteLine(item);
+        //    }
+        //}
     }
 }

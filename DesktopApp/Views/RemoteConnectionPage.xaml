@@ -121,50 +121,177 @@
             </Border>
         </Grid>
 
-        <Grid Name="MessangerPanel"
+        <Grid x:Name="MessengerPanel"
+              Background="Black"
+              Margin="0,0,10,50"
+              VerticalAlignment="Bottom"
+              HorizontalAlignment="Right"
+              Width="450"
+              MaxWidth="450"
+              MinWidth="420"
+              CornerRadius="{StaticResource ControlCornerRadius}"
               BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
               BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
-              Background="Black"
-              CornerRadius="{StaticResource ControlCornerRadius}"
-              VerticalAlignment="Bottom"
-              Margin="0,0,10,50"
-              HorizontalAlignment="Right">
+              LayoutUpdated="MessengerPanel_LayoutUpdated">
 
             <Grid.RowDefinitions>
-                <RowDefinition  Height="auto" />
-                <RowDefinition Height="auto" />
+                <RowDefinition  Height="*" />
+                <RowDefinition  Height="250"
+                                MinHeight="250"
+                                MaxHeight="300" />
             </Grid.RowDefinitions >
 
-            <CommandBar VerticalAlignment="Center"
-                        Height="40"
-                        ClosedDisplayMode="Compact">
-                <AppBarButton  Icon="BackToWindow"></AppBarButton>
-            </CommandBar>
+            <Grid x:Name="MessengerPanelTopBar"
+                  Background="#2D92BD"
+                  Height="37"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="17"
+                           FontWeight="Medium"
+                           HorizontalAlignment="Left">İleti Kutusu</TextBlock>
+                <Button 
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Right"
+                        CornerRadius="4">
+                    <Image Stretch="Uniform"
+                           Source="../Assets/Arrows/minimize.svg" />
+                </Button>
+                
+            </Grid>
 
-
+             
             <ScrollViewer x:Name="TextHistory"
-                          Height="250"
-                          VerticalAlignment="Bottom"
                           Grid.Row="1"
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"
                           ZoomMode="Disabled"
+                          Background="#212121"
+                          Margin="0,0,0,50"
                           IsVerticalScrollChainingEnabled="True"
                           ManipulationCompleted="ScrollViewer_ManipulationCompleted"
                           HorizontalScrollMode="Disabled"
                           HorizontalScrollBarVisibility="Disabled"
                           VerticalScrollMode="Enabled"
                           VerticalScrollBarVisibility="Auto">
-                <ContentControl Margin="4"
-                                Content="{Binding PastInteractionStackPanel, Mode=OneWay}"
-                                VerticalAlignment="Bottom"
+                
+                <ContentControl 
                                 Height="auto"
-                                Width="auto" />
+                                Width="auto"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                VerticalContentAlignment="Bottom"
+                                Background="White">
+                    
+                    <StackPanel Name="MessageHistoryStack"
+                                Orientation="Vertical"
+                                Width="auto"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent">
+
+
+                        <Grid Name="SubmittedMessage"
+                              Margin="4,6,4,6"
+                              Background="Transparent"
+                              CornerRadius="{StaticResource ControlCornerRadius}"
+                              BorderBrush="Wheat"
+                              BorderThickness="2"
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Right">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                
+                                
+                            </Grid.ColumnDefinitions>
+                            <StackPanel HorizontalAlignment="Right"
+                                        Grid.Column="0"
+                                        Background="#5E609E"
+                                        Orientation="Vertical"
+                                        >
+
+                                <Grid Margin="4"
+                                      Background="Transparent">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="20"
+                                                       MinHeight="20"
+                                                       MaxHeight="20" />
+                                    </Grid.RowDefinitions>
+
+
+                                    <RichTextBlock FlowDirection="LeftToRight" Width="300">
+                                        <Paragraph>
+                                            asldjalksjdlksajdsakjjjjjjjjjjjjjjjsakdjlksajdkajskjdassjlkasjdklasjdsalkjdlksajdkljsadaslkdjas
+                                        </Paragraph>
+                                    </RichTextBlock>
+                                   
+                                    <TextBlock Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" FlowDirection="RightToLeft" Text="Saat : 11:03"/>
+
+                                </Grid>
+                                </StackPanel>
+                        </Grid>
+                        <Grid Name="ReceivedMessage"
+                              Margin="4,6,4,6"
+                              Background="Yellow"
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Left"
+                              BorderBrush="Gray"
+                              BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
+                              CornerRadius="{StaticResource ControlCornerRadius}">
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+
+
+                            </Grid.ColumnDefinitions>
+                            <StackPanel HorizontalAlignment="Right"
+                                        Grid.Column="0"
+                                        Background="#5E609E"
+                                        Orientation="Vertical">
+
+                                <Grid Margin="4"
+                                      Background="Transparent">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="20"
+                                                       MinHeight="20"
+                                                       MaxHeight="20" />
+                                    </Grid.RowDefinitions>
+
+
+                                    <RichTextBlock FlowDirection="LeftToRight"
+                                                   Width="300">
+                                        <Paragraph>
+                                            asldjalksjdlksajdsakjjjjjjjjjjjjjjjsakdjlksajdkajskjdassjlkasjdklasjdsalkjdlksajdkljsadaslkdjas
+                                        </Paragraph>
+                                    </RichTextBlock>
+
+                                    <TextBlock Grid.Row="1"
+                                               VerticalAlignment="Bottom"
+                                               HorizontalAlignment="Right"
+                                               FlowDirection="RightToLeft"
+                                               Text="Saat : 11:03" />
+
+                                </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </ContentControl>
             </ScrollViewer>
 
 
-            <Grid x:Name="SenderPanel"
+            <Grid x:Name="SubmitPanel"
+                  Grid.Row="1"
                   Background="#2D92BD"
                   VerticalAlignment="Bottom"
-                  Grid.Row="1">
+                  HorizontalAlignment="Stretch">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -178,13 +305,15 @@
                     </Grid.ColumnDefinitions>
                     <Button  Margin="2"
                              Width="auto"
-                             Height="40">
+                             Height="40" MinHeight="40" MaxHeight="40">
                         <SymbolIcon Symbol="Message" />
                     </Button>
-                    <ScrollViewer Height="auto"
+                    <ScrollViewer
                                   Grid.Column="1"
-                                  ZoomMode="Disabled"
+                                  Height="auto"
                                   VerticalAlignment="Center"
+                                  HorizontalAlignment="Stretch"
+                                  ZoomMode="Disabled"
                                   IsVerticalScrollChainingEnabled="True"
                                   ManipulationCompleted="ScrollViewer_ManipulationCompleted"
                                   HorizontalScrollMode="Disabled"
@@ -200,13 +329,17 @@
                     <Button  Grid.Column="2"
                              Margin="2"
                              Width="auto"
-                             Height="40">
+                             Height="40"
+                             MinHeight="40"
+                             MaxHeight="40">
                         <SymbolIcon Symbol="Attach" />
                     </Button>
                     <Button  Grid.Column="3"
                              Margin="6"
                              Width="auto"
-                             Height="40">
+                             Height="40"
+                             MinHeight="40"
+                             MaxHeight="40">
                         <SymbolIcon Symbol="Send" />
                     </Button>
                 </Grid>
@@ -214,44 +347,67 @@
         </Grid>
 
         <Grid x:Name="FileHistoryPanel"
-              Background="Red"
               VerticalAlignment="Top"
               HorizontalAlignment="Right"
               Width="450"
               Height="330"
               Margin="0,50,10,0"
+              Background="#BDBDBD"
               CornerRadius="{StaticResource ControlCornerRadius}"
               BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
               BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+         
+            <Grid.RowDefinitions>
+                <RowDefinition Height="37" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid x:Name="FileHistoryPanelTopBar"
+                  Background="#2D92BD"
+                  Height="37"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="17"
+                           FontWeight="Medium"
+                           HorizontalAlignment="Left">Dosya Trafiği Kutusu</TextBlock>
+                <Button VerticalAlignment="Stretch"
+                        HorizontalAlignment="Right"
+                        CornerRadius="4">
+                    <Image Stretch="Uniform" Source="../Assets/Arrows/minimize.svg" />
+                </Button>
+
+            </Grid>
             <ScrollViewer x:Name="FileHistory"
-                          Width="450"
+                          Grid.Row="1"
                           VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"
-                          Grid.Row="1"
                           ZoomMode="Disabled"
-                          Background="Yellow"
+                          Background="Transparent"
                           IsVerticalScrollChainingEnabled="True"
                           ManipulationCompleted="ScrollViewer_ManipulationCompleted"
                           HorizontalScrollMode="Disabled"
                           HorizontalScrollBarVisibility="Disabled"
                           VerticalScrollMode="Enabled"
                           VerticalScrollBarVisibility="Auto">
-                <ContentControl Margin="4"
+                <ContentControl Margin="4,4,4,4"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Stretch"
+                                Background="Transparent">
+                    <StackPanel Orientation="Vertical"
                                 VerticalAlignment="Bottom"
                                 HorizontalAlignment="Center"
-                                Background="White">
-                    <StackPanel Orientation="Vertical"
-                                VerticalAlignment="Stretch"
-                                HorizontalAlignment="Center">
+                                Background="Transparent">
 
 
-                        <Grid Background="{StaticResource RegionBrush}"
+                        <Grid Name="FileGrid"
+                              Background="#5E609E"
                               CornerRadius="{StaticResource ControlCornerRadius}"
-                              BorderBrush="red"
-                              BorderThickness="5"
+                              BorderBrush="Gray"
+                              BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
                               VerticalAlignment="Stretch"
                               HorizontalAlignment="Stretch"
                               Margin="3">
@@ -261,19 +417,25 @@
 
                             </Grid.RowDefinitions>
 
-                            <Grid Margin="9">
+                            <Grid Name="FileInfoGrid"
+                                  Margin="9"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch"
+                                  Background="Transparent">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="250" />
+                                    <ColumnDefinition Width="240" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Image Grid.Column="0"
                                        Stretch="Fill"
-                                       HorizontalAlignment="Left"
-                                       Height="70"
+                                       Height="60"
                                        Source="../Assets/File_Type_Icons_Svg/css.svg" />
 
                                 <Grid Grid.Column="1"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch"
+                                      Background="Transparent"
                                       Margin="5">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="2*" />
@@ -285,7 +447,9 @@
 
                                     <StackPanel Grid.Row="2"
                                                 Orientation="Horizontal"
-                                                VerticalAlignment="Center">
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Stretch"
+                                                Background="Transparent">
 
                                         <Image Height="20"
                                                Width="20"
@@ -293,7 +457,7 @@
                                                Source="../Assets/File_Operations_Svg/down.svg" />
 
                                         <TextBlock Margin="3,0,0,0"
-                                                   Text="DowdloadStatus" />
+                                                   Text="DowdloadStatus"/>
                                     </StackPanel>
                                 </Grid>
 
@@ -312,132 +476,7 @@
                             </Grid>
                         </Grid>
 
-                        <Grid Background="{StaticResource RegionBrush}"
-                              CornerRadius="{StaticResource ControlCornerRadius}"
-                              BorderBrush="red"
-                              BorderThickness="5"
-                              VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch"
-                              Margin="3">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="90" />
-
-                            </Grid.RowDefinitions>
-
-                            <Grid Margin="9">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="250" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0"
-                                       Stretch="Fill"
-                                       HorizontalAlignment="Left"
-                                       Height="70"
-                                       Source="../Assets/File_Type_Icons_Svg/css.svg" />
-
-                                <Grid Grid.Column="1"
-                                      Margin="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="2*" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock  FontWeight="Black"
-                                                Text="File Name : "
-                                                Grid.Row="0" />
-
-                                    <StackPanel Grid.Row="2"
-                                                Orientation="Horizontal"
-                                                VerticalAlignment="Center">
-
-                                        <Image Height="20"
-                                               Width="20"
-                                               Grid.Row="2"
-                                               Source="../Assets/File_Operations_Svg/down.svg" />
-
-                                        <TextBlock Margin="3,0,0,0"
-                                                   Text="DowdloadStatus" />
-                                    </StackPanel>
-                                </Grid>
-
-
-                                <Button Height="auto"
-                                        Grid.Column="2"
-                                        Background="Transparent"
-                                        VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Stretch">
-
-                                    <Image Stretch="Fill"
-                                           Source="../Assets/File_Operations_Svg/check.svg" />
-
-                                </Button>
-
-                            </Grid>
-                        </Grid>
-                        <Grid Background="{StaticResource RegionBrush}"
-                              CornerRadius="{StaticResource ControlCornerRadius}"
-                              BorderBrush="red"
-                              BorderThickness="5"
-                              VerticalAlignment="Stretch"
-                              HorizontalAlignment="Stretch"
-                              Margin="3">
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="90" />
-
-                            </Grid.RowDefinitions>
-
-                            <Grid Margin="9">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="250" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0"
-                                       Stretch="Fill"
-                                       HorizontalAlignment="Left"
-                                       Height="70"
-                                       Source="../Assets/File_Type_Icons_Svg/css.svg" />
-
-                                <Grid Grid.Column="1"
-                                      Margin="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="2*" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock  FontWeight="Black"
-                                                Text="File Name : "
-                                                Grid.Row="0" />
-
-                                    <StackPanel Grid.Row="2"
-                                                Orientation="Horizontal"
-                                                VerticalAlignment="Center">
-
-                                        <Image Height="20"
-                                               Width="20"
-                                               Grid.Row="2"
-                                               Source="../Assets/File_Operations_Svg/down.svg" />
-
-                                        <TextBlock Margin="3,0,0,0"
-                                                   Text="DowdloadStatus" />
-                                    </StackPanel>
-                                </Grid>
-
-
-                                <Button Height="auto"
-                                        Grid.Column="2"
-                                        Background="Transparent"
-                                        VerticalAlignment="Stretch"
-                                        HorizontalAlignment="Stretch">
-
-                                    <Image Stretch="Fill"
-                                           Source="../Assets/File_Operations_Svg/check.svg" />
-
-                                </Button>
-
-                            </Grid>
-                        </Grid>
+                       
                     </StackPanel>
 
 

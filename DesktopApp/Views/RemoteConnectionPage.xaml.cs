@@ -33,8 +33,15 @@ namespace DesktopApp.Views
         {
             InitializeComponent();
             //ViewModelLocator.Current.RemoteConnectionViewModel.PastInteractionStackPanel = PastInteractionStackPanel;
+            //AppBarClose?.Begin();
+            Loaded += RemoteConnectionPage_Loaded;    
+        }
+
+        private void RemoteConnectionPage_Loaded(object sender, RoutedEventArgs e)
+        {
             AppBarClose.Begin();
         }
+
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

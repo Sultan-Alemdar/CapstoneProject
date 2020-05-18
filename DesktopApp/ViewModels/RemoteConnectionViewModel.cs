@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using DesktopApp.Core.Models;
 using GalaSoft.MvvmLight;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,15 +15,23 @@ namespace DesktopApp.ViewModels
     {
         private StackPanel _pastInteractionStackPanel;
         public StackPanel PastInteractionStackPanel { get => _pastInteractionStackPanel; set => Set<StackPanel>("PastInteractionStackPanel", ref this._pastInteractionStackPanel, value); }
-        
+
+        private ObservableCollection<File> fileItems = new ObservableCollection<File>();
+        public ObservableCollection<File> FileItems { get => fileItems; set => Set<ObservableCollection<File>>("FileItems", ref this.fileItems, value); }
+
         public RemoteConnectionViewModel()
         {
             PastInteractionStackPanel = new StackPanel();
             PastInteractionStackPanel.Children.Add(CreateMessage());
-           // RichTextBlock asd = PastInteractionStackPanel.Children.Move(0)
+            // RichTextBlock asd = PastInteractionStackPanel.Children.Move(0)
+
+            File file = new File("Deneme", "", "", 5, "", "");
+            File file2 = new File("ikiinci", "", "", 5, "", "");
+            FileItems.Add(file);
+            FileItems.Add(file2);
         }
 
-        public RichTextBlock CreateMessage(Dictionary<string,string> parameters=null, bool received = false)
+        public RichTextBlock CreateMessage(Dictionary<string, string> parameters = null, bool received = false)
         {
             ///TODO WTS:Create message metodunu implement et
             //throw new NotImplementedException();
@@ -53,9 +62,9 @@ namespace DesktopApp.ViewModels
             //    run.Text = "1010101";
             //} 
             #endregion
-        
+
             richTextBlock.Blocks.Add(paragraph);
-            
+
             // Add the RichTextBlock to the visual tree (assumes stackPanel is decalred in XAML).
             return richTextBlock;
         }

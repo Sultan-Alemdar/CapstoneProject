@@ -29,6 +29,7 @@ namespace DesktopApp.ViewModels
             File file2 = new File("ikiinci", "", "", 5, "", "");
             FileItems.Add(file);
             FileItems.Add(file2);
+            
         }
 
         public RichTextBlock CreateMessage(Dictionary<string, string> parameters = null, bool received = false)

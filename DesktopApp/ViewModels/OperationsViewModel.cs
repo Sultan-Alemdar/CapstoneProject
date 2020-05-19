@@ -6,6 +6,8 @@ using GalaSoft.MvvmLight;
 using DesktopApp.Constants;
 using GalaSoft.MvvmLight.Command;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using DesktopApp.Signaling;
 
 namespace DesktopApp.ViewModels
 {
@@ -13,10 +15,10 @@ namespace DesktopApp.ViewModels
     {
         private ViewModelLocator _viewModelLocator = ViewModelLocator.Current;
         // public string OpSetButNam { get => "Ayarları Aç"; }
-        public ICommand OnOpenSettingsPageCommand { get; set; }
-        public ICommand OnBackCommand { get; set; }
-        public ICommand OnForwardCommand { get; set; }
-
+        public ICommand OpenSettingsPageCommand { get; set; }
+        public ICommand BackCommand { get; set; }
+        public ICommand ForwardCommand { get; set; }
+        public ICommand ConnectCommand { get; set; }
         private string _ID = "ID";
         public string ID { get => _ID; set => Set<string>("ID", ref this._ID, value); }
         private string _password = "Password";
@@ -31,11 +33,27 @@ namespace DesktopApp.ViewModels
 
         public OperationsViewModel()
         {
-            OnOpenSettingsPageCommand = new RelayCommand(OnOpenSettingsPageMethod);
-            OnBackCommand = new RelayCommand(OnGoBackMethod, CanGoBack);
-            OnForwardCommand = new RelayCommand(OnGoForwardMethod, CanGoForward);
+            OpenSettingsPageCommand = new RelayCommand(OpenSettingsPageExecute);
+            BackCommand = new RelayCommand(GoBackExecute, CanGoBack);
+            ForwardCommand = new RelayCommand(GoForwardExecute, CanGoForward);
+            ConnectCommand = new RelayCommand(ConnectCommandExecute, ConnectCommandCanExecute);
         }
-        public void OnOpenSettingsPageMethod()
+
+        private bool ConnectCommandCanExecute()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ConnectCommandExecute()
+        {
+            new Task(() =>
+            {
+                //IsConnecting = true;
+                //Conductor.Instance.StartLogin(Ip.Value, Port.Value);
+            }).Start();
+        }
+
+        public void OpenSettingsPageExecute()
         {
             _viewModelLocator.NavigationService.Navigate(MyConstants.SETTINGS_VIEW_MODEL_FULL_NAME);
         }
@@ -47,11 +65,11 @@ namespace DesktopApp.ViewModels
         {
             return _viewModelLocator.NavigationService.CanGoForward;
         }
-        public void OnGoBackMethod()
+        public void GoBackExecute()
         {
             _viewModelLocator.NavigationService.GoBack();
         }
-        public void OnGoForwardMethod()
+        public void GoForwardExecute()
         {
             _viewModelLocator.NavigationService.GoForward();
         }

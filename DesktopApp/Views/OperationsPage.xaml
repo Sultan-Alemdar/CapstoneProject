@@ -19,19 +19,19 @@
                     Width="600"
                     Orientation="Horizontal">
             <Button  Name="BackButton"
-                     Command="{Binding OnBackCommand, Mode=OneTime}"
+                     Command="{Binding BackCommand, Mode=OneTime}"
                      Width="50"
                      Height="50">
                 <SymbolIcon Symbol="Back" />
             </Button>
             <Button  Name="ForwardButton"
-                     Command="{Binding OnForwardCommand, Mode=OneTime}"
+                     Command="{Binding ForwardCommand, Mode=OneTime}"
                      Width="50"
                      Height="50">
                 <SymbolIcon Symbol="Forward" />
             </Button>
             <Button Margin="449,0,0,0"
-                    Command="{Binding OnOpenSettingsPageCommand, Mode=OneTime}"
+                    Command="{Binding OpenSettingsPageCommand, Mode=OneTime}"
                     Name="SettingsButton"
                     Width="50"
                     Height="50">

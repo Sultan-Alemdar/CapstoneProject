@@ -181,6 +181,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Styles\SettingsHeaders.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\_Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -271,6 +275,9 @@
     <Content Include="Assets\File_Type_Icons_Svg\xml.svg" />
     <Content Include="Assets\File_Type_Icons_Svg\zip-1.svg" />
     <Content Include="Assets\File_Type_Icons_Svg\zip.svg" />
+    <Content Include="Assets\Settings\add.svg" />
+    <Content Include="Assets\Settings\delete.svg" />
+    <Content Include="Assets\Settings\delete2.svg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

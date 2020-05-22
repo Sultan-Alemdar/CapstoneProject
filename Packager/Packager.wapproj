@@ -36,7 +36,7 @@
   <PropertyGroup>
     <ProjectGuid>0cb51315-318f-4107-8e81-97055c970d7a</ProjectGuid>
     <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.17134.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageCertificateKeyFile>Packager_TemporaryKey.pfx</PackageCertificateKeyFile>
     <EntryPointProjectUniqueName>..\DesktopApp\DesktopApp.csproj</EntryPointProjectUniqueName>

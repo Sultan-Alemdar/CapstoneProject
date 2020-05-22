@@ -148,8 +148,6 @@
     <Compile Include="Services\SuspendAndResumeService.cs" />
     <Compile Include="Services\SuspensionState.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
-    <Compile Include="Signaling\Conductor.cs" />
-    <Compile Include="Signaling\Signalling.cs" />
     <Compile Include="ViewModels\InteractionsPanelViewModel.cs" />
     <Compile Include="ViewModels\OperationsViewModel.cs" />
     <Compile Include="ViewModels\RemoteConnectionViewModel.cs" />

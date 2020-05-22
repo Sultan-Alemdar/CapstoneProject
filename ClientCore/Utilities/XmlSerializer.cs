@@ -14,7 +14,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace PeerConnectionClient.Utilities
+namespace PeerConnectionClientOperators.Utilities
 {
     public static class XmlSerializer<T>
     {

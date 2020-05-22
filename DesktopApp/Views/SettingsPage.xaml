@@ -27,7 +27,7 @@
 
             <StackPanel Style="{StaticResource SettignStackPanel}" >
                 <TextBlock Text="Connection"  Style="{StaticResource SettingsHeader1}" />
-                <TextBlock Text="Connection" Style="{StaticResource SettingsHeader2}"  />
+                <TextBlock Text="IP" Style="{StaticResource SettingsHeader2}"  />
                 <TextBox Style="{StaticResource SettingTexbox}"
                          SelectedText="127.0.0.1" />
                 <TextBlock Text="Port"

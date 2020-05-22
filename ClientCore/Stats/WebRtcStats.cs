@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PeerConnectionClientCore.Stats
+namespace PeerConnectionClientOperators.Stats
 {
     /// <summary>
     /// Prepares stats obtained from peer connections GetStats method for Callstats client.

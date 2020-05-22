@@ -48,9 +48,9 @@ using UseRTCTrackEvent = Org.Ortc.Adapter.IRTCTrackEvent;
 using UseRTCSessionDescription = Org.Ortc.Adapter.IRTCSessionDescription;
 #else
 using Org.WebRtc;
-using PeerConnectionClient.Utilities;
+using PeerConnectionClientOperators.Utilities;
 #if !UNITY
-using PeerConnectionClientCore.Stats;
+using PeerConnectionClientOperators.Stats;
 #endif
 using System.Text;
 using UseMediaStreamTrack = Org.WebRtc.IMediaStreamTrack;
@@ -71,7 +71,7 @@ using System.Runtime.Serialization;
 using System.IO;
 #endif
 
-namespace PeerConnectionClient.Signalling
+namespace PeerConnectionClientOperators.Signalling
 {
     /// <summary>
     /// A singleton conductor for WebRTC session.

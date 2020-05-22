@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace PeerConnectionClientCore.Stats
+namespace PeerConnectionClientOperators.Stats
 {
     /// <summary>
     /// Tracks peer connection states change to get data needed for Callstats client.

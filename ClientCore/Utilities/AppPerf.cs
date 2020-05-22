@@ -17,7 +17,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace PeerConnectionClient.Utilities
+namespace PeerConnectionClientOperators.Utilities
 {
 #if _APP_PERFORMANCE_
     static class MEMData

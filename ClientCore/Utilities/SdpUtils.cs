@@ -19,7 +19,7 @@ using CodecInfo= Org.Ortc.RTCRtpCodecCapability;
 using Org.WebRtc;
 #endif
 
-namespace PeerConnectionClient.Utilities
+namespace PeerConnectionClientOperators.Utilities
 {
     /// <summary>
     /// Utility class to organize SDP negotiation.

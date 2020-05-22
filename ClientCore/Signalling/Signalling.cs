@@ -20,7 +20,7 @@ using Windows.Networking;
 using Windows.Networking.Sockets;
 using Windows.Storage.Streams;
 
-namespace PeerConnectionClient.Signalling
+namespace PeerConnectionClientOperators.Signalling
 {
     public delegate void SignedInDelegate();
     public delegate void DisconnectedDelegate();

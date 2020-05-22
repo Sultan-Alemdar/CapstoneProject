@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using Windows.Storage;
 
-namespace PeerConnectionClientCore
+namespace PeerConnectionClientOperators
 {
     public static class Config
     {

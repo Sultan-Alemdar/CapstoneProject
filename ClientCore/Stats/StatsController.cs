@@ -10,7 +10,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace PeerConnectionClientCore.Stats
+namespace PeerConnectionClientOperators.Stats
 {
     /// <summary>
     /// A singleton controller for shared properties and methods used to collect stats.

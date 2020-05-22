@@ -11,12 +11,6 @@ Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "Packager", "Packager\Packag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalingApp", "SignalingApp\SignalingApp.csproj", "{35095552-B820-481C-8B2A-DCA6B53172AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeerConnectionClientCore", "..\..\..\..\..\webrtc-uwp-sdk\common\windows\samples\PeerCC\ClientCore\PeerConnectionClientCore.csproj", "{217FAA3A-8FC1-4663-BA00-2F842B3FF4E1}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Org.WebRtc", "..\..\..\..\..\webrtc-uwp-sdk\webrtc\windows\projects\msvc\Org.WebRtc.Universal\Org.WebRtc.vcxproj", "{3DD8FDCD-B703-4B75-826A-2C7E844F903E}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Org.WebRtc.WrapperGlue", "..\..\..\..\..\webrtc-uwp-sdk\webrtc\windows\projects\msvc\Org.WebRtc.WrapperGlue.Universal\Org.WebRtc.WrapperGlue.vcxproj", "{76CC41B9-4027-4330-A139-0CFA7AA34768}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{B8718DA6-2F14-46EB-A8EC-A271C3A484AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Org.WebRtc", "Org.WebRtc", "{1E35EAF8-92DF-42C5-B5B3-6BFB62D54DD7}"
@@ -25,7 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MainApp", "MainApp", "{B3F3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PeerConnection", "PeerConnection", "{15121972-E2E3-4F10-B34B-DE97D27835E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.WebRtc.Callstats", "..\..\..\..\..\webrtc-uwp-sdk\common\windows\samples\PeerCC\Org.WebRtc.Callstats\Org.WebRtc.Callstats.csproj", "{8980A463-09EC-415F-850A-7DEE57F9F1DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeerConnectionClient.WebRtc.Core", "ClientCore\PeerConnectionClient.WebRtc.Core.csproj", "{217FAA3A-8FC1-4663-BA00-2F842B3FF4E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Org.WebRtc.Callstats", "Org.WebRtc.Callstats\Org.WebRtc.Callstats.csproj", "{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Org.WebRtc", "..\..\..\..\..\webrtc-uwp-sdk\webrtc\windows\projects\msvc\Org.WebRtc.Universal\Org.WebRtc.vcxproj", "{3DD8FDCD-B703-4B75-826A-2C7E844F903E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Org.WebRtc.WrapperGlue", "..\..\..\..\..\webrtc-uwp-sdk\webrtc\windows\projects\msvc\Org.WebRtc.WrapperGlue.Universal\Org.WebRtc.WrapperGlue.vcxproj", "{76CC41B9-4027-4330-A139-0CFA7AA34768}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -152,6 +152,25 @@ Global
 		{217FAA3A-8FC1-4663-BA00-2F842B3FF4E1}.Release|x64.Build.0 = Release|x64
 		{217FAA3A-8FC1-4663-BA00-2F842B3FF4E1}.Release|x86.ActiveCfg = Release|x86
 		{217FAA3A-8FC1-4663-BA00-2F842B3FF4E1}.Release|x86.Build.0 = Release|x86
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|ARM.Build.0 = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Debug|x86.Build.0 = Debug|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|ARM.ActiveCfg = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|ARM.Build.0 = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|ARM64.Build.0 = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|x64.ActiveCfg = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|x64.Build.0 = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|x86.ActiveCfg = Release|Any CPU
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33}.Release|x86.Build.0 = Release|Any CPU
 		{3DD8FDCD-B703-4B75-826A-2C7E844F903E}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{3DD8FDCD-B703-4B75-826A-2C7E844F903E}.Debug|ARM.ActiveCfg = Debug|ARM
 		{3DD8FDCD-B703-4B75-826A-2C7E844F903E}.Debug|ARM.Build.0 = Debug|ARM
@@ -186,25 +205,6 @@ Global
 		{76CC41B9-4027-4330-A139-0CFA7AA34768}.Release|x64.Build.0 = Release|x64
 		{76CC41B9-4027-4330-A139-0CFA7AA34768}.Release|x86.ActiveCfg = Release|Win32
 		{76CC41B9-4027-4330-A139-0CFA7AA34768}.Release|x86.Build.0 = Release|Win32
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|ARM.Build.0 = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Debug|x86.Build.0 = Debug|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|ARM.ActiveCfg = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|ARM.Build.0 = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|ARM64.Build.0 = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|x64.ActiveCfg = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|x64.Build.0 = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|x86.ActiveCfg = Release|Any CPU
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -212,11 +212,12 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9ECF6F03-65F5-4191-963F-FB8F79B2FAE1} = {B3F3FD7A-F7D8-4FF7-AA5A-A053EB2E6C71}
 		{D89085D5-F0B9-45E6-85AD-3FF33F8F6C45} = {B3F3FD7A-F7D8-4FF7-AA5A-A053EB2E6C71}
+		{35095552-B820-481C-8B2A-DCA6B53172AB} = {B3F3FD7A-F7D8-4FF7-AA5A-A053EB2E6C71}
+		{1E35EAF8-92DF-42C5-B5B3-6BFB62D54DD7} = {B8718DA6-2F14-46EB-A8EC-A271C3A484AC}
 		{217FAA3A-8FC1-4663-BA00-2F842B3FF4E1} = {15121972-E2E3-4F10-B34B-DE97D27835E4}
+		{5BFC4CA6-70B3-445B-96AE-97C02D3C0F33} = {15121972-E2E3-4F10-B34B-DE97D27835E4}
 		{3DD8FDCD-B703-4B75-826A-2C7E844F903E} = {1E35EAF8-92DF-42C5-B5B3-6BFB62D54DD7}
 		{76CC41B9-4027-4330-A139-0CFA7AA34768} = {1E35EAF8-92DF-42C5-B5B3-6BFB62D54DD7}
-		{1E35EAF8-92DF-42C5-B5B3-6BFB62D54DD7} = {B8718DA6-2F14-46EB-A8EC-A271C3A484AC}
-		{8980A463-09EC-415F-850A-7DEE57F9F1DF} = {15121972-E2E3-4F10-B34B-DE97D27835E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6E2B0AB7-E054-4CC0-8AA9-A58366D01E72}

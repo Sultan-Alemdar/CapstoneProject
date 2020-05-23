@@ -57,21 +57,8 @@ namespace DesktopApp.Views
 
         }
 
-        /// <summary>
-        /// Media Failed event handler for remote/peer video.
-        /// Invoked when an error occurs in peer media source.
-        /// </summary>
-        /// <param name="sender">The object where the handler is attached.</param>
-        /// <param name="e">Details about the exception routed event.</param>
-
-        private void PeerVideo_MediaFailed(object sender, Windows.UI.Xaml.ExceptionRoutedEventArgs e)
-        {
-            if (ViewModel != null)
-            {
-                ViewModel.PeerVideo_MediaFailed(sender, e);
-            }
-
-        }
+        
+        
         private void PinButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             pinned = true;
@@ -135,39 +122,39 @@ namespace DesktopApp.Views
                 AppBarClose.Begin();
         }
 
-        private bool DecideInOrOut(Grid element, bool writeToOut = false, double bufferPxs = 0)
-        {
-            writeToOut = true;
-            var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
-            var wp_x = pointerPosition.X - Window.Current.Bounds.X;
-            var wp_y = pointerPosition.Y - Window.Current.Bounds.Y;
-            var ttv = element.TransformToVisual(Window.Current.Content);
-            Point screenCoords = ttv.TransformPoint(new Point(0, 0));
-            var x1 = screenCoords.X - bufferPxs;
-            var y1 = screenCoords.Y - bufferPxs;
-            var x2 = x1 + element.ActualWidth + bufferPxs;
-            var y2 = y1 + element.ActualHeight + bufferPxs;
-            #region WriteToDebug
-            if (writeToOut)
-            {
-                Debug.WriteLine("Pointer.x :" + pointerPosition.X);
-                Debug.WriteLine("Pointer.y :" + pointerPosition.Y);
-                Debug.WriteLine("Pointer.x on window :" + wp_x);
-                Debug.WriteLine("Pointer.y on window :" + wp_y);
-                Debug.WriteLine("screenCoords.x1 :" + x1);
-                Debug.WriteLine("screenCoords.y1 :" + y1);
-                Debug.WriteLine("screenCoords.x2 :" + x2);
-                Debug.WriteLine("screenCoords.y2 :" + y2);
-            }
-            #endregion
+        //private bool DecideInOrOut(Grid element, bool writeToOut = false, double bufferPxs = 0)
+        //{
+        //    writeToOut = true;
+        //    var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
+        //    var wp_x = pointerPosition.X - Window.Current.Bounds.X;
+        //    var wp_y = pointerPosition.Y - Window.Current.Bounds.Y;
+        //    var ttv = element.TransformToVisual(Window.Current.Content);
+        //    Point screenCoords = ttv.TransformPoint(new Point(0, 0));
+        //    var x1 = screenCoords.X - bufferPxs;
+        //    var y1 = screenCoords.Y - bufferPxs;
+        //    var x2 = x1 + element.ActualWidth + bufferPxs;
+        //    var y2 = y1 + element.ActualHeight + bufferPxs;
+        //    #region WriteToDebug
+        //    if (writeToOut)
+        //    {
+        //        Debug.WriteLine("Pointer.x :" + pointerPosition.X);
+        //        Debug.WriteLine("Pointer.y :" + pointerPosition.Y);
+        //        Debug.WriteLine("Pointer.x on window :" + wp_x);
+        //        Debug.WriteLine("Pointer.y on window :" + wp_y);
+        //        Debug.WriteLine("screenCoords.x1 :" + x1);
+        //        Debug.WriteLine("screenCoords.y1 :" + y1);
+        //        Debug.WriteLine("screenCoords.x2 :" + x2);
+        //        Debug.WriteLine("screenCoords.y2 :" + y2);
+        //    }
+        //    #endregion
 
-            if ((wp_x >= x1 && wp_x <= x2) && (wp_y >= y1 && wp_y <= y2))
-            {
-                //Debug.WriteLine("Boooooom");
-                return true;
-            }
-            return false;
-        }
+        //    if ((wp_x >= x1 && wp_x <= x2) && (wp_y >= y1 && wp_y <= y2))
+        //    {
+        //        //Debug.WriteLine("Boooooom");
+        //        return true;
+        //    }
+        //    return false;
+        //}
 
         private void SwichVisibility()
         {

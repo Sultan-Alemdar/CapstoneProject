@@ -20,7 +20,7 @@ namespace WebRTCAdapter.MVVM
     public abstract class DispatcherBindableBase : BindableBase
     {
         // The UI dispatcher
-        private readonly CoreDispatcher _uiDispatcher;
+        public readonly CoreDispatcher _uiDispatcher;
 
         /// <summary>
         /// Creates a DispatcherBindableBase instance.

@@ -3,13 +3,58 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:h="using:DesktopApp.Helpers"
+      xmlns:utilities="using:WebRTCAdapter.Utilities"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       Background="{ThemeResource RegionBrush}"
       DataContext="{x:Bind Path=ViewModel}"
       xmlns:xaml="using:Windows.UI.Xaml"
       mc:Ignorable="d">
     <Page.Resources>
+        <utilities:BoolToVisConverter x:Key="BoolToVisConverterNegated"
+                                      Negated="true" />
+        <utilities:BoolToVisConverter x:Key="BoolToVisConverter"
+                                      Negated="false" />
+        <utilities:NullToVisibleConverter x:Key="NullToVisibleConverter" />
+        <utilities:ToggleImageConverter x:Key="ToggleImageConverter" />
+        <utilities:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
 
+        <Style TargetType="TextBlock"
+               x:Name="TextBlockHeader">
+            <Setter Property="FontWeight"
+                    Value="{ThemeResource ComboBoxHeaderThemeFontWeight}" />
+            <Setter Property="Margin"
+                    Value="{ThemeResource ComboBoxHeaderThemeMargin}" />
+            <Setter Property="FontFamily"
+                    Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="FontSize"
+                    Value="{ThemeResource ControlContentThemeFontSize}" />
+        </Style>
+        <Style TargetType="Image"
+               x:Name="CallActionImage">
+            <Setter Property="Height"
+                    Value="25" />
+            <Setter Property="Width"
+                    Value="25" />
+        </Style>
+        <Style TargetType="Button"
+               x:Name="CallActionButton">
+            <Setter Property="Padding"
+                    Value="5" />
+        </Style>
+        <Style TargetType="Button"
+               x:Name="GrayButton">
+            <Setter Property="Background"
+                    Value="Gray" />
+            <Setter Property="Foreground"
+                    Value="Black" />
+        </Style>
+        <Style TargetType="ToggleButton"
+               x:Name="CallActionToggleButton">
+            <Setter Property="Padding"
+                    Value="5" />
+            <Setter Property="Background"
+                    Value="Gray" />
+        </Style>
     </Page.Resources>
 
 
@@ -19,88 +64,270 @@
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Style="{StaticResource SettingsGrid}">
+        <Grid Grid.Column="0"
+              Style="{StaticResource SettingsGrid}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <StackPanel Style="{StaticResource SettignStackPanel}" >
-                <TextBlock Text="Connection"  Style="{StaticResource SettingsHeader1}" />
-                <TextBlock Text="IP" Style="{StaticResource SettingsHeader2}"  />
-                <TextBox Style="{StaticResource SettingTexbox}"
-                         SelectedText="127.0.0.1" />
+            <StackPanel Style="{StaticResource SettignStackPanel}">
+                <TextBlock Text="Connection"
+                           Style="{StaticResource SettingsHeader1}" />
+                <TextBlock Text="IP"
+                           Style="{StaticResource SettingsHeader2}" />
+                <utilities:ErrorControl x:Name="ServerIpTextBox"
+                                        DataContext="{Binding AdapterViewModel.Ip}">
+                    <utilities:ErrorControl.InnerContent>
+                        <TextBox Style="{StaticResource SettingTexbox}"
+                                 Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                    </utilities:ErrorControl.InnerContent>
+                </utilities:ErrorControl>
+
                 <TextBlock Text="Port"
                            Style="{StaticResource SettingsHeader2}" />
-                <TextBox Style="{StaticResource SettingTexbox}"
-                         SelectedText="8888" />
+
+                <utilities:ErrorControl x:Name="ServerPortTextBox"
+                                        DataContext="{Binding AdapterViewModel.Port}">
+                    <utilities:ErrorControl.InnerContent>
+                        <TextBox Style="{StaticResource SettingTexbox}"
+                                 Text="{Binding Value, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                 SelectedText="8888" />
+                    </utilities:ErrorControl.InnerContent>
+                </utilities:ErrorControl>
+
                 <Button Style="{StaticResource SettingButton}"
-                        VerticalAlignment="Center" Content="Re-Connect"/>
-                
-                <TextBlock Text="ICE Servers" Style="{StaticResource SettingsHeader2}" />
-                <ListView Style="{StaticResource SettingsListView}" >
-                    
+                        VerticalAlignment="Center"
+                        Content="Re-Connect" />
+
+                <TextBlock Text="ICE Servers"
+                           Style="{StaticResource SettingsHeader2}" />
+                <ListView Style="{StaticResource SettingsListView}"
+                          ItemsSource="{Binding AdapterViewModel.IceServers,Mode=TwoWay}"
+                          SelectedItem="{Binding AdapterViewModel.SelectedIceServer, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <RelativePanel RelativePanel.AlignLeftWithPanel="True"
+                                           RelativePanel.AlignRightWithPanel="True">
+                                <TextBlock Name="IceServerItem_HostAndPort"
+                                           Text="{Binding HostAndPort}"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           RelativePanel.AlignTopWithPanel="True" />
+                                <TextBlock Name="IceServerItem_TypeHeader"
+                                           Text="Type"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           FontWeight="Bold"
+                                           Margin="5,0,10,0"
+                                           RelativePanel.Below="IceServerItem_HostAndPort" />
+                                <TextBlock Name="IceServerItem_Type"
+                                           Text="{Binding TypeStr}"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           RelativePanel.RightOf="IceServerItem_TypeHeader"
+                                           RelativePanel.Below="IceServerItem_HostAndPort" />
+                                <TextBlock Name="IceServerItem_UserHeader"
+                                           Text="User"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           FontWeight="Bold"
+                                           Margin="5,0,10,0"
+                                           Visibility="{Binding Username, Converter={StaticResource NullToVisibleConverter}}"
+                                           RelativePanel.Below="IceServerItem_TypeHeader" />
+                                <TextBlock Name="IceServerItem_User"
+                                           Text="{Binding Username}"
+                                           Visibility="{Binding Username, Converter={StaticResource NullToVisibleConverter}}"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           RelativePanel.RightOf="IceServerItem_UserHeader"
+                                           RelativePanel.Below="IceServerItem_TypeHeader" />
+                            </RelativePanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
-                
+
             </StackPanel>
-            <StackPanel Background="Transparent" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Orientation="Horizontal">
-                <Button Style="{StaticResource SettingsIconButton}">
+            <StackPanel Background="Transparent"
+                        Grid.Row="1"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Button Name="AddButton"
+                        Style="{StaticResource SettingsIconButton}">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Width="auto"
+                                        Orientation="Vertical"
+                                        VerticalAlignment="Stretch"
+                                        HorizontalAlignment="Stretch">
+                                <TextBlock Style="{StaticResource SettingsHeader3}"
+                                           Text="Server" />
+                                <utilities:ErrorControl x:Name="HostTextBox"
+                                                        DataContext="{Binding AdapterViewModel.NewIceServer.Host}"
+                                                        Margin="5">
+                                    <utilities:ErrorControl.InnerContent>
+
+                                        <TextBox  Style="{StaticResource SettingsFlayoutTextBox}"
+                                                  Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </utilities:ErrorControl.InnerContent>
+
+                                </utilities:ErrorControl>
+                                <TextBlock Style="{StaticResource SettingsHeader3}"
+                                           Text="Type" />
+                                <ComboBox  Style="{StaticResource SettingsFlayoutComboBox}"
+                                           ItemsSource="{Binding AdapterViewModel.NewIceServer.Types}"
+                                           SelectedItem="{Binding AdapterViewModel.NewIceServer.Type, Mode=TwoWay}" />
+                                <TextBlock  Style="{StaticResource SettingsHeader3}"
+                                            Text="Port" />
+                                
+                                <utilities:ErrorControl DataContext="{Binding AdapterViewModel.NewIceServer.Port}">
+                                    <utilities:ErrorControl.InnerContent>
+                                        <TextBox  Style="{StaticResource SettingsFlayoutTextBox}"
+                                                  Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </utilities:ErrorControl.InnerContent>
+                                </utilities:ErrorControl>
+                                
+                                <TextBlock  Style="{StaticResource SettingsHeader3}"
+                                            Text="Name" />
+                                <TextBox  Style="{StaticResource SettingsFlayoutTextBox}"
+                                          Text="{Binding AdapterViewModel.NewIceServer.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock  Style="{StaticResource SettingsHeader3}"
+                                            Text="Credential" />
+                                <TextBox  Style="{StaticResource SettingsFlayoutTextBox}"
+                                          Text="{Binding AdapterViewModel.NewIceServer.Credential, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <Button Name="ConfirmAddButton"
+                                        Style="{StaticResource SettingsIconButton}"
+                                        Click="ConfirmAddButton_Click"
+                                        Command="{Binding AdapterViewModel.AddIceServerCommand}">
+                                    <SymbolIcon Symbol="Save" />
+                                </Button>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
                     <SymbolIcon Symbol="Add" />
                 </Button>
 
-                <Button  Style="{StaticResource SettingsIconButton}">
-                    <SymbolIcon Symbol="Delete"/>
+                <Button  Style="{StaticResource SettingsIconButton}"
+                         Command="{Binding AdapterViewModel.RemoveSelectedIceServerCommand}">
+                    <SymbolIcon Symbol="Delete" />
                 </Button>
             </StackPanel>
-            
+
         </Grid>
-        <Grid
-            Grid.Column="1"
-            Style="{StaticResource SettingsGrid}">
+        <Grid Grid.Column="1"
+              Style="{StaticResource SettingsGrid}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+
             <StackPanel Style="{StaticResource SettignStackPanel}">
                 <TextBlock Text="Audio and Video"
                            Style="{StaticResource SettingsHeader1}" />
+
                 <TextBlock Text="Cameras"
                            Style="{StaticResource SettingsHeader2}" />
-                <ComboBox Style="{StaticResource SettingComboBox}">
-                    
+                <ComboBox Name="CameraCombo"
+                          Style="{StaticResource SettingComboBox}"
+                          ItemsSource="{Binding AdapterViewModel.Cameras}"
+                          SelectedItem="{Binding AdapterViewModel.SelectedCamera, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}"
+                                           Style="{StaticResource CaptionTextBlockStyle}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
+
                 <TextBlock Text="Microphones"
                            Style="{StaticResource SettingsHeader2}" />
-                <ComboBox Style="{StaticResource SettingComboBox}">
-
+                <ComboBox Name="MicrophonesCombo"
+                          Style="{StaticResource SettingComboBox}"
+                          ItemsSource="{Binding AdapterViewModel.Microphones}"
+                          SelectedItem="{Binding AdapterViewModel.SelectedMicrophone, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}"
+                                           Style="{StaticResource CaptionTextBlockStyle}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
+
                 <TextBlock Text="Speakers"
                            Style="{StaticResource SettingsHeader2}" />
-                <ComboBox Style="{StaticResource SettingComboBox}">
-
+                <ComboBox Name="SpeakersCombo"
+                          Style="{StaticResource SettingComboBox}"
+                          ItemsSource="{Binding AdapterViewModel.AudioPlayoutDevices}"
+                          SelectedItem="{Binding AdapterViewModel.SelectedAudioPlayoutDevice, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}"
+                                           Style="{StaticResource CaptionTextBlockStyle}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
+
                 <TextBlock Text="Audio Codec"
                            Style="{StaticResource SettingsHeader2}" />
-                <ComboBox Style="{StaticResource SettingsMiniComboBox}">
-
+                <ComboBox Name="AudioCodecCombo"
+                          ItemsSource="{Binding AdapterViewModel.AudioCodecs}"
+                          SelectedItem="{Binding AdapterViewModel.SelectedAudioCodec, Mode=TwoWay}"
+                          Style="{StaticResource SettingsMiniComboBox}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}" />
+                                <TextBlock Text="|" />
+                                <TextBlock Text="{Binding ClockRate}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
+
                 <TextBlock Text="Video Codec"
                            Style="{StaticResource SettingsHeader2}" />
-                <ComboBox Style="{StaticResource SettingsMiniComboBox}">
-
+                <ComboBox Name="VideoCodecCombo"
+                          ItemsSource="{Binding AdapterViewModel.VideoCodecs}"
+                          SelectedItem="{Binding AdapterViewModel.SelectedVideoCodec, Mode=TwoWay}"
+                          Style="{StaticResource SettingsMiniComboBox}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
                 </ComboBox>
+
                 <TextBlock Text="Capture Resolution"
                            Style="{StaticResource SettingsHeader2}" />
-                <ComboBox Style="{StaticResource SettingsMiniComboBox}">
+                <ComboBox Name="VideoResolutionCombo"
+                          Style="{StaticResource SettingsMiniComboBox}"
+                          ItemsSource="{Binding AdapterViewModel.AllCapRes, Mode=OneWay}"
+                          SelectedItem="{Binding AdapterViewModel.SelectedCapResItem, Mode=TwoWay}" />
 
-                </ComboBox>
+
                 <TextBlock Text="Capture Frame Rate"
                            Style="{StaticResource SettingsHeader2}" />
-                <ComboBox Style="{StaticResource SettingsMiniComboBox}">
+                
+                <ComboBox Name="VideoFrameRateCombo"
+                          Style="{StaticResource SettingsMiniComboBox}"
+                          DisplayMemberPath="FrameRateDescription"
+                          ItemsSource="{Binding AdapterViewModel.AllCapFps, Mode=OneWay}"
+                          SelectedItem="{Binding AdapterViewModel.SelectedCapFpsItem, Mode=TwoWay}" />
 
-                </ComboBox>
+
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="2" Style="{StaticResource SettingsGrid}">
+        <Grid Grid.Column="2"
+              Style="{StaticResource SettingsGrid}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -109,33 +336,50 @@
                            Style="{StaticResource SettingsHeader1}" />
                 <TextBlock Text="Tracing"
                            Style="{StaticResource SettingsHeader2}" />
-                <ToggleSwitch Margin="10,0,0,0" />
-                <RichTextBlock Margin="10" FontSize="15">
+                <ToggleSwitch Name="TracingToggleSwitch"
+                              Margin="10,0,0,0"
+                              IsOn="{Binding AdapterViewModel.TracingEnabled, Mode=TwoWay}" />
+                <RichTextBlock Margin="10"
+                               FontSize="15">
                     <Paragraph>
                         Note: Traces are saved to the file in local application data store folder.
                     </Paragraph>
-                </RichTextBlock>  
-               
-                <TextBlock Text="Trace File Name"
-                           Style="{StaticResource SettingsHeader2}" />
-                <TextBox Style="{StaticResource SettingTexbox}" Text="webrtc-trace.txt">
+                </RichTextBlock>
 
-                </TextBox>
+                <TextBox Name="TraceFileNameTextBox"
+                         Style="{StaticResource SettingTexbox}"
+                         Text="{Binding AdapterViewModel.TraceFileName, Mode=TwoWay}"
+                         PlaceholderText="File name" />
+
+
                 <TextBlock Text="Trace Server IP"
                            Style="{StaticResource SettingsHeader2}" />
-                <TextBox Style="{StaticResource SettingTexbox}" Text="127.0.0.1">
+
+                <TextBox Name="TraceServerIpTextBox"
+                         Style="{StaticResource SettingTexbox}"
+                         PlaceholderText="IPv4"
+                         IsEnabled="false"
+                         Text="{Binding AdapterViewModel.TraceServerIp, Mode=TwoWay}">
 
                 </TextBox>
-                <TextBox Style="{StaticResource SettingTexbox}"
-                         Text="55000">
 
-                </TextBox>
+                <TextBlock Text="Trace Server Port"
+                           Style="{StaticResource SettingsHeader2}" />
+
+                <TextBox Name="TraceServerPortTextBox"
+                         Style="{StaticResource SettingTexbox}"
+                         Text="{Binding AdapterViewModel.TraceServerPort, Mode=TwoWay}"
+                         IsEnabled="false"
+                         PlaceholderText="Port" />
+
                 <TextBlock Text="Logging"
                            Style="{StaticResource SettingsHeader2}" />
-                <ToggleSwitch Margin="10,0,0,0" />
+                <ToggleSwitch Name="LoggingToggleSwitch"
+                              Margin="10,0,0,0"
+                              IsOn="{Binding AdapterViewModel.LoggingEnabled, Mode=TwoWay}" />
             </StackPanel>
         </Grid>
-        
+
     </Grid>
 
 </Page>

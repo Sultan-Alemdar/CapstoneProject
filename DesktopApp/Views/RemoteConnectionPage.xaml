@@ -415,20 +415,35 @@
                 </Grid.RowDefinitions>
 
 
-                <Grid>
+                <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
+                    
+                    <Grid Name="MediaPlayersLayer">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <MediaElement Name="PeerVideo"
+                                      RealTimePlayback="True"
+                                      Grid.Column="0"
+                                      RelativePanel.AlignLeftWithPanel="True"
+                                      RelativePanel.AlignRightWithPanel="True"
+                                      RelativePanel.AlignTopWithPanel="True"
+                                      RelativePanel.AlignBottomWithPanel="True"
+                                      MediaFailed="PeerVideo_MediaFailed" />
+                        <MediaElement Name="SelfVideo"
+                                      RealTimePlayback="True"
+                                      Grid.Column="1"
+                                      RelativePanel.AlignLeftWithPanel="True"
+                                      RelativePanel.AlignRightWithPanel="True"
+                                      RelativePanel.AlignTopWithPanel="True"
+                                      RelativePanel.AlignBottomWithPanel="True"
+                                      MediaFailed="SelfVideo_MediaFailed" />
+                    </Grid>
 
-                    <MediaElement Name="PeerVideo"
-                                  RealTimePlayback="True"
-                                  Grid.Row="0"
-                                  RelativePanel.AlignLeftWithPanel="True"
-                                  RelativePanel.AlignRightWithPanel="True"
-                                  RelativePanel.AlignTopWithPanel="True"
-                                  RelativePanel.AlignBottomWithPanel="True"
-                                  MediaFailed="PeerVideo_MediaFailed" />
                     <Grid x:Name="AppBarGrid"
                           Grid.Row="0"
                           Background="Transparent"

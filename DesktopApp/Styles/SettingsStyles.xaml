@@ -78,6 +78,8 @@
                 Value="15" />
         <Setter Property="VerticalAlignment"
                 Value="Bottom" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
         <Setter Property="FontStyle"
                 Value="Normal" />
         <Setter Property="Margin"
@@ -161,5 +163,49 @@
         <Setter Property="Background"
                 Value="Transparent" />
 
+    </Style>
+    <Style TargetType="ComboBox"
+           x:Key="SettingsFlayoutComboBox">
+        <Setter Property="FontSize"
+                Value="15" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="FontStyle"
+                Value="Normal" />
+        <Setter Property="Margin"
+                Value="8,4,4,8" />
+        <Setter Property="Width"
+                Value="200" />
+    </Style>
+    <Style TargetType="TextBox"
+           x:Key="SettingsFlayoutTextBox">
+        <Setter Property="FontSize"
+                Value="15" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="Width"
+                Value="200" />
+        <Setter Property="FontStyle"
+                Value="Normal" />
+        <Setter Property="Margin"
+                Value="8,4,4,8" />
+        <Setter Property="CornerRadius"
+                Value="{StaticResource ControlCornerRadius}" />
+        <Setter Property="BorderThickness"
+                Value="{StaticResource TextControlBorderThemeThickness}" />
+      
+    </Style>
+    <Style TargetType="TextBlock"
+           x:Key="SettingsHeader3">
+        <Setter Property="FontSize"
+                Value="15" />
+        <Setter Property="Width"
+                Value="200" />
+        <Setter Property="HorizontalAlignment"
+                Value="Left" />
+        <Setter Property="FontStyle"
+                Value="Normal" />
+        <Setter Property="Margin"
+                Value="8,4,4,8" />
     </Style>
 </ResourceDictionary>

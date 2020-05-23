@@ -150,6 +150,8 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="ViewModels\InteractionsPanelViewModel.cs" />
     <Compile Include="ViewModels\OperationsViewModel.cs" />
+    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel.cs" />
+    <Compile Include="ViewModels\PartialClases\SettingsViewModel.cs" />
     <Compile Include="ViewModels\RemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
@@ -159,6 +161,7 @@
     <Compile Include="Views\OperationsPage.xaml.cs">
       <DependentUpon>OperationsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PartialClases\RemoteConnectionPage.xaml.cs" />
     <Compile Include="Views\RemoteConnectionPage.xaml.cs">
       <DependentUpon>RemoteConnectionPage.xaml</DependentUpon>
     </Compile>
@@ -181,7 +184,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Styles\SettingsHeaders.xaml">
+    <Page Include="Styles\SettingsStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -298,9 +301,17 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClientCore\PeerConnectionClient.Operators.csproj">
+      <Project>{217faa3a-8fc1-4663-ba00-2f842b3ff4e1}</Project>
+      <Name>PeerConnectionClient.Operators</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DesktopApp.Core\DesktopApp.Core.csproj">
       <Project>{D89085D5-F0B9-45E6-85AD-3FF33F8F6C45}</Project>
       <Name>DesktopApp.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebRTCAdapter\WebRTCAdapter.csproj">
+      <Project>{3d37aeb4-2b7a-45b3-bc3b-77afe3d970c3}</Project>
+      <Name>WebRTCAdapter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

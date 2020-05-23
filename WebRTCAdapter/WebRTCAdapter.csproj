@@ -120,7 +120,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Adapters\Adapter.cs" />
+    <Compile Include="Adapters\AdapterViewModel.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Model\IceServer.cs" />
     <Compile Include="Model\Peer.cs" />
@@ -134,6 +134,9 @@
     <Compile Include="Utilities\NullToVisibleConverter.cs" />
     <Compile Include="Utilities\SdpUtils.cs" />
     <Compile Include="Utilities\ToggleImageConverter.cs" />
+    <Compile Include="Utilities\UI\ErrorControl.xaml.cs">
+      <DependentUpon>ErrorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utilities\ValidableBase.cs" />
     <Compile Include="Utilities\ValidableIntegerString.cs" />
     <Compile Include="Utilities\ValidableNonEmptyString.cs" />
@@ -159,6 +162,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Page Include="Utilities\UI\ErrorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

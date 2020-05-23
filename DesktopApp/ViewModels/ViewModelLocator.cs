@@ -2,7 +2,7 @@
 
 using DesktopApp.Services;
 using DesktopApp.Views;
-
+using WebRTCAdapter.Adapters;
 using GalaSoft.MvvmLight.Ioc;
 
 namespace DesktopApp.ViewModels
@@ -21,6 +21,7 @@ namespace DesktopApp.ViewModels
             Register<RemoteConnectionViewModel, RemoteConnectionPage>();
             Register<SettingsViewModel, SettingsPage>();
             Register<InteractionsPanelViewModel, InteractionsPanelPage>();
+
         }
 
         public SettingsViewModel SettingsViewModel => SimpleIoc.Default.GetInstance<SettingsViewModel>();

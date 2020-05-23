@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Media;
 
 namespace DesktopApp.ViewModels
 {
-    public class RemoteConnectionViewModel : ViewModelBase
+    public sealed partial class RemoteConnectionViewModel : ViewModelBase
     {
         private StackPanel _pastInteractionStackPanel;
         public StackPanel PastInteractionStackPanel { get => _pastInteractionStackPanel; set => Set<StackPanel>("PastInteractionStackPanel", ref this._pastInteractionStackPanel, value); }
@@ -69,10 +69,6 @@ namespace DesktopApp.ViewModels
             // Add the RichTextBlock to the visual tree (assumes stackPanel is decalred in XAML).
             return richTextBlock;
         }
-        public void PeerVideo_MediaFailed(object sender, Windows.UI.Xaml.ExceptionRoutedEventArgs e)
-        {
-            ///TODO WTS: RemoteConnectionPage için PeerVideo_MediaFailed implement et.
-            throw new NotImplementedException();
-        }
+        
     }
 }

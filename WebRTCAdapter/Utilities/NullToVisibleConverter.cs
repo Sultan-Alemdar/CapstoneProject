@@ -19,7 +19,7 @@ namespace WebRTCAdapter.Utilities
     /// Class to convert a null to a Visibility type.
     /// Implements the IValueConverter.
     /// </summary>
-    class NullToVisibleConverter : IValueConverter
+    public class NullToVisibleConverter : IValueConverter
     {
         public bool Negated { get; set; }
 

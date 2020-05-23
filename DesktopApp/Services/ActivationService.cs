@@ -9,6 +9,7 @@ using DesktopApp.ViewModels;
 
 using Windows.ApplicationModel.Activation;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -36,6 +37,7 @@ namespace DesktopApp.Services
             _app = app;
             _shell = shell;
             _defaultNavItem = defaultNavItem;
+            
         }
 
         public async Task ActivateAsync(object activationArgs)

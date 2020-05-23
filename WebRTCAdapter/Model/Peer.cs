@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WebRTCAdapter.Model
 {
-    class Peer
+    public class Peer
     {
         public int Id { get; set; }
         public string Name { get; set; }

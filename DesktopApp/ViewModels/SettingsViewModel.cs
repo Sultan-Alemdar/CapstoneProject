@@ -14,7 +14,7 @@ using Windows.UI.Xaml;
 namespace DesktopApp.ViewModels
 {
     // TODO WTS: Add other settings as necessary. For help see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/pages/settings.md
-    public class SettingsViewModel : ViewModelBase
+    public sealed partial class SettingsViewModel : ViewModelBase
     {
         private ViewModelLocator _viewModelLocator = ViewModelLocator.Current;
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
@@ -59,7 +59,7 @@ namespace DesktopApp.ViewModels
 
         public SettingsViewModel()
         {
-           
+
             OnBackCommand = new RelayCommand(OnGoBackMethod, CanGoBack);
             OnForwardCommand = new RelayCommand(OnGoForwardMethod, CanGoForward);
         }

@@ -355,8 +355,16 @@ namespace PeerConnectionClientOperators.Signalling
                     // Apparently, with webrtc package version < 1.1.175, the internal stream source was destroyed
                     // corectly, only by setting SelfVideo.Source to null.
 #if !UNITY && !ORTCLIB
-                    
-                    _selfVideoTrack.Element = null; // Org.WebRtc.MediaElementMaker.Bind(obj)
+
+                    try
+                    {
+                        _selfVideoTrack.Element = null; // Org.WebRtc.MediaElementMaker.Bind(obj)
+                    }
+                    catch (Exception e)
+                    {
+
+                        Debug.WriteLine("[Info] Conductor : Loopback video trick : " + e.Message);
+                    }
 #endif
                     GC.Collect(); // Ensure all references are truly dropped.
                 }
@@ -1149,7 +1157,7 @@ namespace PeerConnectionClientOperators.Signalling
             parameters.Id = _selectedVideoDevice.Id;
             if (_selectedVideoDevice.Id.Equals("custom-capture") || _selectedVideoDevice.Id.Equals("screen-share"))
                 parameters.Factory = _factory;
-          
+
             var videoCapturer = VideoCapturer.Create(parameters);
 
             VideoOptions options = new VideoOptions();

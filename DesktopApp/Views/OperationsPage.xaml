@@ -5,123 +5,142 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:vm="using:DesktopApp.ViewModels"
       xmlns:hl="using:DesktopApp.Helpers"
+      xmlns:utilities="using:WebRTCAdapter.Utilities"
       Background="{ThemeResource RegionBrush}"
       DataContext="{x:Bind Path=ViewModel}"
       mc:Ignorable="d vm">
-    <Grid x:Name="ContentArea">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="52" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Page.Resources>
+        <utilities:BoolToVisConverter x:Key="BoolToVisConverterNegated"
+                                      Negated="true" />
+        <utilities:BoolToVisConverter x:Key="BoolToVisConverter"
+                                      Negated="false" />
+        <utilities:NullToVisibleConverter x:Key="NullToVisibleConverter" />
+        <utilities:ToggleImageConverter x:Key="ToggleImageConverter" />
+        <utilities:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+    </Page.Resources>
+    <Grid Width="600"
+          Name="Page"
+          Height="600"
+          VerticalAlignment="Center"
+          HorizontalAlignment="Center"
+          Background="Transparent">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <RelativePanel VerticalAlignment="Stretch"
+                       HorizontalAlignment="Stretch"
+                       Background="Transparent"
+                       Name="RelativePanel">
 
-        <StackPanel Name="Top"
-                    Grid.Row="0"
-                    Width="600"
-                    Orientation="Horizontal">
-            <Button  Name="BackButton"
-                     Command="{Binding BackCommand, Mode=OneTime}"
-                     Width="50"
-                     Height="50">
-                <SymbolIcon Symbol="Back" />
-            </Button>
-            <Button  Name="ForwardButton"
-                     Command="{Binding ForwardCommand, Mode=OneTime}"
-                     Width="50"
-                     Height="50">
-                <SymbolIcon Symbol="Forward" />
-            </Button>
-            <Button Margin="449,0,0,0"
-                    Command="{Binding OpenSettingsPageCommand, Mode=OneTime}"
-                    Name="SettingsButton"
-                    Width="50"
-                    Height="50">
-                <SymbolIcon Symbol="Setting" />
-            </Button>
-        </StackPanel>
+            <Grid Name="VerticalSperator"
+                  RelativePanel.AlignHorizontalCenterWithPanel="True"
+                  RelativePanel.AlignVerticalCenterWithPanel="True"
+                  Style="{StaticResource VerticalOperationSperator}" />
+            <Grid Name="HorizontalSperator"
+                  RelativePanel.Below="VerticalSperator"
+                  RelativePanel.AlignHorizontalCenterWith="VerticalSperator"
+                  Style="{StaticResource HorizontalOperationSperator}" />
 
 
-        <Grid Name="Center"
-              Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <StackPanel  Name="Left"
-                         Grid.Column="0"
-                         Orientation="Vertical"
-                         HorizontalAlignment="Center"
-                         VerticalAlignment="Center">
-
-                <StackPanel Name="IDPanel"
-                            Grid.Column="0"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center">
-                    <TextBlock FontWeight="Bold"
-                               Height="30"
-                               Width="Auto">ID :</TextBlock>
-                    <TextBlock Height="30"
-                               Width="Auto"
-                               Text="{Binding ID, Mode=OneWay}"
-                               Margin="10" />
+            <StackPanel Name="InformationPanel"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWith="VerticalSperator"
+                        Style="{StaticResource OperationStackPanelLeft}">
+                <StackPanel Style="{StaticResource StackPanelHorizontal}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0">
+                    <TextBox Name="MyId"
+                             Header="Your ID"
+                             IsReadOnly="True"
+                             Style="{StaticResource OperationTextBox}"
+                             HorizontalAlignment="Stretch"
+                             Text="{Binding MyId}"
+                             Width="129" />
+                    <Button Name="CoppyButton"
+                            Style="{StaticResource OperationImageButton}"
+                            Margin="10,3,0,0"
+                            Width="auto"
+                            Height="auto"
+                            Command="{Binding Coppy}">
+                        <Image Stretch="Fill"
+                               Height="20"
+                               Source="../Assets/OperationIcons/portable-document-format.svg" />
+                    </Button>
                 </StackPanel>
 
-                <StackPanel Name="PasswordPanel"
-                            Grid.Column="0"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center">
-                    <TextBlock Height="30"
-                               Width="Auto">Password :</TextBlock>
-                    <TextBlock Height="30"
-                               Width="Auto"
-                               Text="{Binding Password, Mode=OneWay}"
-                               Margin="10" />
-                </StackPanel>
+                <RichTextBlock>
+                    <Paragraph>Status :
+                        <Run Text="Connected"
+                             Foreground="Green">
+
+                        </Run>
+                    </Paragraph>
+                </RichTextBlock>
 
             </StackPanel>
-            <StackPanel Name="Right"
-                        Grid.Column="1"
-                        Orientation="Vertical"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <StackPanel Name="ConnectionID"
-                            Grid.Column="0"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center">
-                    <TextBlock Height="30"
-                               Width="Auto">Remote ID :</TextBlock>
-                    <TextBox Height="30"
-                             Width="Auto"
-                             Text="{Binding RemoteID, Mode=TwoWay}"
-                             Margin="10" />
-                </StackPanel>
 
-                <StackPanel Name="ConnectionPassword"
-                            Grid.Column="0"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center">
-                    <TextBlock Height="30"
-                               Width="Auto">Remote Password :</TextBlock>
-                    <TextBox Height="30"
-                             Width="Auto"
-                             Text="{Binding RemotePassword, Mode=TwoWay}"
-                             Margin="10" />
-                </StackPanel>
+            <StackPanel Name="ConnectionPanel"
+                        RelativePanel.AlignRightWithPanel="True"
+                        RelativePanel.AlignTopWith="VerticalSperator"
+                        Style="{StaticResource OperationStackPanelRight}">
+                <TextBox Name="PeerId"
+                         Header="Peer ID"
+                         Text="{Binding PeerId}"
+                         Style="{StaticResource OperationTextBox}" />
                 <Button Name="ConnectButton"
-                        Width="50"
-                        Height="50"
-                        Click="Button_Click">
-                    <SymbolIcon Symbol="Accept" />
+                        Style="{StaticResource OperationImageButton}"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"
+                        Command="{Binding AdapterViewModel.ConnectToPeerCommand}">
+                    <Image Stretch="Fill"
+                           Height="40"
+                           Width="40"
+                           Source="../Assets/OperationIcons/start-button.svg" />
                 </Button>
 
+
             </StackPanel>
+            <StackPanel Name="SettingPanel"
+                        Style="{StaticResource StackPanelHorizontal}"
+                        RelativePanel.Below="HorizontalSperator"
+                        RelativePanel.AlignHorizontalCenterWith="HorizontalSperator">
+                <Button Name="SettingButton"
+                        Style="{StaticResource OperationImageButton}"
+                        Margin="0,0,40,0"
+                        Command="{Binding OpenSettingsPageCommand}">
+                    <Image Stretch="Fill"
+                           Height="40"
+                           Width="40"
+                           Source="../Assets/OperationIcons/settings.svg" />
+                </Button>
+                <ToggleButton Name="CameraToggle"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              IsChecked="{Binding AdapterViewModel.CameraEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding AdapterViewModel.IsCameraEnabled, Mode=OneWay}">
+                    <Image Stretch="Fill"
+                           Height="40"
+                           Source="../Assets/OperationIcons/SettingIcons/film.svg" />
 
-        </Grid>
+                </ToggleButton>
+                <ToggleButton Name="MicrophoneToggle"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              IsChecked="{Binding AdapterViewModel.MicrophoneIsOn, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding AdapterViewModel.IsMicrophoneEnabled, Mode=OneWay}">
+                    <Image Stretch="Fill"
+                           Height="40"
+                           Source="../Assets/OperationIcons/SettingIcons/microphone.svg" />
 
+                </ToggleButton>
+                <ToggleButton Name="VideoLoopBackToggle"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              IsChecked="{Binding AdapterViewModel.VideoLoopbackEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}">
+                    <Image Stretch="Fill"
+                           Height="40"
+                           Source="../Assets/OperationIcons/SettingIcons/my-space.svg" />
 
+                </ToggleButton>
+
+            </StackPanel>
+        </RelativePanel >
     </Grid>
 </Page>

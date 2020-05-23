@@ -180,6 +180,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\OperationPageStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Styles\Page.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -278,6 +282,17 @@
     <Content Include="Assets\File_Type_Icons_Svg\xml.svg" />
     <Content Include="Assets\File_Type_Icons_Svg\zip-1.svg" />
     <Content Include="Assets\File_Type_Icons_Svg\zip.svg" />
+    <Content Include="Assets\OperationIcons\portable-document-format.svg" />
+    <Content Include="Assets\OperationIcons\SettingIcons\film.svg">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Assets\OperationIcons\SettingIcons\microphone.svg" />
+    <Content Include="Assets\OperationIcons\SettingIcons\my-space.svg" />
+    <Content Include="Assets\OperationIcons\settings.svg" />
+    <Content Include="Assets\OperationIcons\SettingIcons\speaker.svg" />
+    <Content Include="Assets\OperationIcons\start-button.svg">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Assets\Settings\add.svg" />
     <Content Include="Assets\Settings\delete.svg" />
     <Content Include="Assets\Settings\delete2.svg" />

@@ -1,0 +1,132 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DesktopApp.Styles">
+    <Style TargetType="TextBox"
+           x:Key="OperationTextBox">
+        <Setter Property="Margin"
+                Value="0,0,0,20" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="CornerRadius"
+                Value="{StaticResource ControlCornerRadius}" />
+        <Setter Property="BorderThickness"
+                Value="{StaticResource TextControlBorderThemeThickness}" />
+    </Style>
+    <Style TargetType="Button"
+        x:Key="OperationImageButton">
+        <Setter Property="Width"
+                Value="auto" />
+        <Setter Property="Height"
+                Value="auto" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="3" />
+        <Setter Property="CornerRadius"
+                Value="{StaticResource ControlCornerRadius}" />
+    </Style>
+    <Style TargetType="ToggleButton"
+           x:Key="OperationImageToggleButton">
+        <Setter Property="Width"
+                Value="auto" />
+        <Setter Property="Height"
+                Value="auto" />
+        <Setter Property="Margin"
+                Value="20,0,0,0" />
+        <Setter Property="BorderBrush"
+                Value="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="3" />
+       
+        <Setter Property="CornerRadius"
+                Value="{StaticResource ControlCornerRadius}" />
+    </Style>
+    <Style TargetType="StackPanel"
+           x:Key="OperationStackPanelLeft">
+        <Setter Property="Orientation"
+                Value="Vertical" />
+        <Setter Property="VerticalAlignment"
+                Value="Stretch" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch"/>
+        <Setter Property="Width"
+                Value="180" />
+        <Setter Property="Height"
+                Value="auto" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Margin"
+                Value="20,45,0,0" />
+
+    </Style>
+    <Style TargetType="StackPanel"
+           x:Key="OperationStackPanelRight">
+        <Setter Property="Orientation"
+                Value="Vertical" />
+        <Setter Property="VerticalAlignment"
+                Value="Stretch" />
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch" />
+        <Setter Property="Width"
+                Value="180" />
+        <Setter Property="Height"
+                Value="auto" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Margin"
+                Value="0,45,20,0" />
+
+    </Style>
+    <Style TargetType="StackPanel"
+           x:Key="StackPanelHorizontal">
+        <Setter Property="Orientation"
+                Value="Horizontal" />
+        <Setter Property="VerticalAlignment"
+                Value="Bottom" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="Width"
+                Value="auto" />
+        <Setter Property="Height"
+                Value="auto" />
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Margin"
+                Value="0,20,0,0" />
+
+    </Style>
+
+    <Style TargetType="Grid"
+           x:Key="VerticalOperationSperator">
+        <Setter Property="BorderBrush"
+                Value="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="6" />
+        <Setter Property="Background"
+                Value="{StaticResource AppBarBackgroundThemeBrush}" />
+        <Setter Property="CornerRadius"
+                Value="4" />
+        <Setter Property="Width"
+                Value="16" />
+        <Setter Property="Height"
+                Value="300" />
+    </Style>
+    <Style TargetType="Grid"
+           x:Key="HorizontalOperationSperator">
+        <Setter Property="BorderBrush"
+                Value="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="6" />
+        <Setter Property="Background"
+                Value="{StaticResource AppBarBackgroundThemeBrush}" />
+        <Setter Property="CornerRadius"
+                Value="4" />
+        <Setter Property="Width"
+                Value="400" />
+        <Setter Property="Height"
+                Value="16" />
+        <Setter Property="Margin"
+                Value="0,20,0,0" />
+    </Style>
+</ResourceDictionary>

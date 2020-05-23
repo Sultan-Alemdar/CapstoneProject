@@ -18,8 +18,8 @@ namespace DesktopApp.ViewModels
     {
         private ViewModelLocator _viewModelLocator = ViewModelLocator.Current;
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
-        public ICommand OnBackCommand { get; set; }
-        public ICommand OnForwardCommand { get; set; }
+        public ICommand BackCommand { get; set; }
+        public ICommand ForwardCommand { get; set; }
 
         public ElementTheme ElementTheme
         {
@@ -60,8 +60,8 @@ namespace DesktopApp.ViewModels
         public SettingsViewModel()
         {
 
-            OnBackCommand = new RelayCommand(OnGoBackMethod, CanGoBack);
-            OnForwardCommand = new RelayCommand(OnGoForwardMethod, CanGoForward);
+            BackCommand = new RelayCommand(GoBack, CanGoBack);
+            ForwardCommand = new RelayCommand(GoForward, CanGoForward);
         }
 
         public async Task InitializeAsync()
@@ -87,11 +87,11 @@ namespace DesktopApp.ViewModels
         {
             return _viewModelLocator.NavigationService.CanGoForward;
         }
-        public void OnGoBackMethod()
+        public void GoBack()
         {
             _viewModelLocator.NavigationService.GoBack();
         }
-        public void OnGoForwardMethod()
+        public void GoForward()
         {
             _viewModelLocator.NavigationService.GoForward();
         }

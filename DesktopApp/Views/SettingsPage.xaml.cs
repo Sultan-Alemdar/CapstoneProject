@@ -24,6 +24,7 @@ namespace DesktopApp.Views
         {
             await ViewModel.InitializeAsync();
         }
+
         /// <summary>
         /// Invoked when the Add button is clicked 
         /// </summary>
@@ -32,6 +33,11 @@ namespace DesktopApp.Views
         private void ConfirmAddButton_Click(object sender, RoutedEventArgs e)
         {
             this.AddButton.Flyout.Hide();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

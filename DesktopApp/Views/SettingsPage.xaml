@@ -2,7 +2,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:h="using:DesktopApp.Helpers"
+      xmlns:helper="using:DesktopApp.Helpers"
       xmlns:utilities="using:WebRTCAdapter.Utilities"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       Background="{ThemeResource RegionBrush}"
@@ -10,6 +10,8 @@
       xmlns:xaml="using:Windows.UI.Xaml"
       mc:Ignorable="d">
     <Page.Resources>
+        <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter"
+                                       EnumType="ElementTheme" />
         <utilities:BoolToVisConverter x:Key="BoolToVisConverterNegated"
                                       Negated="true" />
         <utilities:BoolToVisConverter x:Key="BoolToVisConverter"
@@ -56,15 +58,75 @@
                     Value="Gray" />
         </Style>
     </Page.Resources>
+    <ScrollViewer 
+                  ZoomMode="Disabled"
+                  IsVerticalScrollChainingEnabled="True"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  HorizontalScrollMode="Enabled"
+                  HorizontalScrollBarVisibility="Visible"
+                  VerticalScrollMode="Auto"
+                  VerticalScrollBarVisibility="Auto">
+    <Grid Background="Transparent"
+          HorizontalAlignment="Center">
 
-
-    <Grid Background="Transparent">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0"
+              Style="{StaticResource SettingsGrid}"
+              Width="400">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+
+            </Grid>
+            <StackPanel Style="{StaticResource SettignStackPanel}">
+                <TextBlock Text="Theme Selection"
+                           Style="{StaticResource SettingsHeader1}"></TextBlock>
+                <RadioButton  x:Uid="Settings_Theme_Light"
+                              Command="{Binding SwitchThemeCommand}"
+                              IsChecked="{Binding ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light, Mode=OneWay}"
+                              GroupName="AppTheme"
+                              Margin="10,0,10,0">
+                    <RadioButton.CommandParameter>
+                        <xaml:ElementTheme>Light</xaml:ElementTheme>
+                    </RadioButton.CommandParameter>
+                </RadioButton>
+                <RadioButton x:Uid="Settings_Theme_Dark"
+                             Command="{Binding SwitchThemeCommand}"
+                             IsChecked="{Binding ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark, Mode=OneWay}"
+                             FontSize="15"
+                             GroupName="AppTheme"
+                             Margin="10,0,10,0">
+                    <RadioButton.CommandParameter>
+                        <xaml:ElementTheme>Dark</xaml:ElementTheme>
+                    </RadioButton.CommandParameter>
+                </RadioButton>
+                <RadioButton x:Uid="Settings_Theme_Default"
+                             Command="{Binding SwitchThemeCommand}"
+                             IsChecked="{Binding ElementTheme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default, Mode=OneWay}"
+                             FontSize="15"
+                             GroupName="AppTheme"
+                             Margin="10,0,10,0">
+                    <RadioButton.CommandParameter>
+                        <xaml:ElementTheme>Default</xaml:ElementTheme>
+                    </RadioButton.CommandParameter>
+                </RadioButton>
+            </StackPanel>
+            <Button Style="{StaticResource SettingsIconButton}" HorizontalAlignment="Left"
+                    Command="{Binding BackCommand}">
+                <SymbolIcon Symbol="Back" />
+            </Button>
+
+
+        </Grid>
+        <Grid Name="ConnectionSection"
+              Grid.Column="1"
               Style="{StaticResource SettingsGrid}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -99,7 +161,8 @@
 
                 <Button Style="{StaticResource SettingButton}"
                         VerticalAlignment="Center"
-                        Content="Re-Connect" />
+                        Content="Re-Connect"
+                        Command="{Binding ReConnectCommand}" />
 
                 <TextBlock Text="ICE Servers"
                            Style="{StaticResource SettingsHeader2}" />
@@ -176,14 +239,14 @@
                                            SelectedItem="{Binding AdapterViewModel.NewIceServer.Type, Mode=TwoWay}" />
                                 <TextBlock  Style="{StaticResource SettingsHeader3}"
                                             Text="Port" />
-                                
+
                                 <utilities:ErrorControl DataContext="{Binding AdapterViewModel.NewIceServer.Port}">
                                     <utilities:ErrorControl.InnerContent>
                                         <TextBox  Style="{StaticResource SettingsFlayoutTextBox}"
                                                   Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </utilities:ErrorControl.InnerContent>
                                 </utilities:ErrorControl>
-                                
+
                                 <TextBlock  Style="{StaticResource SettingsHeader3}"
                                             Text="Name" />
                                 <TextBox  Style="{StaticResource SettingsFlayoutTextBox}"
@@ -211,7 +274,8 @@
             </StackPanel>
 
         </Grid>
-        <Grid Grid.Column="1"
+        <Grid Name="AudioAndVideoSection"
+              Grid.Column="2"
               Style="{StaticResource SettingsGrid}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -231,8 +295,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"
                                         VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Name}"
-                                           Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -248,8 +311,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"
                                         VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Name}"
-                                           Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -265,8 +327,7 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal"
                                         VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Name}"
-                                           Style="{StaticResource CaptionTextBlockStyle}" />
+                                <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -316,7 +377,7 @@
 
                 <TextBlock Text="Capture Frame Rate"
                            Style="{StaticResource SettingsHeader2}" />
-                
+
                 <ComboBox Name="VideoFrameRateCombo"
                           Style="{StaticResource SettingsMiniComboBox}"
                           DisplayMemberPath="FrameRateDescription"
@@ -326,7 +387,8 @@
 
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="2"
+        <Grid Name="DebugSection"
+              Grid.Column="3"
               Style="{StaticResource SettingsGrid}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -381,5 +443,8 @@
         </Grid>
 
     </Grid>
+       
+    </ScrollViewer>
+
 
 </Page>

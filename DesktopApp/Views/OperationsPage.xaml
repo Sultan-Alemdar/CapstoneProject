@@ -110,7 +110,7 @@
                 <TextBox Name="PeerId"
                          Header="Peer ID"
                          Text="{Binding PeerId, Converter={StaticResource IntToInformationConverter},Mode=TwoWay}"
-                         PlaceholderText="Type Here Peer Id."
+                         PlaceholderText="Please... Type Here Peer Id No."
                          Style="{StaticResource OperationTextBox}" />
                 <Button Name="ConnectButton"
                         Style="{StaticResource OperationImageButton}"
@@ -140,8 +140,76 @@
                         RelativePanel.AlignHorizontalCenterWith="HorizontalSperator">
                 <Button Name="SettingButton"
                         Style="{StaticResource OperationImageButton}"
-                        Margin="0,0,40,0"
-                        Command="{Binding OpenSettingsPageCommand}">
+                        Margin="0,0,40,0">
+                    <Button.Flyout>
+                        <Flyout>
+                            <Grid>
+                                <StackPanel Style="{StaticResource SettignStackPanel}">
+                                    <TextBlock Text="Audio and Video"
+                                               Style="{StaticResource SettingsHeader1}" />
+
+                                    <TextBlock Text="Cameras"
+                                               Style="{StaticResource SettingsHeader2}" />
+                                    <ComboBox Name="CameraCombo"
+                                              Style="{StaticResource SettingComboBox}"
+                                              ItemsSource="{Binding AdapterViewModel.Cameras}"
+                                              SelectedItem="{Binding AdapterViewModel.SelectedCamera, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                    <TextBlock Text="Microphones"
+                                               Style="{StaticResource SettingsHeader2}" />
+                                    <ComboBox Name="MicrophonesCombo"
+                                              Style="{StaticResource SettingComboBox}"
+                                              ItemsSource="{Binding AdapterViewModel.Microphones}"
+                                              SelectedItem="{Binding AdapterViewModel.SelectedMicrophone, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                    <TextBlock Text="Speakers"
+                                               Style="{StaticResource SettingsHeader2}" />
+                                    <ComboBox Name="SpeakersCombo"
+                                              Style="{StaticResource SettingComboBox}"
+                                              ItemsSource="{Binding AdapterViewModel.AudioPlayoutDevices}"
+                                              SelectedItem="{Binding AdapterViewModel.SelectedAudioPlayoutDevice, Mode=TwoWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Name}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <TextBlock Text="Capture Resolution"
+                                               Style="{StaticResource SettingsHeader2}" />
+                                    <ComboBox Name="VideoResolutionCombo"
+                                              Style="{StaticResource SettingsMiniComboBox}"
+                                              ItemsSource="{Binding AdapterViewModel.AllCapRes, Mode=OneWay}"
+                                              SelectedItem="{Binding AdapterViewModel.SelectedCapResItem, Mode=TwoWay}" />
+                                    <Button Content="Advanced Settings"
+                                            Style="{StaticResource SettingButton}"
+                                            Margin="0,10,0,0"
+                                            Width="auto"
+                                            Command="{Binding OpenSettingsPageCommand}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Flyout>
+                    </Button.Flyout>
                     <Image Stretch="Fill"
                            Height="40"
                            Width="40"
@@ -150,7 +218,8 @@
                 <ToggleButton Name="CameraToggle"
                               Style="{StaticResource OperationImageToggleButton}"
                               IsChecked="{Binding AdapterViewModel.CameraEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"
-                              IsEnabled="{Binding AdapterViewModel.IsCameraEnabled, Mode=OneWay}">
+                              IsEnabled="{Binding AdapterViewModel.IsCameraEnabled, Mode=OneWay}"
+                              Click="CameraToggle_Click">
 
                     <RelativePanel Height="40"
                                    Width="40">

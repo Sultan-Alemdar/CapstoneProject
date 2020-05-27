@@ -76,32 +76,46 @@ namespace DesktopApp.ViewModels
         }
         private async void ConnectToPeer()
         {
-            await Task.Run(async () =>
+            try
             {
-                var peers = (IList<WebRTCAdapter.Model.Peer>)AdapterViewModel.Instance.Peers;
-                var e = from p in peers where PeerId == p.Id select p;
-
-                if (e.Count() > 0)
-                {
-                    AdapterViewModel.SelectedPeer = e.First<WebRTCAdapter.Model.Peer>();
-
-                    if (AdapterViewModel.ConnectToPeerCommand.CanExecute(this))
+                await Task.Run(async () =>
                     {
-                        await RunOnUI(CoreDispatcherPriority.High, () =>
-                         {
-                             _viewModelLocator.NavigationService.Navigate(MyConstants.REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME);
-                             AdapterViewModel.ConnectToPeerCommand.Execute(this);
+                        var peers = (IList<WebRTCAdapter.Model.Peer>)AdapterViewModel.Instance.Peers;
+                        if (peers != null)
+                        {
+                            var e = from p in peers where PeerId == p.Id select p;
+
+                            if (e.Count() > 0)
+                            {
+                                AdapterViewModel.SelectedPeer = e.First<WebRTCAdapter.Model.Peer>();
+
+                                if (AdapterViewModel.ConnectToPeerCommand.CanExecute(this))
+                                {
+                                    await RunOnUI(CoreDispatcherPriority.High, () =>
+                                     {
+                                         _viewModelLocator.NavigationService.Navigate(MyConstants.REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME);
+                                         AdapterViewModel.ConnectToPeerCommand.Execute(this);
 
 
-                         });
-                    }
+                                     });
+                                    return;
+                                }
+                            }
+                        }
+                        await RunOnUI(CoreDispatcherPriority.High, async () =>
+                        {
+                            var messageDialog = new MessageDialog("Peer could not being found. Please check Peer Id and try again.", "Maching Error!");
+                            await messageDialog.ShowAsync();
 
-                    return;
-                }
+                        });
 
-                var messageDialog = new MessageDialog("Peer could not find.");
-                await messageDialog.ShowAsync();
-            });
+                    });
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
 
         }
         private bool ConnectToPeerCanExecute()

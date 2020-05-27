@@ -52,5 +52,10 @@ namespace DesktopApp.Views
         {
             await _coreDispatcher.RunAsync(priority, new DispatchedHandler(action));
         }
+
+        private void CameraToggle_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+          
+        }
     }
 }

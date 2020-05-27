@@ -22,6 +22,7 @@ using Windows.Storage.Streams;
 
 namespace PeerConnectionClientOperators.Signalling
 {
+    public delegate void MyIdCastDelegate(int id);
     public delegate void SignedInDelegate();
     public delegate void DisconnectedDelegate();
     public delegate void PeerConnectedDelegate(int id, string name);
@@ -37,6 +38,7 @@ namespace PeerConnectionClientOperators.Signalling
     public class Signaller
     {
         // Connection events
+        public event MyIdCastDelegate OnMyIdCast;
         public event SignedInDelegate OnSignedIn;
         public event DisconnectedDelegate OnDisconnected;
         public event PeerConnectedDelegate OnPeerConnected;
@@ -55,6 +57,7 @@ namespace PeerConnectionClientOperators.Signalling
 
             // Annoying but register empty handlers
             // so we don't have to check for null everywhere
+            OnMyIdCast += (int id) => { };
             OnSignedIn += () => { };
             OnDisconnected += () => { };
             OnPeerConnected += (a, b) => { };
@@ -147,7 +150,7 @@ namespace PeerConnectionClientOperators.Signalling
             try
             {
                 int index = buffer.IndexOf(header);
-                if(index == -1)
+                if (index == -1)
                 {
                     if (optional)
                     {
@@ -174,7 +177,7 @@ namespace PeerConnectionClientOperators.Signalling
                 }
             }
         }
-       
+
         /// <summary>
         /// Gets the string value from the message header.
         /// </summary>
@@ -187,7 +190,7 @@ namespace PeerConnectionClientOperators.Signalling
             try
             {
                 int startIndex = buffer.IndexOf(header);
-                if(startIndex == -1)
+                if (startIndex == -1)
                 {
                     value = null;
                     return false;
@@ -424,6 +427,7 @@ namespace PeerConnectionClientOperators.Signalling
                             pos = eol + 1;
                         }
                         OnSignedIn();
+                        OnMyIdCast(_myId);
                     }
                 }
                 else if (_state == State.SIGNING_OUT)

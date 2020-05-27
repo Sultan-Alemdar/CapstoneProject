@@ -5,6 +5,7 @@ using DesktopApp.Services;
 
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 
 namespace DesktopApp
@@ -21,7 +22,7 @@ namespace DesktopApp
         public App()
         {
             InitializeComponent();
-
+         
             EnteredBackground += App_EnteredBackground;
             Resuming += App_Resuming;
 
@@ -32,11 +33,13 @@ namespace DesktopApp
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
+          //  var dapterViewModel = WebRTCAdapter.Adapters.AdapterViewModel.Instance;
             if (!args.PrelaunchActivated)
             {
                 await ActivationService.ActivateAsync(args);
 
             }
+
         }
 
         protected override async void OnActivated(IActivatedEventArgs args)

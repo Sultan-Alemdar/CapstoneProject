@@ -18,8 +18,8 @@ namespace DesktopApp.ViewModels
     {
         private ViewModelLocator _viewModelLocator = ViewModelLocator.Current;
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
-        public ICommand BackCommand { get; set; }
-        public ICommand ForwardCommand { get; set; }
+        public RelayCommand BackCommand { get; set; }
+        public RelayCommand ForwardCommand { get; set; }
 
         public ElementTheme ElementTheme
         {
@@ -27,6 +27,7 @@ namespace DesktopApp.ViewModels
 
             set { Set(ref _elementTheme, value); }
         }
+
 
         private string _versionDescription;
 

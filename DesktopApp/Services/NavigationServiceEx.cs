@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using DesktopApp.Helpers;
-
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -51,6 +51,7 @@ namespace DesktopApp.Services
         {
             if (CanGoBack)
             {
+                
                 Frame.GoBack();
                 return true;
             }
@@ -73,7 +74,7 @@ namespace DesktopApp.Services
 
             if (Frame.Content?.GetType() != page || (parameter != null && !parameter.Equals(_lastParamUsed)))
             {
-                var navigationResult = Frame.Navigate(page, parameter, infoOverride);
+                var navigationResult = Frame.Navigate(page, parameter, new SuppressNavigationTransitionInfo());
                 if (navigationResult)
                 {
                     _lastParamUsed = parameter;

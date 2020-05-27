@@ -66,7 +66,7 @@ namespace WebRTCAdapter.Adapters
                 {
                     lock (InstanceLock)
                     {
-                        _instance = new AdapterViewModel(Window.Current.Dispatcher);
+                        _instance = new AdapterViewModel(Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher);
                     }
                 }
                 return _instance;
@@ -1088,7 +1088,7 @@ namespace WebRTCAdapter.Adapters
             set { SetProperty(ref _hasServer, value); }
         }
 
-        private bool _isConnected;
+        private bool _isConnected=false;
 
         /// <summary>
         /// Indicator if the user is connected to the server.

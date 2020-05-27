@@ -118,9 +118,7 @@
     <Style TargetType="Grid"
            x:Key="SettingsGrid">
         <Setter Property="Background"
-                Value="Gray" />
-        <Setter Property="Background"
-                Value="Transparent" />
+                Value="transparent" />
         <Setter Property="HorizontalAlignment"
                 Value="Stretch" />
         <Setter Property="VerticalAlignment"
@@ -129,13 +127,12 @@
                 Value="300" />
         <Setter Property="Margin"
                 Value="10" />
-
         <Setter Property="CornerRadius"
                 Value="2" />
-        <Setter Property="BorderThickness"
-                Value="1" />
         <Setter Property="BorderBrush"
-                Value="{StaticResource ButtonBorderThemeBrush}" />
+                Value="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}" />
+        <Setter Property="BorderThickness"
+                Value="6" />
     </Style>
     <Style TargetType="ComboBox"
            x:Key="SettingsMiniComboBox">

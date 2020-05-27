@@ -138,6 +138,7 @@
     <Compile Include="BackgroundTasks\FramePoolTask.cs" />
     <Compile Include="BackgroundTasks\PeerConnectionTask.cs" />
     <Compile Include="Constants\MyConstants.cs" />
+    <Compile Include="Helpers\IntToInformationConverter.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Services\ActivationService.cs" />
@@ -290,6 +291,9 @@
     <Content Include="Assets\OperationIcons\SettingIcons\my-space.svg" />
     <Content Include="Assets\OperationIcons\settings.svg" />
     <Content Include="Assets\OperationIcons\SettingIcons\speaker.svg" />
+    <Content Include="Assets\OperationIcons\slash.svg">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Assets\OperationIcons\start-button.svg">
       <SubType>Designer</SubType>
     </Content>

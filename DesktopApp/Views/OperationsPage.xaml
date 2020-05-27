@@ -6,6 +6,7 @@
       xmlns:vm="using:DesktopApp.ViewModels"
       xmlns:hl="using:DesktopApp.Helpers"
       xmlns:utilities="using:WebRTCAdapter.Utilities"
+      xmlns:helpers="using:DesktopApp.Helpers"
       Background="{ThemeResource RegionBrush}"
       DataContext="{x:Bind Path=ViewModel}"
       mc:Ignorable="d vm">
@@ -17,6 +18,7 @@
         <utilities:NullToVisibleConverter x:Key="NullToVisibleConverter" />
         <utilities:ToggleImageConverter x:Key="ToggleImageConverter" />
         <utilities:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+        <helpers:IntToInformationConverter x:Key="IntToInformationConverter" />
     </Page.Resources>
     <Grid Width="600"
           Name="Page"
@@ -54,29 +56,51 @@
                              IsReadOnly="True"
                              Style="{StaticResource OperationTextBox}"
                              HorizontalAlignment="Stretch"
-                             Text="{Binding MyId}"
+                             Text="{Binding MyId, Converter={StaticResource IntToInformationConverter},Mode=OneWay}"
                              Width="129" />
                     <Button Name="CoppyButton"
                             Style="{StaticResource OperationImageButton}"
                             Margin="10,3,0,0"
                             Width="auto"
                             Height="auto"
-                            Command="{Binding Coppy}">
+                            Command="{Binding CopyToClipboardCommand}">
                         <Image Stretch="Fill"
                                Height="20"
                                Source="../Assets/OperationIcons/portable-document-format.svg" />
                     </Button>
                 </StackPanel>
 
-                <RichTextBlock>
+                <RichTextBlock Visibility="Collapsed">
                     <Paragraph>Status :
-                        <Run Text="Connected"
-                             Foreground="Green">
+                        <Run Text="{Binding Status}"
+                             Foreground="{Binding Foreground }">
 
                         </Run>
                     </Paragraph>
                 </RichTextBlock>
+                <ToggleButton Name="ConnecToServer"
+                              Visibility="Collapsed"
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Left"
+                              Margin="0,0,0,0"
+                              Background="green"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              Command="{Binding TryReConnectToServerCommand}">
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Stretch"
+                                Width="auto"
+                                Height="auto">
 
+                        <TextBlock Text="Reconnect"
+                                   VerticalAlignment="Center"></TextBlock>
+                        <Image Stretch="Fill"
+                               Height="40"
+                               Width="40"
+                               Source="../Assets/OperationIcons/start-button.svg" />
+                    </StackPanel>
+
+                </ToggleButton>
             </StackPanel>
 
             <StackPanel Name="ConnectionPanel"
@@ -85,17 +109,27 @@
                         Style="{StaticResource OperationStackPanelRight}">
                 <TextBox Name="PeerId"
                          Header="Peer ID"
-                         Text="{Binding PeerId}"
+                         Text="{Binding PeerId, Converter={StaticResource IntToInformationConverter},Mode=TwoWay}"
+                         PlaceholderText="Type Here Peer Id."
                          Style="{StaticResource OperationTextBox}" />
                 <Button Name="ConnectButton"
                         Style="{StaticResource OperationImageButton}"
                         VerticalAlignment="Bottom"
                         HorizontalAlignment="Right"
-                        Command="{Binding AdapterViewModel.ConnectToPeerCommand}">
-                    <Image Stretch="Fill"
-                           Height="40"
-                           Width="40"
-                           Source="../Assets/OperationIcons/start-button.svg" />
+                        IsEnabled="{Binding AdapterViewModel.IsCameraEnabled, Mode=OneWay}"
+                        Command="{Binding ConnecToPeerCommand}">
+                    <RelativePanel Height="40"
+                                   Width="40">
+
+                        <Image Name="StarImage"
+                               Stretch="Fill"
+                               Height="36"
+                               Width="36"
+                               Source="../Assets/OperationIcons/start-button.svg"
+                               RelativePanel.AlignHorizontalCenterWithPanel="True"
+                               RelativePanel.AlignVerticalCenterWithPanel="True" />
+
+                    </RelativePanel>
                 </Button>
 
 
@@ -117,27 +151,64 @@
                               Style="{StaticResource OperationImageToggleButton}"
                               IsChecked="{Binding AdapterViewModel.CameraEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"
                               IsEnabled="{Binding AdapterViewModel.IsCameraEnabled, Mode=OneWay}">
-                    <Image Stretch="Fill"
-                           Height="40"
-                           Source="../Assets/OperationIcons/SettingIcons/film.svg" />
+
+                    <RelativePanel Height="40"
+                                   Width="40">
+
+                        <Image Stretch="Fill"
+                               Height="36"
+                               Source="../Assets/OperationIcons/SettingIcons/film.svg" />
+                        <Image  Stretch="Fill"
+                                Visibility="{Binding AdapterViewModel.CameraEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=OneWay}"
+                                Height="40"
+                                Width="40"
+                                Source="../Assets/OperationIcons/slash.svg"
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignVerticalCenterWithPanel="True" />
+                    </RelativePanel>
 
                 </ToggleButton>
                 <ToggleButton Name="MicrophoneToggle"
                               Style="{StaticResource OperationImageToggleButton}"
                               IsChecked="{Binding AdapterViewModel.MicrophoneIsOn, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"
                               IsEnabled="{Binding AdapterViewModel.IsMicrophoneEnabled, Mode=OneWay}">
-                    <Image Stretch="Fill"
-                           Height="40"
-                           Source="../Assets/OperationIcons/SettingIcons/microphone.svg" />
+                    <RelativePanel Height="40"
+                                   Width="40">
+
+                        <Image Stretch="Fill"
+                               Height="36"
+                               Source="../Assets/OperationIcons/SettingIcons/microphone.svg" />
+                        <Image  Stretch="Fill"
+                                Visibility="{Binding AdapterViewModel.MicrophoneIsOn, Converter={StaticResource InvertedBooleanConverter}, Mode=OneWay}"
+                                Height="40"
+                                Width="40"
+                                Source="../Assets/OperationIcons/slash.svg"
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignVerticalCenterWithPanel="True" />
+                    </RelativePanel>
+
 
                 </ToggleButton>
                 <ToggleButton Name="VideoLoopBackToggle"
                               Style="{StaticResource OperationImageToggleButton}"
                               IsChecked="{Binding AdapterViewModel.VideoLoopbackEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}">
-                    <Image Stretch="Fill"
-                           Height="40"
-                           Source="../Assets/OperationIcons/SettingIcons/my-space.svg" />
+                    <RelativePanel Height="40"
+                                   Width="40">
 
+                        <Image Stretch="Fill"
+                               Height="30"
+                               Margin="0,5,0,0"
+                               Source="../Assets/OperationIcons/SettingIcons/my-space.svg"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" />
+                        <Image  Stretch="Fill"
+                                Visibility="{Binding AdapterViewModel.VideoLoopbackEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=OneWay}"
+                                Height="40"
+                                Width="40"
+                                Source="../Assets/OperationIcons/slash.svg"
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignVerticalCenterWithPanel="True" />
+                    </RelativePanel>
                 </ToggleButton>
 
             </StackPanel>

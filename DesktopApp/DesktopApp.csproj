@@ -150,6 +150,7 @@
     <Compile Include="Services\SuspensionState.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="ViewModels\InteractionsPanelViewModel.cs" />
+    <Compile Include="ViewModels\Old\OldRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\OperationsViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\SettingsViewModel.cs" />
@@ -159,6 +160,10 @@
     <Compile Include="Views\InteractionsPanelPage.xaml.cs">
       <DependentUpon>InteractionsPanelPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Old\OldRemoteConnectionPage.xaml.cs">
+      <DependentUpon>OldRemoteConnectionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Old\RemoteConnectionPage.xaml.cs" />
     <Compile Include="Views\OperationsPage.xaml.cs">
       <DependentUpon>OperationsPage.xaml</DependentUpon>
     </Compile>
@@ -168,6 +173,12 @@
     </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SubViews\FileBox.xaml.cs">
+      <DependentUpon>FileBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SubViews\MessaBox.xaml.cs">
+      <DependentUpon>MessaBox.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +224,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Old\OldRemoteConnectionPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\OperationsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -224,6 +239,14 @@
     <Page Include="Views\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SubViews\FileBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SubViews\MessaBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace DesktopApp.Core.Models
+namespace DesktopApp.Old.Core.Models
 {
     public sealed class File : ModelBase
     {

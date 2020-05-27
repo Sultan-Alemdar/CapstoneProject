@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using DesktopApp.Core.Models;
 using DesktopApp.Old.Core.Models;
 using GalaSoft.MvvmLight;
 using Windows.UI.Xaml;
@@ -10,22 +9,27 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 
-namespace DesktopApp.ViewModels
+namespace DesktopApp.Old.ViewModels
 {
     public sealed partial class RemoteConnectionViewModel : ViewModelBase
     {
-        public string AssetsDirectory { get; set };
         private StackPanel _pastInteractionStackPanel;
         public StackPanel PastInteractionStackPanel { get => _pastInteractionStackPanel; set => Set<StackPanel>("PastInteractionStackPanel", ref this._pastInteractionStackPanel, value); }
 
-        private ObservableCollection<FileModel> _fileItems = new ObservableCollection<FileModel>();
-        public ObservableCollection<FileModel> FileItems { get => _fileItems; set => Set<ObservableCollection<FileModel>>("FileItems", ref this._fileItems, value); }
+        private ObservableCollection<File> fileItems = new ObservableCollection<File>();
+        public ObservableCollection<File> FileItems { get => fileItems; set => Set<ObservableCollection<File>>("FileItems", ref this.fileItems, value); }
 
         public RemoteConnectionViewModel()
         {
             PastInteractionStackPanel = new StackPanel();
             PastInteractionStackPanel.Children.Add(CreateMessage());
-            AssetsDirectory = "../Assets/File_Operations_Svg/";
+            // RichTextBlock asd = PastInteractionStackPanel.Children.Move(0)
+
+            File file = new File("Deneme", "", "", 5, "", "");
+            File file2 = new File("ikiinci", "", "", 5, "", "");
+            FileItems.Add(file);
+            FileItems.Add(file2);
+            
         }
 
         public RichTextBlock CreateMessage(Dictionary<string, string> parameters = null, bool received = false)
@@ -65,6 +69,6 @@ namespace DesktopApp.ViewModels
             // Add the RichTextBlock to the visual tree (assumes stackPanel is decalred in XAML).
             return richTextBlock;
         }
-
+        
     }
 }

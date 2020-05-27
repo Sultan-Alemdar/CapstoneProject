@@ -12,7 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 
-namespace DesktopApp.Views
+namespace DesktopApp.Old.Views
 {
     public sealed partial class RemoteConnectionPage : Page, INotifyPropertyChanged
     {

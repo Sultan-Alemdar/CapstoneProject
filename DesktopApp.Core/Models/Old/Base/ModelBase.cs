@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace DesktopApp.Core.Models
+namespace DesktopApp.Old.Core.Models
 {
     public abstract class ModelBase : INotifyPropertyChanged
     {

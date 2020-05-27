@@ -29,22 +29,13 @@ namespace DesktopApp.ViewModels
         public AdapterViewModel AdapterViewModel { get => _adapterViewModel; set => Set<AdapterViewModel>("AdapterViewModel", ref this._adapterViewModel, value); }
 
         public RelayCommand OpenSettingsPageCommand { get; set; }
-
         public RelayCommand CopyToClipboardCommand { get; set; }
         public RelayCommand TryReConnectToServerCommand { get; set; }
         public RelayCommand _connecToPeerCommand;
         public RelayCommand ConnecToPeerCommand { get => _connecToPeerCommand; set => Set<RelayCommand>("ConnecToPeerCommand", ref this._connecToPeerCommand, value); }
 
-
-        //private string isVideoEnable=true;
-
-
-
         private bool _isConnected = false;
         public bool IsConnected { get => _isConnected; set => Set<bool>("IsConnected", ref this._isConnected, value); }
-
-        private string _status = "Unready";
-        public string Status { get => _status; set => Set<string>("Status", ref this._status, value); }
 
         private int _myId = -1;
         public int MyId { get => _myId; set => Set<int>("MyId", ref this._myId, value); }
@@ -111,10 +102,9 @@ namespace DesktopApp.ViewModels
 
                     });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Debug.WriteLine("[Error] OperationsViewModel : Starting of Connect to Peer operation was ended with error : " + e.Message);
             }
 
         }
@@ -142,15 +132,7 @@ namespace DesktopApp.ViewModels
         {
             return MyId != -1;
         }
-        private async void Signaller_OnSignedIn()
-        {
-            await RunOnUI(CoreDispatcherPriority.High, () =>
-              {
 
-                  Foreground = "Green";
-                  Status = "Ready";
-              });
-        }
 
         private async void ConnectTo()
         {
@@ -165,7 +147,6 @@ namespace DesktopApp.ViewModels
 
                    });
 
-                 Conductor.Instance.Signaller.OnSignedIn += Signaller_OnSignedIn;
                  Conductor.Instance.Signaller.OnMyIdCast += Signaller_OnMyIdCast;
 
              });
@@ -200,6 +181,7 @@ namespace DesktopApp.ViewModels
             await _coreDispatcher.RunAsync(CoreDispatcherPriority.High, () =>
               {
                   MyId = id;
+                  CopyToClipboardCommand.RaiseCanExecuteChanged();
                   ConnecToPeerCommand.RaiseCanExecuteChanged();
               });
         }

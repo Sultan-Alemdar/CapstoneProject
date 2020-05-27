@@ -358,7 +358,8 @@ namespace PeerConnectionClientOperators.Signalling
 
                     try
                     {
-                        _selfVideoTrack.Element = null; // Org.WebRtc.MediaElementMaker.Bind(obj)
+                        if (_selfVideoTrack != null)
+                            _selfVideoTrack.Element = null; // Org.WebRtc.MediaElementMaker.Bind(obj)
                     }
                     catch (Exception e)
                     {

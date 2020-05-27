@@ -22,7 +22,7 @@ namespace DesktopApp
         public App()
         {
             InitializeComponent();
-         
+
             EnteredBackground += App_EnteredBackground;
             Resuming += App_Resuming;
 
@@ -33,7 +33,7 @@ namespace DesktopApp
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
-          //  var dapterViewModel = WebRTCAdapter.Adapters.AdapterViewModel.Instance;
+          
             if (!args.PrelaunchActivated)
             {
                 await ActivationService.ActivateAsync(args);
@@ -49,7 +49,7 @@ namespace DesktopApp
 
         private ActivationService CreateActivationService()
         {
-            return new ActivationService(this, typeof(ViewModels.OperationsViewModel));
+            return new ActivationService(this, typeof(ViewModels.RemoteConnectionViewModel));
         }
 
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)

@@ -14,12 +14,17 @@ namespace DesktopApp.ViewModels
 {
     public sealed partial class RemoteConnectionViewModel : ViewModelBase
     {
-        public string AssetsDirectory { get; set };
+        public System.Type TypeOfEnumExist => typeof(MessageModel.EnumIsExist);
+
+        public string AssetsDirectory { get; set; }
         private StackPanel _pastInteractionStackPanel;
         public StackPanel PastInteractionStackPanel { get => _pastInteractionStackPanel; set => Set<StackPanel>("PastInteractionStackPanel", ref this._pastInteractionStackPanel, value); }
 
         private ObservableCollection<FileModel> _fileItems = new ObservableCollection<FileModel>();
         public ObservableCollection<FileModel> FileItems { get => _fileItems; set => Set<ObservableCollection<FileModel>>("FileItems", ref this._fileItems, value); }
+
+        private ObservableCollection<MessageModel> _messageItems = new ObservableCollection<MessageModel>();
+        public ObservableCollection<MessageModel> MessageItems { get => _messageItems; set => Set<ObservableCollection<MessageModel>>("MessageItems", ref this._messageItems, value); }
 
         public RemoteConnectionViewModel()
         {

@@ -16,6 +16,10 @@
                     Value="{StaticResource ControlCornerRadius}" />
         </Style>
         <helpers:StringToImageConverter x:Key="StringToImageConverter" />
+        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter"
+                                        EnumType="{x:Bind Path=ViewModel.TypeOfEnumExist}" />
+
+
     </Page.Resources>
     <SplitView x:Name="SplitView"
                PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
@@ -36,118 +40,385 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <ListView Grid.Row="0"
-                              ItemsSource="{Binding FileItems}">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel VerticalAlignment="Bottom"
-                                                 ItemsUpdatingScrollMode="KeepLastItemInView" />
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:Name="FileTemplate"
-                                          x:DataType="models:FileModel">
-                                <Grid Name="FileGrid"
-                                      Background="#5E609E"
-                                      CornerRadius="{StaticResource ControlCornerRadius}"
-                                      BorderBrush="Gray"
-                                      BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
-                                      VerticalAlignment="top"
-                                      HorizontalAlignment="Stretch"
-                                      Margin="3">
+                    <Grid x:Name="FilePanel"
+                          Grid.Row="0"
+                          VerticalAlignment="Stretch"
+                          HorizontalAlignment="Stretch"
+                          Margin="7"
+                          Background="#BDBDBD"
+                          CornerRadius="{StaticResource ControlCornerRadius}"
+                          BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
+                          BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}">
 
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="90" />
-                                    </Grid.RowDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid x:Name="FilePanelTopBar"
+                              Background="#2D92BD"
+                              Height="37"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="20,0,0,0"
+                                       VerticalAlignment="Center"
+                                       FontSize="17"
+                                       FontWeight="Medium"
+                                       HorizontalAlignment="Left">Dosya Trafiği Kutusu</TextBlock>
+                            <Button VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Right"
+                                    CornerRadius="4">
+                                <Image Stretch="Uniform"
+                                       Source="../Assets/Arrows/minimize.svg" />
+                            </Button>
 
-                                    <Grid Name="FileInfoGrid"
-                                          Margin="9"
-                                          VerticalAlignment="Stretch"
+                        </Grid>
+                        <ListView Name="FileList"
+                                  Grid.Row="1"
+                                  ItemsSource="{Binding FileItems}">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel VerticalAlignment="Bottom"
+                                                     ItemsUpdatingScrollMode="KeepLastItemInView" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:Name="FileTemplate"
+                                              x:DataType="models:FileModel">
+                                    <Grid Name="FileGrid"
+                                          Background="#5E609E"
+                                          CornerRadius="{StaticResource ControlCornerRadius}"
+                                          BorderBrush="Gray"
+                                          BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
+                                          VerticalAlignment="top"
                                           HorizontalAlignment="Stretch"
-                                          Background="Transparent">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="240" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
-                                        <Image Name="FileTypeImage"
-                                               Grid.Column="0"
-                                               Stretch="Fill"
-                                               Height="60"
-                                               Source="{Binding FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Type_Icons_Svg/'}" />
+                                          Margin="3">
 
-                                        <Grid Grid.Column="1"
-                                              HorizontalAlignment="Stretch"
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="90" />
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Name="FileInfoGrid"
+                                              Margin="9"
                                               VerticalAlignment="Stretch"
+                                              HorizontalAlignment="Stretch"
+                                              Background="Transparent">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="240" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Image Name="FileTypeImage"
+                                                   Grid.Column="0"
+                                                   Stretch="Fill"
+                                                   Height="60"
+                                                   Source="{Binding FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Type_Icons_Svg/'}" />
+
+                                            <Grid Grid.Column="1"
+                                                  HorizontalAlignment="Stretch"
+                                                  VerticalAlignment="Stretch"
+                                                  Background="Transparent"
+                                                  Margin="5">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="2*" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Name="FileNameTextBlock"
+                                                           FontWeight="Black"
+                                                           Text="{Binding FileName}"
+                                                           Grid.Row="0" />
+
+                                                <StackPanel Grid.Row="2"
+                                                            Orientation="Horizontal"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalAlignment="Stretch"
+                                                            Background="Transparent">
+
+                                                    <Image  Name="EventImage"
+                                                            Height="20"
+                                                            Width="20"
+                                                            Grid.Row="2"
+                                                            Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+
+                                                    <TextBlock Name="SpeedTextBlock"
+                                                               Margin="3,0,0,0"
+                                                               Text="{Binding ActionSpeed}" />
+                                                    <TextBlock     Margin="3,0,0,0"
+                                                                   Text="/" />
+
+                                                    <TextBlock Name="PercentTextBlock"
+                                                               Margin="3,0,0,0"
+                                                               Text="{Binding Percent}" />
+
+                                                </StackPanel>
+                                            </Grid>
+
+
+                                            <Button Name="ActionButton"
+                                                    Height="auto"
+                                                    Grid.Column="2"
+                                                    Background="Transparent"
+                                                    VerticalAlignment="Stretch"
+                                                    HorizontalAlignment="Stretch">
+
+                                                <Image Name="ActionImage"
+                                                       Stretch="Fill"
+                                                       Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+
+                                            </Button>
+
+                                        </Grid>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+
+                    <Grid  x:Name="MessengerPanel"
+                           Grid.Row="1"
+                           Background="#212121"
+                           Margin="7"
+                           VerticalAlignment="Stretch"
+                           HorizontalAlignment="Stretch"
+                           CornerRadius="{StaticResource ControlCornerRadius}"
+                           BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
+                           BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition  Height="auto" />
+                            <RowDefinition  Height="*" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions >
+
+                        <Grid x:Name="MessengerPanelTopBar"
+                              Background="#2D92BD"
+                              Height="37"
+                              Grid.Row="0"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="20,0,0,0"
+                                       VerticalAlignment="Center"
+                                       FontSize="17"
+                                       FontWeight="Medium"
+                                       HorizontalAlignment="Left">İleti Kutusu</TextBlock>
+                            <Button VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Right"
+                                    CornerRadius="4">
+                                <Image Stretch="Uniform"
+                                       Source="../Assets/Arrows/minimize.svg" />
+                            </Button>
+
+                        </Grid>
+
+
+                        <ListView Name="MessengerList"
+                                  Grid.Row="1"
+                                  Background="Transparent"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  ItemsSource="{Binding MessageItems}">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel VerticalAlignment="Bottom"
+                                                     HorizontalAlignment="Stretch"
+                                                     ItemsUpdatingScrollMode="KeepLastItemInView" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate  x:DataType="models:MessageModel">
+                                    <ListViewItem HorizontalContentAlignment="Stretch"
+                                                  Width="auto">
+
+
+                                        <Grid Name="Message"
+                                              Margin="10"
                                               Background="Transparent"
-                                              Margin="5">
+                                              Width="auto">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="2*" />
-                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="auto" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Name="FileNameTextBlock"
-                                                       FontWeight="Black"
-                                                       Text="{Binding FileName}"
-                                                       Grid.Row="0" />
 
-                                            <StackPanel Grid.Row="2"
-                                                        Orientation="Horizontal"
-                                                        VerticalAlignment="Center"
-                                                        HorizontalAlignment="Stretch"
-                                                        Background="Transparent">
 
-                                                <Image  Name="EventImage"
-                                                        Height="20"
-                                                        Width="20"
-                                                        Grid.Row="2"
-                                                        Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+                                            <Grid Grid.Row="0"
+                                                  Name="SubmitedMessageBody"
+                                                  Margin="4"
+                                                  Background="Transparent"
+                                                  HorizontalAlignment="Right"
+                                                  Visibility="{Binding IsSent,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="20"
+                                                                   MinHeight="20"
+                                                                   MaxHeight="20" />
+                                                </Grid.RowDefinitions>
 
-                                                <TextBlock Name="SpeedTextBlock"
-                                                           Margin="3,0,0,0"
-                                                           Text="{Binding ActionSpeed}" />
-                                                <TextBlock     Margin="3,0,0,0"
-                                                               Text="/" />
+                                                <StackPanel Name="SubmitedMessageStack"
+                                                            Orientation="Vertical">
 
-                                                <TextBlock Name="PercentTextBlock"
-                                                           Margin="3,0,0,0"
-                                                           Text="{Binding Percent}" />
+                                                    <Button Name="SubmitedMessageBodyFile"
+                                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}">
+                                                        <RelativePanel Height="50"
+                                                                       Width="50">
+                                                            <Image Name="SubmitedMessageBodyFileImage"
+                                                                   Source="{Binding File.FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Type_Icons_Svg/'}" />
+                                                            <Image Name="SubmitedMessageBodyActionImage"
+                                                                   RelativePanel.RightOf="SubmitedMessageBodyFileImage"
+                                                                   Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
 
-                                            </StackPanel>
+                                                        </RelativePanel>
+
+                                                    </Button>
+
+                                                    <TextBlock Name="SubmittedMessageBodyText"
+                                                               TextWrapping="Wrap"
+                                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                               Text="{Binding Text}" />
+                                                </StackPanel>
+
+                                                <TextBlock Name="ReceivedClockText"
+                                                           Grid.Row="1"
+                                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                           VerticalAlignment="Bottom"
+                                                           HorizontalAlignment="Right"
+                                                           FlowDirection="RightToLeft"
+                                                           Text="{Binding Time}" />
+
+                                                <TextBlock Name="SubmittedClockText"
+                                                           Grid.Row="1"
+                                                           Visibility="{Binding IsSent,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                           VerticalAlignment="Bottom"
+                                                           HorizontalAlignment="Left"
+                                                           FlowDirection="LeftToRight"
+                                                           Text="{Binding Time}" />
+
+                                            </Grid>
+
+                                            <Grid Grid.Row="0"
+                                                  Name="ReceivedMessageBody"
+                                                  Margin="4"
+                                                  Background="Transparent"
+                                                  HorizontalAlignment="Left"
+                                                  Visibility="{Binding IsReceived,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto" />
+                                                    <RowDefinition Height="20"
+                                                                   MinHeight="20"
+                                                                   MaxHeight="20" />
+                                                </Grid.RowDefinitions>
+
+                                                <StackPanel Name="ReceivedMessageStack"
+                                                            Orientation="Vertical">
+
+                                                    <Button Name="ReceivedMessageBodyFile"
+                                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}">
+                                                        <RelativePanel Height="50"
+                                                                       Width="50">
+                                                            <Image Name="MessageBodyFileImage"
+                                                                   Source="{Binding File.FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Type_Icons_Svg/'}" />
+                                                            <Image Name="MessageBodyActionImage"
+                                                                   RelativePanel.RightOf="MessageBodyFileImage"
+                                                                   Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+
+                                                        </RelativePanel>
+
+                                                    </Button>
+
+                                                    <TextBlock Name="ReceivedMessageBodyText"
+                                                               TextWrapping="Wrap"
+                                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                               Text="{Binding Text}" />
+                                                </StackPanel>
+
+                                                <TextBlock Name="ReceivedClockText2"
+                                                           Grid.Row="1"
+                                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                           VerticalAlignment="Bottom"
+                                                           HorizontalAlignment="Right"
+                                                           FlowDirection="RightToLeft"
+                                                           Text="{Binding Time}" />
+
+                                                <TextBlock Name="SubmittedClockText2"
+                                                           Grid.Row="1"
+                                                           Visibility="{Binding IsSent,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                           VerticalAlignment="Bottom"
+                                                           HorizontalAlignment="Left"
+                                                           FlowDirection="LeftToRight"
+                                                           Text="{Binding Time}" />
+
+                                            </Grid>
                                         </Grid>
 
+                                    </ListViewItem>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
 
-                                        <Button Name="ActionButton"
-                                                Height="auto"
-                                                Grid.Column="2"
-                                                Background="Transparent"
-                                                VerticalAlignment="Stretch"
-                                                HorizontalAlignment="Stretch">
 
-                                            <Image Name="ActionImage"
-                                                   Stretch="Fill"
-                                                   Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+                        <Grid x:Name="MassengerPanelSubmit"
+                              Grid.Row="3"
+                              Background="#2D92BD"
+                              VerticalAlignment="Bottom"
+                              HorizontalAlignment="Stretch">
 
-                                        </Button>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid  Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="10*" />
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Button  Margin="2"
+                                         Width="auto"
+                                         Height="40"
+                                         MinHeight="40"
+                                         MaxHeight="40">
+                                    <SymbolIcon Symbol="Message" />
+                                </Button>
+                                <ScrollViewer Grid.Column="1"
+                                              Height="auto"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Stretch"
+                                              ZoomMode="Disabled"
+                                              IsVerticalScrollChainingEnabled="True"
+                                              ManipulationCompleted="ScrollViewer_ManipulationCompleted"
+                                              HorizontalScrollMode="Disabled"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollMode="Enabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                    <RichEditBox  FontSize="20"
+                                                  Margin="4"
+                                                  MinHeight="20"
+                                                  MaxHeight="400"
+                                                  MinWidth="300" />
+                                </ScrollViewer>
+                                <Button  Grid.Column="2"
+                                         Margin="2"
+                                         Width="auto"
+                                         Height="40"
+                                         MinHeight="40"
+                                         MaxHeight="40">
+                                    <SymbolIcon Symbol="Attach" />
+                                </Button>
+                                <Button  Grid.Column="3"
+                                         Margin="6"
+                                         Width="auto"
+                                         Height="40"
+                                         MinHeight="40"
+                                         MaxHeight="40">
+                                    <SymbolIcon Symbol="Send" />
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
 
-                                    </Grid>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                    <ListView Grid.Row="1">
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel VerticalAlignment="Bottom"
-                                                 ItemsUpdatingScrollMode="KeepLastItemInView" />
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-                        
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
                 </Grid>
 
             </ContentControl>
@@ -181,6 +452,13 @@
                                   HorizontalAlignment="Right"
                                   Width="150"
                                   Height="200" />
+                    <Button Content="Button"
+                            HorizontalAlignment="Left"
+                            Height="140"
+                            Margin="836,468,0,0"
+                            VerticalAlignment="Top"
+                            Width="280"
+                            Click="Button_Click_1" />
                 </Grid>
 
                 <Grid x:Name="AppBarGrid"

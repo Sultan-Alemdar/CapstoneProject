@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
 using System.Threading.Tasks;
+using DesktopApp.Core.Models;
 using DesktopApp.Old.Core.Models;
 using DesktopApp.ViewModels;
 using Windows.Foundation;
@@ -18,6 +20,8 @@ namespace DesktopApp.Views
     {
         private Visibility closeButonVisibility = Visibility.Collapsed;
         private Visibility openButtonVisibility = Visibility.Visible;
+
+
         private bool pinned = false;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -41,9 +45,9 @@ namespace DesktopApp.Views
 
         private void RemoteConnectionPage_Loaded(object sender, RoutedEventArgs e)
         {
-           
+
             AppBarClose.Begin();
-      
+
         }
 
         private void OnPropertyChanged(string propertyName)
@@ -57,8 +61,8 @@ namespace DesktopApp.Views
 
         }
 
-        
-        
+
+
         private void PinButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             pinned = true;
@@ -178,6 +182,28 @@ namespace DesktopApp.Views
         private void MessengerPanel_LayoutUpdated(object sender, object e)
         {
             Debug.WriteLine("Boooooom");
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+            MessageModel message = new MessageModel
+            {
+                IsSent = MessageModel.EnumIsExist.Yes,
+
+            };
+            FileModel file = message.File;
+            ViewModel.MessageItems.Add(message);
+            ViewModel.FileItems.Add(file);
+
+            MessageModel message2 = new MessageModel
+            {
+                IsSent = MessageModel.EnumIsExist.No
+            };
+            FileModel file2 = message.File;
+
+            ViewModel.MessageItems.Add(message2);
+            ViewModel.FileItems.Add(file2);
         }
 
         //private void Button_Click_1(object sender, RoutedEventArgs e)

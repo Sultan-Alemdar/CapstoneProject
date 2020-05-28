@@ -17,7 +17,7 @@ namespace DesktopApp.Core.Models
             Waiting = 0,
             Progressing = 1,
             Completed = 2,
-            Cancelled = 3,
+            Cancelled = 3, 
         }
         public enum EnumFileState
         {
@@ -30,8 +30,8 @@ namespace DesktopApp.Core.Models
         private string _fileType = "pdf";       //pdf ...
         private EnumFileState _fileState = EnumFileState.Offered;       //offered, accepted, declined
         private string _actionSpeed = "1020kbps";       //kbp
-        private string _percent = "%20";       //total/proggresedSİze
-        private string _progresedSize = "1GB";         //1024kb
+        private string _percent = "20";       //total/proggresedSİze
+        private string _progressedSize = "1GB";         //1024kb
         private string _totalSize = "10GB";      //1024kb
         private EnumStatus _status = EnumStatus.Waiting;     //cancelled, progressing, completed
         private EnumEvent _event = EnumEvent.Update;       //update,download
@@ -42,7 +42,7 @@ namespace DesktopApp.Core.Models
         public string ActionSpeed { get => _actionSpeed; set => SetProperty<string>(ref this._actionSpeed, value, "ActionSpeed"); }
         public string Percent { get => _percent; set => SetProperty<string>(ref this._percent, value, "Percent"); }
         public string TotalSize { get => _totalSize; set => SetProperty<string>(ref this._totalSize, value, "TotalSize"); }
-        public string ProgresedSize { get => _progresedSize; set => SetProperty<string>(ref this._progresedSize, value, "ProgresedSize"); }
+        public string ProgressedSize { get => _progressedSize; set => SetProperty<string>(ref this._progressedSize, value, "ProgresedSize"); }
         public EnumStatus Status { get => _status; set => SetProperty<EnumStatus>(ref this._status, value, "Status"); }
         public EnumEvent Event { get => _event; set => SetProperty<EnumEvent>(ref this._event, value, "Event"); }
     }

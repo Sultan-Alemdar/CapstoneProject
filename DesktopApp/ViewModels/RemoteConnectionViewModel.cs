@@ -15,6 +15,7 @@ namespace DesktopApp.ViewModels
     public sealed partial class RemoteConnectionViewModel : ViewModelBase
     {
         public System.Type TypeOfEnumExist => typeof(MessageModel.EnumIsExist);
+        public System.Type TypeOfEnumStatus => typeof(FileModel.EnumStatus);
 
         public string AssetsDirectory { get; set; }
         private StackPanel _pastInteractionStackPanel;

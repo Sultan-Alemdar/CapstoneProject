@@ -16,8 +16,10 @@
                     Value="{StaticResource ControlCornerRadius}" />
         </Style>
         <helpers:StringToImageConverter x:Key="StringToImageConverter" />
-        <helpers:EnumToBooleanConverter x:Key="EnumToBooleanConverter"
+        <helpers:EnumToBooleanConverter x:Key="EnumExistToBooleanConverter"
                                         EnumType="{x:Bind Path=ViewModel.TypeOfEnumExist}" />
+        <helpers:EnumToBooleanConverter x:Key="EnumStatusToBooleanConverter"
+                                        EnumType="{x:Bind Path=ViewModel.TypeOfEnumStatus}" />
 
 
     </Page.Resources>
@@ -92,16 +94,15 @@
                                           CornerRadius="{StaticResource ControlCornerRadius}"
                                           BorderBrush="Gray"
                                           BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
-                                          VerticalAlignment="top"
                                           HorizontalAlignment="Stretch"
-                                          Margin="3">
+                                          Margin="0,0,0,3">
 
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="90" />
                                         </Grid.RowDefinitions>
 
                                         <Grid Name="FileInfoGrid"
-                                              Margin="9"
+                                             
                                               VerticalAlignment="Stretch"
                                               HorizontalAlignment="Stretch"
                                               Background="Transparent">
@@ -120,9 +121,10 @@
                                                   HorizontalAlignment="Stretch"
                                                   VerticalAlignment="Stretch"
                                                   Background="Transparent"
-                                                  Margin="5">
+                                                  Margin="2">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="2*" />
+                                                    <RowDefinition Height="*" />
+                                                    <RowDefinition Height="*" />
                                                     <RowDefinition Height="*" />
                                                 </Grid.RowDefinitions>
                                                 <TextBlock Name="FileNameTextBlock"
@@ -130,7 +132,7 @@
                                                            Text="{Binding FileName}"
                                                            Grid.Row="0" />
 
-                                                <StackPanel Grid.Row="2"
+                                                <StackPanel Grid.Row="1"
                                                             Orientation="Horizontal"
                                                             VerticalAlignment="Center"
                                                             HorizontalAlignment="Stretch"
@@ -146,12 +148,28 @@
                                                                Margin="3,0,0,0"
                                                                Text="{Binding ActionSpeed}" />
                                                     <TextBlock     Margin="3,0,0,0"
-                                                                   Text="/" />
+                                                                   Text="-" />
 
+                                                    <TextBlock     Margin="3,0,0,0"
+                                                                   Text="{Binding ProgressedSize}" />
+                                                    <TextBlock     Margin="3,0,0,0"
+                                                                   Text="/" />
                                                     <TextBlock Name="PercentTextBlock"
                                                                Margin="3,0,0,0"
-                                                               Text="{Binding Percent}" />
+                                                               Text="{Binding TotalSize}" />
 
+                                                </StackPanel>
+                                                <StackPanel  Grid.Row="2" Orientation="Horizontal">
+                                                    <Button Name="RemoveUp" Width="auto" Height="auto" HorizontalContentAlignment="Stretch" Background="Transparent">
+                                                        <Image  Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+                                                    </Button>
+                                                    <Button Name="RemoveDown"
+                                                            Width="auto"
+                                                            Height="auto"
+                                                            HorizontalContentAlignment="Stretch"
+                                                            >
+                                                        <Image Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+                                                    </Button>
                                                 </StackPanel>
                                             </Grid>
 
@@ -221,7 +239,9 @@
                                   Background="Transparent"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
-                                  ItemsSource="{Binding MessageItems}">
+                                  ItemsSource="{Binding MessageItems}"
+                                  SelectionMode="None"
+                                  ElementSoundMode="FocusOnly">
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <ItemsStackPanel VerticalAlignment="Bottom"
@@ -249,7 +269,11 @@
                                                   Margin="4"
                                                   Background="Transparent"
                                                   HorizontalAlignment="Right"
-                                                  Visibility="{Binding IsSent,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}">
+                                                  BorderThickness="3"
+                                                  CornerRadius="4"
+                                                  
+                                                  BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
+                                                  Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="auto" />
                                                     <RowDefinition Height="20"
@@ -258,31 +282,52 @@
                                                 </Grid.RowDefinitions>
 
                                                 <StackPanel Name="SubmitedMessageStack"
-                                                            Orientation="Vertical">
+                                                            Orientation="Vertical"
+                                                            Margin="9">
 
-                                                    <Button Name="SubmitedMessageBodyFile"
-                                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}">
-                                                        <RelativePanel Height="50"
-                                                                       Width="50">
-                                                            <Image Name="SubmitedMessageBodyFileImage"
-                                                                   Source="{Binding File.FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Type_Icons_Svg/'}" />
-                                                            <Image Name="SubmitedMessageBodyActionImage"
-                                                                   RelativePanel.RightOf="SubmitedMessageBodyFileImage"
-                                                                   Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+                                                    <Button Name="SubmitedReceivedMessageBodyFile"
+                                                            Background="Transparent"
+                                                            HorizontalContentAlignment="Left"
+                                                            HorizontalAlignment="Left"
+                                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    VerticalAlignment="Stretch"
+                                                                    HorizontalAlignment="Left">
+                                                            <RelativePanel Height="60"
+                                                                           Width="54">
+                                                                <Image Name="SubmitedMessageBodyFileImage"
+                                                                       Height="48"
+                                                                       Source="{Binding File.FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Type_Icons_Svg/'}" />
+                                                                <Image Name="SubmitedMessageBodyActionImage"
+                                                                       RelativePanel.AlignBottomWithPanel="True"
+                                                                       RelativePanel.AlignRightWithPanel="True"
+                                                                       Height="18"
+                                                                       Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
 
-                                                        </RelativePanel>
-
+                                                            </RelativePanel>
+                                                            <StackPanel Margin="4,0,0,0"
+                                                                        Orientation="Vertical">
+                                                                <TextBlock Margin="1"
+                                                                           Text="{Binding File.FileName}"></TextBlock>
+                                                                <TextBlock Margin="1"
+                                                                           Text="{Binding File.TotalSize}"></TextBlock>
+                                                                <muxc:ProgressBar Margin="1"
+                                                                                  Value="{Binding File.Percent}"
+                                                                                  IsIndeterminate="True"
+                                                                                  ShowPaused="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
+                                                                                  ShowError="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Cancelled'}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
                                                     </Button>
-
                                                     <TextBlock Name="SubmittedMessageBodyText"
                                                                TextWrapping="Wrap"
-                                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
                                                                Text="{Binding Text}" />
                                                 </StackPanel>
 
                                                 <TextBlock Name="ReceivedClockText"
                                                            Grid.Row="1"
-                                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
                                                            VerticalAlignment="Bottom"
                                                            HorizontalAlignment="Right"
                                                            FlowDirection="RightToLeft"
@@ -290,7 +335,7 @@
 
                                                 <TextBlock Name="SubmittedClockText"
                                                            Grid.Row="1"
-                                                           Visibility="{Binding IsSent,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                           Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
                                                            VerticalAlignment="Bottom"
                                                            HorizontalAlignment="Left"
                                                            FlowDirection="LeftToRight"
@@ -303,7 +348,7 @@
                                                   Margin="4"
                                                   Background="Transparent"
                                                   HorizontalAlignment="Left"
-                                                  Visibility="{Binding IsReceived,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}">
+                                                  Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="auto" />
                                                     <RowDefinition Height="20"
@@ -315,28 +360,49 @@
                                                             Orientation="Vertical">
 
                                                     <Button Name="ReceivedMessageBodyFile"
-                                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}">
-                                                        <RelativePanel Height="50"
-                                                                       Width="50">
-                                                            <Image Name="MessageBodyFileImage"
-                                                                   Source="{Binding File.FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Type_Icons_Svg/'}" />
-                                                            <Image Name="MessageBodyActionImage"
-                                                                   RelativePanel.RightOf="MessageBodyFileImage"
-                                                                   Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
+                                                            Background="Transparent"
+                                                            HorizontalContentAlignment="Left"
+                                                            HorizontalAlignment="Left"
+                                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    VerticalAlignment="Stretch"
+                                                                    HorizontalAlignment="Left">
+                                                            <RelativePanel Height="60"
+                                                                           Width="54">
+                                                                <Image Name="ReceivedMessageBodyFileImage"
+                                                                       Height="48"
+                                                                       Source="{Binding File.FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Type_Icons_Svg/'}" />
+                                                                <Image Name="ReceivedMessageBodyActionImage"
+                                                                       RelativePanel.AlignBottomWithPanel="True"
+                                                                       RelativePanel.AlignRightWithPanel="True"
+                                                                       Height="18"
+                                                                       Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
 
-                                                        </RelativePanel>
-
+                                                            </RelativePanel>
+                                                            <StackPanel Margin="4,0,0,0"
+                                                                        Orientation="Vertical">
+                                                                <TextBlock Margin="1"
+                                                                           Text="{Binding File.FileName}"></TextBlock>
+                                                                <TextBlock Margin="1"
+                                                                           Text="{Binding File.TotalSize}"></TextBlock>
+                                                                <muxc:ProgressBar Margin="1"
+                                                                                  Value="{Binding File.Percent}"
+                                                                                  IsIndeterminate="True"
+                                                                                  ShowPaused="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
+                                                                                  ShowError="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Cancelled'}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
                                                     </Button>
 
                                                     <TextBlock Name="ReceivedMessageBodyText"
                                                                TextWrapping="Wrap"
-                                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
                                                                Text="{Binding Text}" />
                                                 </StackPanel>
 
                                                 <TextBlock Name="ReceivedClockText2"
                                                            Grid.Row="1"
-                                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
                                                            VerticalAlignment="Bottom"
                                                            HorizontalAlignment="Right"
                                                            FlowDirection="RightToLeft"
@@ -344,7 +410,7 @@
 
                                                 <TextBlock Name="SubmittedClockText2"
                                                            Grid.Row="1"
-                                                           Visibility="{Binding IsSent,Converter={StaticResource EnumToBooleanConverter},ConverterParameter='Yes'}"
+                                                           Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
                                                            VerticalAlignment="Bottom"
                                                            HorizontalAlignment="Left"
                                                            FlowDirection="LeftToRight"

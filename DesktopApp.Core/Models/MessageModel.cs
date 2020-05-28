@@ -11,7 +11,7 @@ namespace DesktopApp.Core.Models
         public enum EnumIsExist
         {
             No = 0,
-            Yes = 2,
+            Yes = 1,
         }
 
         private string _text = "Deneme Mesajı";      //ben kimim gibi mesala

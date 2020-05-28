@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DesktopApp.Core.Models;
 using DesktopApp.Old.Core.Models;
 using DesktopApp.ViewModels;
+using PeerConnectionClientOperators.Signalling;
 using Windows.Foundation;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
@@ -204,6 +205,16 @@ namespace DesktopApp.Views
 
             ViewModel.MessageItems.Add(message2);
             ViewModel.FileItems.Add(file2);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Conductor.Instance.CreateDataChannel();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            Conductor.Instance.SendMessage();
         }
 
         //private void Button_Click_1(object sender, RoutedEventArgs e)

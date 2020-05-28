@@ -76,7 +76,7 @@ namespace PeerConnectionClientOperators.Signalling
     /// <summary>
     /// A singleton conductor for WebRTC session.
     /// </summary>
-    public class Conductor
+    public partial class Conductor
     {
 #if !UNITY
         private static readonly StatsController SC = StatsController.Instance;
@@ -1030,6 +1030,8 @@ namespace PeerConnectionClientOperators.Signalling
 #else
             PeerConnection.OnTrack += PeerConnection_OnTrack;
             PeerConnection.OnRemoveTrack += PeerConnection_OnRemoveTrack;
+
+            PeerConnection.OnDataChannel += _peerConnection_OnDataChannel;
             //_peerConnection.OnConnectionHealthStats += PeerConnection_OnConnectionHealthStats;
 
             Debug.WriteLine("Conductor: Getting user media.");

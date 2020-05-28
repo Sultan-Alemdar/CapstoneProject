@@ -102,7 +102,6 @@
                                         </Grid.RowDefinitions>
 
                                         <Grid Name="FileInfoGrid"
-                                             
                                               VerticalAlignment="Stretch"
                                               HorizontalAlignment="Stretch"
                                               Background="Transparent">
@@ -159,15 +158,19 @@
                                                                Text="{Binding TotalSize}" />
 
                                                 </StackPanel>
-                                                <StackPanel  Grid.Row="2" Orientation="Horizontal">
-                                                    <Button Name="RemoveUp" Width="auto" Height="auto" HorizontalContentAlignment="Stretch" Background="Transparent">
+                                                <StackPanel  Grid.Row="2"
+                                                             Orientation="Horizontal">
+                                                    <Button Name="RemoveUp"
+                                                            Width="auto"
+                                                            Height="auto"
+                                                            HorizontalContentAlignment="Stretch"
+                                                            Background="Transparent">
                                                         <Image  Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
                                                     </Button>
                                                     <Button Name="RemoveDown"
                                                             Width="auto"
                                                             Height="auto"
-                                                            HorizontalContentAlignment="Stretch"
-                                                            >
+                                                            HorizontalContentAlignment="Stretch">
                                                         <Image Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../Assets/File_Operations_Svg/'}" />
                                                     </Button>
                                                 </StackPanel>
@@ -271,7 +274,6 @@
                                                   HorizontalAlignment="Right"
                                                   BorderThickness="3"
                                                   CornerRadius="4"
-                                                  
                                                   BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
                                                   Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
                                                 <Grid.RowDefinitions>
@@ -521,10 +523,24 @@
                     <Button Content="Button"
                             HorizontalAlignment="Left"
                             Height="140"
-                            Margin="836,468,0,0"
+                            Margin="569,180,0,0"
                             VerticalAlignment="Top"
                             Width="280"
                             Click="Button_Click_1" />
+                    <Button Content="Create&#xD;&#xA;"
+                            HorizontalAlignment="Left"
+                            Height="132"
+                            Margin="569,372,0,0"
+                            VerticalAlignment="Top"
+                            Width="280"
+                            Click="Button_Click_2" />
+                    <Button Content="Send&#xD;&#xA;"
+                            HorizontalAlignment="Left"
+                            Height="65"
+                            Margin="569,540,0,0"
+                            VerticalAlignment="Top"
+                            Width="280"
+                            Click="Button_Click_3" />
                 </Grid>
 
                 <Grid x:Name="AppBarGrid"

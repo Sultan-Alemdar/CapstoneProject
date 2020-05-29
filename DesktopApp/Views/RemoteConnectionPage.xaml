@@ -582,7 +582,7 @@
                                      Height="Auto"
                                      Width="Auto"
                                      Orientation="Horizontal">
-                            <AppBarToggleButton Icon="GoToStart"
+                            <AppBarToggleButton Icon="VideoChat"
                                                 Label="Başlat"
                                                 Visibility="Visible" />
                             <AppBarToggleButton IsChecked="False"

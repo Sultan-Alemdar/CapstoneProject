@@ -156,24 +156,20 @@
     <Compile Include="Services\SuspensionState.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="ViewModels\InteractionsPanelViewModel.cs" />
-    <Compile Include="ViewModels\Old\OldRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\OperationsViewModel.cs" />
-    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel.cs" />
-    <Compile Include="ViewModels\PartialClases\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\AppBarRemoteConnectionViewModel.cs" />
+    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\WebRTCRemoteConnectionViewModel.cs" />
+    <Compile Include="ViewModels\PartialClases\SettingsViewModel\WebRTCSettingsViewModel.cs" />
     <Compile Include="ViewModels\RemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\InteractionsPanelPage.xaml.cs">
       <DependentUpon>InteractionsPanelPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Old\OldRemoteConnectionPage.xaml.cs">
-      <DependentUpon>OldRemoteConnectionPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Old\RemoteConnectionPage.xaml.cs" />
     <Compile Include="Views\OperationsPage.xaml.cs">
       <DependentUpon>OperationsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\PartialClases\RemoteConnectionPage.xaml.cs" />
+    <Compile Include="Views\PartialClases\WebRTCRemoteConnectionPage.xaml.cs" />
     <Compile Include="Views\RemoteConnectionPage.xaml.cs">
       <DependentUpon>RemoteConnectionPage.xaml</DependentUpon>
     </Compile>
@@ -229,10 +225,6 @@
     <Page Include="Views\InteractionsPanelPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Old\OldRemoteConnectionPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OperationsPage.xaml">
       <Generator>MSBuild:Compile</Generator>

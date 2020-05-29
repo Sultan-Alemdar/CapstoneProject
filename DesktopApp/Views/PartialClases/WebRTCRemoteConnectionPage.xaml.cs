@@ -10,8 +10,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
-namespace DesktopApp.Old.Views
+namespace DesktopApp.Views
 {
+    //For WebRTC
     public sealed partial class RemoteConnectionPage : Page, INotifyPropertyChanged
     {
         protected override void OnNavigatedTo(NavigationEventArgs e)

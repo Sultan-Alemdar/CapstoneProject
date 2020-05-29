@@ -384,7 +384,7 @@ namespace PeerConnectionClientOperators.Signalling
         public static void StopMediaTracing()
         {
 #if !ORTCLIB
-            Org.WebRtc.WebRtcLib.StopMediaTrace();
+            // Org.WebRtc.WebRtcLib.StopMediaTrace();
             Org.WebRtc.WebRtcLib.StopMediaTracing();
 #endif
         }
@@ -1792,6 +1792,7 @@ namespace PeerConnectionClientOperators.Signalling
                 var offerOptions = new RTCOfferOptions();
                 offerOptions.OfferToReceiveAudio = true;
                 offerOptions.OfferToReceiveVideo = true;
+                CreateDataChannel(); /////////////////////////////////////////////////////////a//////////////////////////////////////////////////////////
                 var offer = await PeerConnection.CreateOffer(offerOptions);
 
                 if (IsNullOrEmpty(offer.Sdp))

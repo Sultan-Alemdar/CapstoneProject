@@ -150,12 +150,11 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
     </PackageReference>
+    <PackageReference Include="WebRTC">
+      <Version>1.71.0.9</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\webrtc-uwp-sdk\webrtc\windows\projects\msvc\Org.WebRtc.Universal\Org.WebRtc.vcxproj">
-      <Project>{3dd8fdcd-b703-4b75-826a-2c7e844f903e}</Project>
-      <Name>Org.WebRtc</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ClientCore\PeerConnectionClient.Operators.csproj">
       <Project>{217faa3a-8fc1-4663-ba00-2f842b3ff4e1}</Project>
       <Name>PeerConnectionClient.Operators</Name>

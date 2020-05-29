@@ -109,15 +109,14 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.1</Version>
     </PackageReference>
+    <PackageReference Include="WebRTC">
+      <Version>1.71.0.9</Version>
+    </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.23.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\webrtc-uwp-sdk\webrtc\windows\projects\msvc\Org.WebRtc.Universal\Org.WebRtc.vcxproj">
-      <Project>{3dd8fdcd-b703-4b75-826a-2c7e844f903e}</Project>
-      <Name>Org.WebRtc</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Org.WebRtc.Callstats\Org.WebRtc.Callstats.csproj">
       <Project>{8c436a7a-3bc0-413d-9c51-36fa42e45809}</Project>
       <Name>Org.WebRtc.Callstats</Name>

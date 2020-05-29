@@ -23,10 +23,5 @@ namespace DesktopApp.Views.SubViews
         {
             this.InitializeComponent();
         }
-        private void ScrollViewer_ManipulationCompleted(object sender, Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("Manipualitaon Worked");
-
-        }
     }
 }

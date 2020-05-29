@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesktopApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,17 +18,12 @@ using Windows.UI.Xaml.Navigation;
 
 namespace DesktopApp.Views.SubViews
 {
-    public sealed partial class MessaBox : UserControl
+    public sealed partial class MesageBox : UserControl
     {
-        public MessaBox()
+        public RemoteConnectionViewModel ViewModel => this.DataContext as RemoteConnectionViewModel;
+        public MesageBox()
         {
             this.InitializeComponent();
         }
-        private void ScrollViewer_ManipulationCompleted(object sender, Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("Manipualitaon Worked");
-
-        }
     }
-
 }

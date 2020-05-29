@@ -1,15 +1,23 @@
-﻿<UserControl
-    x:Class="DesktopApp.Views.SubViews.FileBox"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DesktopApp.Views.SubViews"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+﻿<UserControl x:Class="DesktopApp.Views.SubViews.FileBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:DesktopApp.Views.SubViews"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:DesktopApp.Core.Models"
+             xmlns:helpers="using:DesktopApp.Helpers"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="CornerRadius"
+                    Value="{StaticResource ControlCornerRadius}" />
+        </Style>
+        <helpers:StringToImageConverter x:Key="StringToImageConverter" />
 
-    <Grid x:Name="FileHistoryPanel"
+    </UserControl.Resources>
+    <Grid x:Name="FilePanel"
           Grid.Row="0"
           VerticalAlignment="Stretch"
           HorizontalAlignment="Stretch"
@@ -20,10 +28,10 @@
           BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}">
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="37" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid x:Name="FileHistoryPanelTopBar"
+        <Grid x:Name="FilePanelTopBar"
               Background="#2D92BD"
               Height="37"
               HorizontalAlignment="Stretch"
@@ -40,48 +48,35 @@
                     HorizontalAlignment="Right"
                     CornerRadius="4">
                 <Image Stretch="Uniform"
-                       Source="../Assets/Arrows/minimize.svg" />
+                       Source="../../Assets/Arrows/minimize.svg" />
             </Button>
 
         </Grid>
-        <ScrollViewer x:Name="FileHistory"
-                      Grid.Row="1"
-                      VerticalAlignment="Stretch"
-                      HorizontalAlignment="Stretch"
-                      ZoomMode="Disabled"
-                      Background="Transparent"
-                      IsVerticalScrollChainingEnabled="True"
-                      ManipulationCompleted="ScrollViewer_ManipulationCompleted"
-                      HorizontalScrollMode="Disabled"
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollMode="Enabled"
-                      VerticalScrollBarVisibility="Auto">
-            <ContentControl Margin="4,4,4,4"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Stretch"
-                            Background="Transparent">
-                <StackPanel Orientation="Vertical"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Center"
-                            Background="Transparent">
-
-
+        <ListView Name="FileList"
+                  Grid.Row="1"
+                  ItemsSource="{Binding FileItems}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel VerticalAlignment="Bottom"
+                                     ItemsUpdatingScrollMode="KeepLastItemInView" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate x:Name="FileTemplate"
+                              x:DataType="models:FileModel">
                     <Grid Name="FileGrid"
                           Background="#5E609E"
                           CornerRadius="{StaticResource ControlCornerRadius}"
                           BorderBrush="Gray"
                           BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
-                          VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"
-                          Margin="3">
+                          Margin="0,0,0,3">
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="90" />
-
                         </Grid.RowDefinitions>
 
                         <Grid Name="FileInfoGrid"
-                              Margin="9"
                               VerticalAlignment="Stretch"
                               HorizontalAlignment="Stretch"
                               Background="Transparent">
@@ -90,61 +85,90 @@
                                 <ColumnDefinition Width="240" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-                            <Image Grid.Column="0"
+                            <Image Name="FileTypeImage"
+                                   Grid.Column="0"
                                    Stretch="Fill"
                                    Height="60"
-                                   Source="../Assets/File_Type_Icons_Svg/css.svg" />
+                                   Source="{Binding FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Type_Icons_Svg/'}" />
 
                             <Grid Grid.Column="1"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
                                   Background="Transparent"
-                                  Margin="5">
+                                  Margin="2">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="2*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
                                     <RowDefinition Height="*" />
                                 </Grid.RowDefinitions>
-                                <TextBlock  FontWeight="Black"
-                                            Text="File Name : "
-                                            Grid.Row="0" />
+                                <TextBlock Name="FileNameTextBlock"
+                                           FontWeight="Black"
+                                           Text="{Binding FileName}"
+                                           Grid.Row="0" />
 
-                                <StackPanel Grid.Row="2"
+                                <StackPanel Grid.Row="1"
                                             Orientation="Horizontal"
                                             VerticalAlignment="Center"
                                             HorizontalAlignment="Stretch"
                                             Background="Transparent">
 
-                                    <Image Height="20"
-                                           Width="20"
-                                           Grid.Row="2"
-                                           Source="../Assets/File_Operations_Svg/down.svg" />
+                                    <Image  Name="EventImage"
+                                            Height="20"
+                                            Width="20"
+                                            Grid.Row="2"
+                                            Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
 
-                                    <TextBlock Margin="3,0,0,0"
-                                               Text="DowdloadStatus" />
+                                    <TextBlock Name="SpeedTextBlock"
+                                               Margin="3,0,0,0"
+                                               Text="{Binding ActionSpeed}" />
+                                    <TextBlock     Margin="3,0,0,0"
+                                                   Text="-" />
+
+                                    <TextBlock     Margin="3,0,0,0"
+                                                   Text="{Binding ProgressedSize}" />
+                                    <TextBlock     Margin="3,0,0,0"
+                                                   Text="/" />
+                                    <TextBlock Name="PercentTextBlock"
+                                               Margin="3,0,0,0"
+                                               Text="{Binding TotalSize}" />
+
+                                </StackPanel>
+                                <StackPanel  Grid.Row="2"
+                                             Orientation="Horizontal">
+                                    <Button Name="RemoveUp"
+                                            Width="auto"
+                                            Height="auto"
+                                            HorizontalContentAlignment="Stretch"
+                                            Background="Transparent">
+                                        <Image  Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
+                                    </Button>
+                                    <Button Name="RemoveDown"
+                                            Width="auto"
+                                            Height="auto"
+                                            HorizontalContentAlignment="Stretch">
+                                        <Image Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
+                                    </Button>
                                 </StackPanel>
                             </Grid>
 
 
-                            <Button Height="auto"
+                            <Button Name="ActionButton"
+                                    Height="auto"
                                     Grid.Column="2"
                                     Background="Transparent"
                                     VerticalAlignment="Stretch"
                                     HorizontalAlignment="Stretch">
 
-                                <Image Stretch="Fill"
-                                       Source="../Assets/File_Operations_Svg/check.svg" />
+                                <Image Name="ActionImage"
+                                       Stretch="Fill"
+                                       Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
 
                             </Button>
 
                         </Grid>
                     </Grid>
-
-
-                </StackPanel>
-
-
-            </ContentControl>
-
-        </ScrollViewer>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>

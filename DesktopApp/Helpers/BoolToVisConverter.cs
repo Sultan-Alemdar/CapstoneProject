@@ -13,7 +13,7 @@ using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace DesktopApp.Core.Models
+namespace DesktopApp.Helpers
 {
     /// <summary>
     /// Class provides functionality to convert from boolean to Visibility.

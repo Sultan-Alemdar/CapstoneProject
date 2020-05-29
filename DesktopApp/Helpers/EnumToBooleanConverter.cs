@@ -10,6 +10,8 @@ namespace DesktopApp.Helpers
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
+            if (value == null || targetType == null)
+                throw new ArgumentNullException();
             if (parameter is string enumString)
             {
                 if (!Enum.IsDefined(EnumType, value))

@@ -179,8 +179,8 @@
     <Compile Include="Views\SubViews\FileBox.xaml.cs">
       <DependentUpon>FileBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\SubViews\MessaBox.xaml.cs">
-      <DependentUpon>MessaBox.xaml</DependentUpon>
+    <Compile Include="Views\SubViews\MesageBox.xaml.cs">
+      <DependentUpon>MesageBox.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -242,7 +242,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\SubViews\MessaBox.xaml">
+    <Page Include="Views\SubViews\MesageBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

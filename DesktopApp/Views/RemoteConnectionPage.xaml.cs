@@ -153,5 +153,20 @@ namespace DesktopApp.Views
             await _coreDispatcher.RunAsync(priority, new DispatchedHandler(action));
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageModel messageModel = new MessageModel();
+            FileModel fileModel = messageModel.File;
+            ViewModel.FileItems.Add(fileModel);
+            ViewModel.MessageItems.Add(messageModel);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            MessageModel messageModel = new MessageModel();
+            FileModel fileModel = messageModel.File;
+            ViewModel.FileItems.Add(fileModel);
+            ViewModel.MessageItems.Add(messageModel);
+        }
     }
 }

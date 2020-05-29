@@ -1,0 +1,313 @@
+﻿<UserControl x:Class="DesktopApp.Views.SubViews.MesageBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:DesktopApp.Views.SubViews"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+             xmlns:models="using:DesktopApp.Core.Models"
+             xmlns:helpers="using:DesktopApp.Helpers"
+             d:DesignHeight="300"
+             d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="CornerRadius"
+                    Value="{StaticResource ControlCornerRadius}" />
+        </Style>
+        <helpers:StringToImageConverter x:Key="StringToImageConverter" />
+        <helpers:EnumToBooleanConverter x:Key="EnumExistToBooleanConverter"
+                                        EnumType="{x:Bind Path=ViewModel.TypeOfEnumExist}" />
+        <helpers:EnumToBooleanConverter x:Key="EnumStatusToBooleanConverter"
+                                        EnumType="{x:Bind Path=ViewModel.TypeOfEnumStatus}" />
+    </UserControl.Resources>
+    <Grid  x:Name="MessengerPanel"
+           Grid.Row="1"
+           Background="#212121"
+           Margin="7"
+           VerticalAlignment="Stretch"
+           HorizontalAlignment="Stretch"
+           CornerRadius="{StaticResource ControlCornerRadius}"
+           BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
+           BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}">
+
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="auto" />
+            <RowDefinition  Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions >
+
+        <Grid x:Name="MessengerPanelTopBar"
+              Background="#2D92BD"
+              Height="37"
+              Grid.Row="0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock Margin="20,0,0,0"
+                       VerticalAlignment="Center"
+                       FontSize="17"
+                       FontWeight="Medium"
+                       HorizontalAlignment="Left">İleti Kutusu</TextBlock>
+            <Button VerticalAlignment="Stretch"
+                    HorizontalAlignment="Right"
+                    CornerRadius="4">
+                <Image Stretch="Uniform"
+                       Source="../../Assets/Arrows/minimize.svg" />
+            </Button>
+
+        </Grid>
+
+
+        <ListView Name="MessengerList"
+                  Grid.Row="1"
+                  Background="Transparent"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  ItemsSource="{Binding MessageItems}"
+                  SelectionMode="None"
+                  ElementSoundMode="FocusOnly">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel VerticalAlignment="Bottom"
+                                     HorizontalAlignment="Stretch"
+                                     ItemsUpdatingScrollMode="KeepLastItemInView" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate  x:DataType="models:MessageModel">
+                    <ListViewItem HorizontalContentAlignment="Stretch"
+                                  Width="auto">
+
+
+                        <Grid Name="Message"
+                              Margin="10"
+                              Background="Transparent"
+                              Width="auto">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+
+
+                            <Grid Grid.Row="0"
+                                  Name="SubmitedMessageBody"
+                                  Margin="4"
+                                  Background="Transparent"
+                                  HorizontalAlignment="Right"
+                                  BorderThickness="3"
+                                  CornerRadius="4"
+                                  BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
+                                  Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="20"
+                                                   MinHeight="20"
+                                                   MaxHeight="20" />
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Name="SubmitedMessageStack"
+                                            Orientation="Vertical"
+                                            Margin="9">
+
+                                    <Button Name="SubmitedReceivedMessageBodyFile"
+                                            Background="Transparent"
+                                            HorizontalContentAlignment="Left"
+                                            HorizontalAlignment="Left"
+                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Stretch"
+                                                    HorizontalAlignment="Left">
+                                            <RelativePanel Height="60"
+                                                           Width="54">
+                                                <Image Name="SubmitedMessageBodyFileImage"
+                                                       Height="48"
+                                                       Source="{Binding File.FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Type_Icons_Svg/'}" />
+                                                <Image Name="SubmitedMessageBodyActionImage"
+                                                       RelativePanel.AlignBottomWithPanel="True"
+                                                       RelativePanel.AlignRightWithPanel="True"
+                                                       Height="18"
+                                                       Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
+
+                                            </RelativePanel>
+                                            <StackPanel Margin="4,0,0,0"
+                                                        Orientation="Vertical">
+                                                <TextBlock Margin="1"
+                                                           Text="{Binding File.FileName}"></TextBlock>
+                                                <TextBlock Margin="1"
+                                                           Text="{Binding File.TotalSize}"></TextBlock>
+                                                <muxc:ProgressBar Margin="1"
+                                                                  Value="{Binding File.Percent}"
+                                                                  IsIndeterminate="True"
+                                                                  ShowPaused="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
+                                                                  ShowError="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Cancelled'}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Button>
+                                    <TextBlock Name="SubmittedMessageBodyText"
+                                               TextWrapping="Wrap"
+                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                               Text="{Binding Text}" />
+                                </StackPanel>
+
+                                <TextBlock Name="ReceivedClockText"
+                                           Grid.Row="1"
+                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Right"
+                                           FlowDirection="RightToLeft"
+                                           Text="{Binding Time}" />
+
+                                <TextBlock Name="SubmittedClockText"
+                                           Grid.Row="1"
+                                           Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Left"
+                                           FlowDirection="LeftToRight"
+                                           Text="{Binding Time}" />
+
+                            </Grid>
+
+                            <Grid Grid.Row="0"
+                                  Name="ReceivedMessageBody"
+                                  Margin="4"
+                                  Background="Transparent"
+                                  HorizontalAlignment="Left"
+                                  Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="20"
+                                                   MinHeight="20"
+                                                   MaxHeight="20" />
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Name="ReceivedMessageStack"
+                                            Orientation="Vertical">
+
+                                    <Button Name="ReceivedMessageBodyFile"
+                                            Background="Transparent"
+                                            HorizontalContentAlignment="Left"
+                                            HorizontalAlignment="Left"
+                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Stretch"
+                                                    HorizontalAlignment="Left">
+                                            <RelativePanel Height="60"
+                                                           Width="54">
+                                                <Image Name="ReceivedMessageBodyFileImage"
+                                                       Height="48"
+                                                       Source="{Binding File.FileType,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Type_Icons_Svg/'}" />
+                                                <Image Name="ReceivedMessageBodyActionImage"
+                                                       RelativePanel.AlignBottomWithPanel="True"
+                                                       RelativePanel.AlignRightWithPanel="True"
+                                                       Height="18"
+                                                       Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
+
+                                            </RelativePanel>
+                                            <StackPanel Margin="4,0,0,0"
+                                                        Orientation="Vertical">
+                                                <TextBlock Margin="1"
+                                                           Text="{Binding File.FileName}"></TextBlock>
+                                                <TextBlock Margin="1"
+                                                           Text="{Binding File.TotalSize}"></TextBlock>
+                                                <muxc:ProgressBar Margin="1"
+                                                                  Value="{Binding File.Percent}"
+                                                                  IsIndeterminate="True"
+                                                                  ShowPaused="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
+                                                                  ShowError="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Cancelled'}" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Button>
+
+                                    <TextBlock Name="ReceivedMessageBodyText"
+                                               TextWrapping="Wrap"
+                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                               Text="{Binding Text}" />
+                                </StackPanel>
+
+                                <TextBlock Name="ReceivedClockText2"
+                                           Grid.Row="1"
+                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Right"
+                                           FlowDirection="RightToLeft"
+                                           Text="{Binding Time}" />
+
+                                <TextBlock Name="SubmittedClockText2"
+                                           Grid.Row="1"
+                                           Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                           VerticalAlignment="Bottom"
+                                           HorizontalAlignment="Left"
+                                           FlowDirection="LeftToRight"
+                                           Text="{Binding Time}" />
+
+                            </Grid>
+                        </Grid>
+
+                    </ListViewItem>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+
+        <Grid x:Name="MassengerPanelSubmit"
+              Grid.Row="3"
+              Background="#2D92BD"
+              VerticalAlignment="Bottom"
+              HorizontalAlignment="Stretch">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid  Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Button  Margin="2"
+                         Width="auto"
+                         Height="40"
+                         MinHeight="40"
+                         MaxHeight="40">
+                    <SymbolIcon Symbol="Message" />
+                </Button>
+                <ScrollViewer Grid.Column="1"
+                              Height="auto"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Stretch"
+                              ZoomMode="Disabled"
+                              IsVerticalScrollChainingEnabled="True"
+                             
+                              HorizontalScrollMode="Disabled"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollMode="Enabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <RichEditBox  FontSize="20"
+                                  Margin="4"
+                                  MinHeight="20"
+                                  MaxHeight="400"
+                                  MinWidth="300" />
+                </ScrollViewer>
+                <Button  Grid.Column="2"
+                         Margin="2"
+                         Width="auto"
+                         Height="40"
+                         MinHeight="40"
+                         MaxHeight="40">
+                    <SymbolIcon Symbol="Attach" />
+                </Button>
+                <Button  Grid.Column="3"
+                         Margin="6"
+                         Width="auto"
+                         Height="40"
+                         MinHeight="40"
+                         MaxHeight="40">
+                    <SymbolIcon Symbol="Send" />
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

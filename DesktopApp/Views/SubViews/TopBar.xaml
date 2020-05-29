@@ -1,0 +1,189 @@
+﻿<UserControl x:Class="DesktopApp.Views.SubViews.TopBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:DesktopApp.Views.SubViews"
+             xmlns:helpers="using:DesktopApp.Helpers"
+             xmlns:utilities="using:WebRTCAdapter.Utilities"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="400">
+    <UserControl.Resources>
+        <helpers:StringToImageConverter x:Key="StringToImageConverter" />
+        <utilities:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+        <utilities:BoolToVisConverter x:Key="BoolToVisConverter" />
+    </UserControl.Resources>
+    <Grid x:Name="AppBarGrid"
+          Background="Transparent"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Top"
+          Width="auto"
+          Height="auto"
+          PointerEntered="AppBarGrid_PointerEntered"
+          PointerExited="AppBarGrid_PointerExited">
+        <Grid.Resources>
+            <Storyboard x:Name="AppBarClose">
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid"
+                                 FillBehavior="HoldEnd"
+                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"
+                                 To="-73">
+                    <DoubleAnimation.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+
+            </Storyboard>
+            <Storyboard x:Name="AppBarOpen">
+                <DoubleAnimation Storyboard.TargetName="AppBarGrid"
+                                 FillBehavior="HoldEnd"
+                                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"
+                                 To="0">
+                    <DoubleAnimation.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </DoubleAnimation.EasingFunction>
+                </DoubleAnimation>
+            </Storyboard>
+
+        </Grid.Resources>
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="Translate"></TranslateTransform>
+        </Grid.RenderTransform>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="60" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="1"
+              Grid.Row="0"
+              x:Name="AppBorder"
+              Margin="20,15,0,0"
+              BorderThickness="2"
+              BorderBrush="White"
+              CornerRadius="17">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel  Margin="5,8,5,8"
+                         CornerRadius="17"
+                         Height="Auto"
+                         Width="Auto"
+                         Orientation="Horizontal">
+
+                <ToggleButton Name="CameraToggle"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              IsChecked="{Binding AdapterViewModel.CameraEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding AdapterViewModel.IsCameraEnabled, Mode=OneWay}"
+                              Margin="0,0,0,0">
+                    <RelativePanel Height="40"
+                                   Width="40">
+
+                        <Image Stretch="Fill"
+                               Height="36"
+                               Source="../../Assets/OperationIcons/SettingIcons/film.svg" />
+                        <Image  Stretch="Fill"
+                                Visibility="{Binding AdapterViewModel.CameraEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=OneWay}"
+                                Height="40"
+                                Width="40"
+                                Source="../../Assets/OperationIcons/slash.svg"
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignVerticalCenterWithPanel="True" />
+                    </RelativePanel>
+
+                </ToggleButton>
+                <ToggleButton Name="MicrophoneToggle"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              IsChecked="{Binding AdapterViewModel.MicrophoneIsOn, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}"
+                              IsEnabled="{Binding AdapterViewModel.IsMicrophoneEnabled, Mode=OneWay}">
+                    <RelativePanel Height="40"
+                                   Width="40">
+
+                        <Image Stretch="Fill"
+                               Height="36"
+                               Source="../../Assets/OperationIcons/SettingIcons/microphone.svg" />
+                        <Image  Stretch="Fill"
+                                Visibility="{Binding AdapterViewModel.MicrophoneIsOn, Converter={StaticResource InvertedBooleanConverter}, Mode=OneWay}"
+                                Height="40"
+                                Width="40"
+                                Source="../../Assets/OperationIcons/slash.svg"
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignVerticalCenterWithPanel="True" />
+                    </RelativePanel>
+
+
+                </ToggleButton>
+                <ToggleButton Name="VideoLoopBackToggle"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              IsChecked="{Binding AdapterViewModel.VideoLoopbackEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=TwoWay}">
+                    <RelativePanel Height="40"
+                                   Width="40">
+
+                        <Image Stretch="Fill"
+                               Height="30"
+                               Margin="0,5,0,0"
+                               Source="../../Assets/OperationIcons/SettingIcons/my-space.svg"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center" />
+                        <Image  Stretch="Fill"
+                                Visibility="{Binding AdapterViewModel.VideoLoopbackEnabled, Converter={StaticResource InvertedBooleanConverter}, Mode=OneWay}"
+                                Height="40"
+                                Width="40"
+                                Source="../../Assets/OperationIcons/slash.svg"
+                                RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                RelativePanel.AlignVerticalCenterWithPanel="True" />
+                    </RelativePanel>
+                </ToggleButton>
+                <Button Name="DisconnectButton"
+                        Style="{StaticResource OperationImageButton}"
+                        Margin="20,0,0,0"
+                        Command="{Binding DisconnectFromPeerCommand}">
+
+                    <Image Stretch="Fill"
+                           Height="40"
+                           Source="../../Assets/File_Operations_Svg/cancel.svg"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+
+                </Button>
+                <Grid Style="{StaticResource VerticalOperationSperator}"
+                      Margin="10,0,10,0"
+                      Height="40" />
+                <ToggleButton Name="PaneStateToggleButton"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              IsChecked="{Binding IsPaneOpen, Mode=TwoWay}"
+                              Margin="0,0,0,0">
+
+                    <Image Stretch="Fill"
+                           Height="40"
+                           Source="../../Assets/bars.svg"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+
+
+                </ToggleButton>
+
+
+                <ToggleButton Name="PinToggleButton"
+                              Style="{StaticResource OperationImageToggleButton}"
+                              IsChecked="{x:Bind IsPinned , Mode=TwoWay}">
+
+                    <Image Stretch="Fill"
+                           Height="40"
+                           Source="../../Assets/pin.svg"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center" />
+
+
+                </ToggleButton>
+
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+</UserControl>

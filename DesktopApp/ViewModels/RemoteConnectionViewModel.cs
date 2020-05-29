@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using DesktopApp.Core.Models;
 using DesktopApp.Old.Core.Models;
 using GalaSoft.MvvmLight;
+using WebRTCAdapter.Adapters;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -27,11 +28,14 @@ namespace DesktopApp.ViewModels
         private ObservableCollection<MessageModel> _messageItems = new ObservableCollection<MessageModel>();
         public ObservableCollection<MessageModel> MessageItems { get => _messageItems; set => Set<ObservableCollection<MessageModel>>("MessageItems", ref this._messageItems, value); }
 
+        public AdapterViewModel AdapterViewModel => AdapterViewModel.Instance;
+
         public RemoteConnectionViewModel()
         {
             PastInteractionStackPanel = new StackPanel();
             PastInteractionStackPanel.Children.Add(CreateMessage());
             AssetsDirectory = "../Assets/File_Operations_Svg/";
+            _disconnectFromPeerCommand = new GalaSoft.MvvmLight.Command.RelayCommand(DiscconectFromPeer, DiscconectFromCanExecute);
         }
 
         public RichTextBlock CreateMessage(Dictionary<string, string> parameters = null, bool received = false)

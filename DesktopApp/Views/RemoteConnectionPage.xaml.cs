@@ -26,15 +26,11 @@ namespace DesktopApp.Views
         private Visibility closeButonVisibility = Visibility.Collapsed;
         private Visibility openButtonVisibility = Visibility.Visible;
 
-        private bool pinned = false;
+       
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         private RemoteConnectionViewModel ViewModel => ViewModelLocator.Current.RemoteConnectionViewModel;
-
-        public Visibility UnPinButtonVisibility { get => closeButonVisibility; set { closeButonVisibility = value; OnPropertyChanged("UnPinButtonVisibility"); } }
-        public Visibility PinButtonVisibility { get => openButtonVisibility; set { openButtonVisibility = value; OnPropertyChanged("PinButtonVisibility"); } }
-
 
 
         public RemoteConnectionPage()
@@ -53,7 +49,7 @@ namespace DesktopApp.Views
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             });
-            AppBarClose.Begin();
+        
         }
 
         private void OnPropertyChanged(string propertyName)
@@ -61,91 +57,6 @@ namespace DesktopApp.Views
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void ScrollViewer_ManipulationCompleted(object sender, Windows.UI.Xaml.Input.ManipulationCompletedRoutedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("Manipualitaon Worked");
-
-        }
-
-
-
-        private void PinButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            pinned = true;
-            SwichVisibility();
-
-        }
-        private void UnpinButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            pinned = false;
-            SwichVisibility();
-        }
-
-        private void AppBarGrid_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            #region eski kod
-            //Debug.WriteLine("Ent");
-            //if (pinned == false)
-            //{
-            //    if (DecideInOrOut(AppBarGrid) ==true && isOpen==false)
-            //    {
-            //        AppBarClose.Pause();
-            //        isOpen = true;
-            //        AppBarOpen.Begin();
-            //        Debug.WriteLine("Opened");
-            //    }
-            //    else if(DecideInOrOut(AppBarGrid) ==false && isOpen==true)
-            //    {
-            //        AppBarOpen.Pause();
-            //        isOpen = false;
-            //        AppBarClose.Begin();
-            //        Debug.WriteLine("Closed");
-            //    }
-            //} 
-            #endregion
-            if (pinned == false)
-                AppBarOpen.Begin();
-        }
-        private void AppBarGrid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            #region eski kod
-            //Debug.WriteLine("Ext");
-            //if (pinned == false)
-            //{
-            //    if (DecideInOrOut(AppBarGrid) ==true && isOpen==false)
-            //    {
-            //        AppBarClose.Pause();
-            //        isOpen = true;
-            //        AppBarOpen.Begin();
-            //        Debug.WriteLine("Opened");
-            //    }
-            //    else if(DecideInOrOut(AppBarGrid) ==false && isOpen==true)
-            //    {
-            //        AppBarOpen.Pause();
-            //        isOpen = false;
-            //        AppBarClose.Begin();
-            //        Debug.WriteLine("Closed");
-            //    }
-            //} 
-            #endregion
-            if (pinned == false)
-                AppBarClose.Begin();
-        }
-
-
-        private void SwichVisibility()
-        {
-            if (openButtonVisibility == Visibility.Collapsed)
-            {
-                UnPinButtonVisibility = Visibility.Collapsed;
-                PinButtonVisibility = Visibility.Visible;
-            }
-            else
-            {
-                PinButtonVisibility = Visibility.Collapsed;
-                UnPinButtonVisibility = Visibility.Visible;
-            }
-        }
 
 
         private async Task RunOnUI(CoreDispatcherPriority priority, Action action)

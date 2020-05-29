@@ -5,29 +5,25 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:models="using:DesktopApp.Core.Models"
       xmlns:helpers="using:DesktopApp.Helpers"
+      xmlns:utilities="using:WebRTCAdapter.Utilities"
       xmlns:subViews="using:DesktopApp.Views.SubViews"
       xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
       Background="{ThemeResource RegionBrush}"
       DataContext="{x:Bind ViewModel}"
       mc:Ignorable="d">
-    <Page.Resources>
+ 
 
-        <Style TargetType="Button">
-            <Setter Property="CornerRadius"
-                    Value="{StaticResource ControlCornerRadius}" />
-        </Style>
-        <helpers:StringToImageConverter x:Key="StringToImageConverter" />
 
-    </Page.Resources>
     <SplitView x:Name="SplitView"
                PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
-               IsPaneOpen="True"
+               IsPaneOpen="{Binding IsPaneOpen}"
                OpenPaneLength="460"
                PanePlacement="Right"
                CompactPaneLength="48"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
-               DisplayMode="Inline">
+               DisplayMode="Inline"
+               >
         <SplitView.Pane>
             <ContentControl VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
@@ -86,99 +82,9 @@
                             Click="Button_Click_1" />
                 </Grid>
 
-                <Grid x:Name="AppBarGrid"
-                      Grid.Row="0"
-                      Background="Transparent"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Top"
-                      Width="auto"
-                      Height="auto"
-                      PointerEntered="AppBarGrid_PointerEntered"
-                      PointerExited="AppBarGrid_PointerExited">
-                    <Grid.Resources>
-                        <Storyboard x:Name="AppBarClose">
-                            <DoubleAnimation Storyboard.TargetName="AppBarGrid"
-                                             FillBehavior="HoldEnd"
-                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"
-                                             To="-73">
-                                <DoubleAnimation.EasingFunction>
-                                    <CircleEase EasingMode="EaseOut" />
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
+                <subViews:TopBar />
 
-                        </Storyboard>
-                        <Storyboard x:Name="AppBarOpen">
-                            <DoubleAnimation Storyboard.TargetName="AppBarGrid"
-                                             FillBehavior="HoldEnd"
-                                             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransForm.Y)"
-                                             To="0">
-                                <DoubleAnimation.EasingFunction>
-                                    <CircleEase EasingMode="EaseOut" />
-                                </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                        </Storyboard>
-
-                    </Grid.Resources>
-                    <Grid.RenderTransform>
-                        <TranslateTransform x:Name="Translate"></TranslateTransform>
-                    </Grid.RenderTransform>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="60" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="60" />
-                    </Grid.RowDefinitions>
-                    <Border Grid.Column="1"
-                            Grid.Row="0"
-                            x:Name="AppBorder"
-                            Margin="20,15,0,0"
-                            BorderThickness="2"
-                            BorderBrush="White"
-                            CornerRadius="17">
-
-
-                        <StackPanel  Margin="5,8,5,8"
-                                     CornerRadius="17"
-                                     Height="Auto"
-                                     Width="Auto"
-                                     Orientation="Horizontal">
-                            <AppBarToggleButton Icon="VideoChat"
-                                                Label="Başlat"
-                                                Visibility="Visible" />
-                            <AppBarToggleButton IsChecked="False"
-                                                Icon="Stop"
-                                                Label="Durdur"
-                                                IsEnabled="False"
-                                                Foreground="DarkRed" />
-                            <AppBarButton Icon="Clear"
-                                          Label="Sonlandır"
-                                          IsEnabled="False" />
-                            <AppBarSeparator />
-                            <AppBarToggleButton Icon="Keyboard"
-                                                Label="Yakala" />
-                            <AppBarButton Icon="Orientation"
-                                          Label="Yönlendir" />
-                            <AppBarSeparator />
-                            <AppBarToggleButton Icon="Message"
-                                                Label="İletiler" />
-                            <AppBarToggleButton Icon="Download"
-                                                Label="İndirmeler" />
-                            <AppBarSeparator />
-                            <AppBarButton Icon="UnPin"
-                                          Label="Kapat"
-                                          Click="UnpinButton_Click"
-                                          Visibility="{x:Bind UnPinButtonVisibility, Mode=OneWay}" />
-                            <AppBarButton Icon="Pin"
-                                          Label="Sabitle"
-                                          Click="PinButton_Click"
-                                          Visibility="{x:Bind PinButtonVisibility, Mode=OneWay}" />
-                        </StackPanel>
-                    </Border>
-                </Grid>
+                
 
 
             </Grid>

@@ -157,7 +157,7 @@
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="ViewModels\InteractionsPanelViewModel.cs" />
     <Compile Include="ViewModels\OperationsViewModel.cs" />
-    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\AppBarRemoteConnectionViewModel.cs" />
+    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\TopBarRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\WebRTCRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\SettingsViewModel\WebRTCSettingsViewModel.cs" />
     <Compile Include="ViewModels\RemoteConnectionViewModel.cs" />
@@ -181,6 +181,9 @@
     </Compile>
     <Compile Include="Views\SubViews\MesageBox.xaml.cs">
       <DependentUpon>MesageBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SubViews\TopBar.xaml.cs">
+      <DependentUpon>TopBar.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +249,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SubViews\TopBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -258,6 +265,7 @@
   <ItemGroup>
     <Content Include="Assets\Arrows\filled_minimize.svg" />
     <Content Include="Assets\Arrows\minimize.svg" />
+    <Content Include="Assets\bars.svg" />
     <Content Include="Assets\File_Operations_Svg\cancel.svg" />
     <Content Include="Assets\File_Operations_Svg\check.svg" />
     <Content Include="Assets\File_Operations_Svg\Download.svg" />
@@ -318,6 +326,7 @@
     <Content Include="Assets\OperationIcons\start-button.svg">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Assets\pin.svg" />
     <Content Include="Assets\Settings\add.svg" />
     <Content Include="Assets\Settings\delete.svg" />
     <Content Include="Assets\Settings\delete2.svg" />

@@ -1792,7 +1792,7 @@ namespace PeerConnectionClientOperators.Signalling
                 var offerOptions = new RTCOfferOptions();
                 offerOptions.OfferToReceiveAudio = true;
                 offerOptions.OfferToReceiveVideo = true;
-                CreateDataChannel(); /////////////////////////////////////////////////////////a//////////////////////////////////////////////////////////
+                CreateDataChannels(); /////////////////////////////////////////////////////////a//////////////////////////////////////////////////////////
                 var offer = await PeerConnection.CreateOffer(offerOptions);
 
                 if (IsNullOrEmpty(offer.Sdp))

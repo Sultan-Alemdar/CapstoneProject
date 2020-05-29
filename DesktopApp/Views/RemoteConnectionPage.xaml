@@ -520,27 +520,6 @@
                                   HorizontalAlignment="Right"
                                   Width="150"
                                   Height="200" />
-                    <Button Content="Button"
-                            HorizontalAlignment="Left"
-                            Height="140"
-                            Margin="569,180,0,0"
-                            VerticalAlignment="Top"
-                            Width="280"
-                            Click="Button_Click_1" />
-                    <Button Content="Create&#xD;&#xA;"
-                            HorizontalAlignment="Left"
-                            Height="132"
-                            Margin="569,372,0,0"
-                            VerticalAlignment="Top"
-                            Width="280"
-                            Click="Button_Click_2" />
-                    <Button Content="Send&#xD;&#xA;"
-                            HorizontalAlignment="Left"
-                            Height="65"
-                            Margin="569,540,0,0"
-                            VerticalAlignment="Top"
-                            Width="280"
-                            Click="Button_Click_3" />
                 </Grid>
 
                 <Grid x:Name="AppBarGrid"

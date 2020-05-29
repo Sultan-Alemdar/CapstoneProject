@@ -11,6 +11,8 @@ using DesktopApp.ViewModels;
 using PeerConnectionClientOperators.Signalling;
 using Windows.Foundation;
 using Windows.System.Profile;
+using Windows.UI.ViewManagement;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -19,36 +21,39 @@ namespace DesktopApp.Views
 {
     public sealed partial class RemoteConnectionPage : Page, INotifyPropertyChanged
     {
+        private CoreDispatcher _coreDispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
+
         private Visibility closeButonVisibility = Visibility.Collapsed;
         private Visibility openButtonVisibility = Visibility.Visible;
-
 
         private bool pinned = false;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private RemoteConnectionViewModel ViewModel
-        {
-            get { return ViewModelLocator.Current.RemoteConnectionViewModel; }
-        }
+        private RemoteConnectionViewModel ViewModel => ViewModelLocator.Current.RemoteConnectionViewModel;
 
         public Visibility UnPinButtonVisibility { get => closeButonVisibility; set { closeButonVisibility = value; OnPropertyChanged("UnPinButtonVisibility"); } }
         public Visibility PinButtonVisibility { get => openButtonVisibility; set { openButtonVisibility = value; OnPropertyChanged("PinButtonVisibility"); } }
 
+
+
         public RemoteConnectionPage()
         {
             InitializeComponent();
-            //ViewModelLocator.Current.RemoteConnectionViewModel.PastInteractionStackPanel = PastInteractionStackPanel;
-            //AppBarClose?.Begin();
             Loaded += RemoteConnectionPage_Loaded;
 
         }
 
-        private void RemoteConnectionPage_Loaded(object sender, RoutedEventArgs e)
+        private async void RemoteConnectionPage_Loaded(object sender, RoutedEventArgs e)
         {
+            await RunOnUI(CoreDispatcherPriority.Low, () =>
+            {
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(600, 500));
+                ApplicationView.GetForCurrentView().TryResizeView(new Size(1850, 970));
+                ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
+            });
             AppBarClose.Begin();
-
         }
 
         private void OnPropertyChanged(string propertyName)
@@ -127,39 +132,6 @@ namespace DesktopApp.Views
                 AppBarClose.Begin();
         }
 
-        //private bool DecideInOrOut(Grid element, bool writeToOut = false, double bufferPxs = 0)
-        //{
-        //    writeToOut = true;
-        //    var pointerPosition = Windows.UI.Core.CoreWindow.GetForCurrentThread().PointerPosition;
-        //    var wp_x = pointerPosition.X - Window.Current.Bounds.X;
-        //    var wp_y = pointerPosition.Y - Window.Current.Bounds.Y;
-        //    var ttv = element.TransformToVisual(Window.Current.Content);
-        //    Point screenCoords = ttv.TransformPoint(new Point(0, 0));
-        //    var x1 = screenCoords.X - bufferPxs;
-        //    var y1 = screenCoords.Y - bufferPxs;
-        //    var x2 = x1 + element.ActualWidth + bufferPxs;
-        //    var y2 = y1 + element.ActualHeight + bufferPxs;
-        //    #region WriteToDebug
-        //    if (writeToOut)
-        //    {
-        //        Debug.WriteLine("Pointer.x :" + pointerPosition.X);
-        //        Debug.WriteLine("Pointer.y :" + pointerPosition.Y);
-        //        Debug.WriteLine("Pointer.x on window :" + wp_x);
-        //        Debug.WriteLine("Pointer.y on window :" + wp_y);
-        //        Debug.WriteLine("screenCoords.x1 :" + x1);
-        //        Debug.WriteLine("screenCoords.y1 :" + y1);
-        //        Debug.WriteLine("screenCoords.x2 :" + x2);
-        //        Debug.WriteLine("screenCoords.y2 :" + y2);
-        //    }
-        //    #endregion
-
-        //    if ((wp_x >= x1 && wp_x <= x2) && (wp_y >= y1 && wp_y <= y2))
-        //    {
-        //        //Debug.WriteLine("Boooooom");
-        //        return true;
-        //    }
-        //    return false;
-        //}
 
         private void SwichVisibility()
         {
@@ -175,59 +147,11 @@ namespace DesktopApp.Views
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
 
+        private async Task RunOnUI(CoreDispatcherPriority priority, Action action)
+        {
+            await _coreDispatcher.RunAsync(priority, new DispatchedHandler(action));
         }
 
-        private void MessengerPanel_LayoutUpdated(object sender, object e)
-        {
-            Debug.WriteLine("Boooooom");
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-            MessageModel message = new MessageModel
-            {
-                IsSent = MessageModel.EnumIsExist.Yes,
-
-            };
-            FileModel file = message.File;
-            ViewModel.MessageItems.Add(message);
-            ViewModel.FileItems.Add(file);
-
-            MessageModel message2 = new MessageModel
-            {
-                IsSent = MessageModel.EnumIsExist.No
-            };
-            FileModel file2 = message.File;
-
-            ViewModel.MessageItems.Add(message2);
-            ViewModel.FileItems.Add(file2);
-        }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            Conductor.Instance.CreateDataChannel();
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            Conductor.Instance.SendMessage();
-        }
-
-        //private void Button_Click_1(object sender, RoutedEventArgs e)
-        //{
-        //    List<string> attrNames = new List<string>();//({ "DeviceFamily", "OSVersionFull", "FlightRing" });
-        //    attrNames.Add("DeviceFamily");
-        //    attrNames.Add("OSVersionFull");
-        //    attrNames.Add("FlightRing");
-        //    var attrData = AnalyticsInfo.GetSystemPropertiesAsync(attrNames).AsTask().GetAwaiter().GetResult();
-        //    foreach (var item in attrData)
-        //    {
-        //        Debug.WriteLine(item);
-        //    }
-        //}
     }
 }

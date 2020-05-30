@@ -11,7 +11,7 @@
       Background="{ThemeResource RegionBrush}"
       DataContext="{x:Bind ViewModel}"
       mc:Ignorable="d">
- 
+
 
 
     <SplitView x:Name="SplitView"
@@ -22,8 +22,7 @@
                CompactPaneLength="48"
                HorizontalAlignment="Stretch"
                VerticalAlignment="Stretch"
-               DisplayMode="Inline"
-               >
+               DisplayMode="Inline">
         <SplitView.Pane>
             <ContentControl VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
@@ -79,13 +78,10 @@
                             Margin="921,344,0,0"
                             VerticalAlignment="Top"
                             Width="285"
-                            Click="Button_Click_1" />
+                            Click="Button_Click" />
                 </Grid>
 
-                <subViews:TopBar />
-
-                
-
+                <subViews:TopBar  />
 
             </Grid>
 

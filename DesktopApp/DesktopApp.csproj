@@ -156,6 +156,7 @@
     <Compile Include="Services\SuspensionState.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="ViewModels\OperationsViewModel.cs" />
+    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\MessageBoxRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\TopBarRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\WebRTCRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\SettingsViewModel\WebRTCSettingsViewModel.cs" />
@@ -262,7 +263,7 @@
     <Content Include="Assets\File_Operations_Svg\check.svg" />
     <Content Include="Assets\File_Operations_Svg\Download.svg" />
     <Content Include="Assets\File_Operations_Svg\refresh.svg" />
-    <Content Include="Assets\File_Operations_Svg\Update.svg" />
+    <Content Include="Assets\File_Operations_Svg\Upload.svg" />
     <Content Include="Assets\File_Type_Icons_Svg\after-effects.svg" />
     <Content Include="Assets\File_Type_Icons_Svg\ai.svg" />
     <Content Include="Assets\File_Type_Icons_Svg\audition.svg" />

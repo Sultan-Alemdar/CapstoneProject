@@ -23,8 +23,8 @@ namespace DesktopApp.Views
     {
         private CoreDispatcher _coreDispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
 
-      
-       
+
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -47,7 +47,7 @@ namespace DesktopApp.Views
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             });
-        
+
         }
 
         private void OnPropertyChanged(string propertyName)
@@ -64,18 +64,20 @@ namespace DesktopApp.Views
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageModel messageModel = new MessageModel();
-            FileModel fileModel = messageModel.File;
-            ViewModel.FileItems.Add(fileModel);
+            int myid, messageid;
+            var id = ViewModel.CreateId(out myid, out messageid);
+            FileModel fileModel = new FileModel(id, "AhmetSaruhan", "pdf", 12053);
+            MessageModel messageModel = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Send, null, fileModel);
+
+            FileModel file = new FileModel("asdasd", "AhmetSaruhan", "pdf", 12053);
+            MessageModel ms = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Received, null, fileModel);
+
             ViewModel.MessageItems.Add(messageModel);
+            ViewModel.FileItems.Add(fileModel);
+            ViewModel.MessageItems.Add(ms);
+            ViewModel.FileItems.Add(file);
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            MessageModel messageModel = new MessageModel();
-            FileModel fileModel = messageModel.File;
-            ViewModel.FileItems.Add(fileModel);
-            ViewModel.MessageItems.Add(messageModel);
-        }
+
     }
 }

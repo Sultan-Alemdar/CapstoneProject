@@ -13,44 +13,86 @@ namespace DesktopApp.Core.Models
             No = 0,
             Yes = 1,
         }
+        public enum EnumEvent
+        {
+            Received = 0,
+            Send = 1
+        }
+        private readonly string _messageId; //<PID>546</PID><MID>53</MID>
+        private readonly string _text = "Deneme Mesajı";      //ben kimim gibi mesala
+        private readonly string _time = "13:10";      //13:14
+        private readonly EnumIsExist _isFileExist = EnumIsExist.Yes;
+        private readonly EnumIsExist _isTextExist = EnumIsExist.Yes;
+        private FileModel _file = null;
 
-        private string _text = "Deneme Mesajı";      //ben kimim gibi mesala
-        private string _time = "13:10";      //13:14
-        private EnumIsExist _isFileExist = EnumIsExist.Yes;
-        private EnumIsExist _isTextExist = EnumIsExist.Yes;
-        private FileModel _file = new FileModel();
-        private EnumIsExist _isReceived = EnumIsExist.No;
-        private EnumIsExist _isSent = EnumIsExist.Yes;
-  
+        private EnumEvent _event;//sended received
 
-
-
-        public string Text { get => _text; set => SetProperty<string>(ref this._text, value, "Text"); }
-        public string Time { get => _time; set => SetProperty<string>(ref this._time, value, "Time"); }
-        public EnumIsExist IsFileExist { get => _isFileExist; set => SetProperty<EnumIsExist>(ref this._isFileExist, value, "IsFileExist"); }
-        public EnumIsExist IsTextExist { get => _isTextExist; set => SetProperty<EnumIsExist>(ref this._isTextExist, value, "IsTextExist"); }
+        public string MessageId { get => _messageId; }
+        public string Text { get => _text; }
+        public string Time { get => _time; }
+        public EnumIsExist IsFileExist { get => _isFileExist; }
+        public EnumIsExist IsTextExist { get => _isTextExist; }
 
         public FileModel File { get => _file; set => SetProperty<FileModel>(ref this._file, value, "File"); }
-        public EnumIsExist IsReceived { get => _isReceived; private set => SetProperty<EnumIsExist>(ref this._isReceived, value, "IsReceived"); }
-        public EnumIsExist IsSent
+
+        public EnumEvent Event { get => _event; set => SetProperty<EnumEvent>(ref this._event, value, "Event"); }
+
+        public MessageModel(string messageId, string time, EnumEvent @event, string text, FileModel file = null)
         {
-            get => _isSent;
-            set
+            _messageId = messageId;
+            _time = time;
+            if (text == "" || text == null)
             {
-                SetProperty<EnumIsExist>(ref this._isSent, value, "IsSent");
-                if (value == EnumIsExist.Yes)
-                {
-                    IsReceived = EnumIsExist.No;
-                   
-                }
-                else
-                {
-                    IsReceived = EnumIsExist.Yes;
-            
-                }
+                _isTextExist = EnumIsExist.No;
+                _text = "";
+
+            }
+            else
+            {
+                _text = text;
+            }
+
+            if (file == null)
+                _isFileExist = EnumIsExist.No;
+
+            _file = file;
+            _event = @event;
+        }
+        /// <summary>
+        /// It provides visibility behavior integrity at both peer side. A peer who is a receiver, must call this method to be provided a receiver behavior to message.
+        /// </summary>
+        /// <param name="message"></param>
+        public static void SwitchBehaivor(MessageModel message)
+        {
+            if (message.Event == EnumEvent.Send)
+            {
+                message.Event = EnumEvent.Received;
+                if (message.File != null)
+                    message.File.Event = FileModel.EnumEvent.Download;
             }
         }
-
-       
     }
 }
+#region Old
+//private EnumIsExist _isReceived = EnumIsExist.No;
+//private EnumIsExist _isSent = EnumIsExist.Yes;
+//public EnumIsExist IsReceived { get => _isReceived; private set => SetProperty<EnumIsExist>(ref this._isReceived, value, "IsReceived"); }
+//public EnumIsExist IsSent
+//{
+//    get => _isSent;
+//    set
+//    {
+//        SetProperty<EnumIsExist>(ref this._isSent, value, "IsSent");
+//        if (value == EnumIsExist.Yes)
+//        {
+//            IsReceived = EnumIsExist.No;
+
+//        }
+//        else
+//        {
+//            IsReceived = EnumIsExist.Yes;
+
+//        }
+//    }
+//} 
+#endregion

@@ -13,5 +13,9 @@ namespace DesktopApp.Constants
         public static readonly string SETTINGS_VIEW_MODEL_FULL_NAME = (typeof(SettingsViewModel)).FullName;
         public static readonly string REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME = (typeof(RemoteConnectionViewModel)).FullName;
         public static readonly string REMOTE_ADAPTER_VIEW_MODEL_FULL_NAME = (typeof(WebRTCAdapter.Adapters.AdapterViewModel)).FullName;
+        public static readonly string ID_START_TAG = "<PID>";
+        public static readonly string ID_END_TAG = "</PID>";
+        public static readonly string MESSAGE_START_TAG = "<MID>";
+        public static readonly string MESSAGE_END_TAG = "</MID>";
     }
 }

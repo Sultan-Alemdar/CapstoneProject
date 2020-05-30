@@ -18,6 +18,8 @@
         <helpers:StringToImageConverter x:Key="StringToImageConverter" />
         <helpers:EnumToBooleanConverter x:Key="EnumExistToBooleanConverter"
                                         EnumType="{x:Bind Path=ViewModel.TypeOfEnumExist}" />
+        <helpers:EnumToBooleanConverter x:Key="EnumMessageEventToBooleanConverter"
+                                        EnumType="{x:Bind Path=ViewModel.TypeOfMessageEnumEvent}" />
         <helpers:EnumToBooleanConverter x:Key="EnumStatusToBooleanConverter"
                                         EnumType="{x:Bind Path=ViewModel.TypeOfEnumStatus}" />
     </UserControl.Resources>
@@ -93,7 +95,7 @@
                                   BorderThickness="3"
                                   CornerRadius="4"
                                   BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
-                                  Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                  Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Send'}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="20"
@@ -147,7 +149,7 @@
 
                                 <TextBlock Name="ReceivedClockText"
                                            Grid.Row="1"
-                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                           Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Received'}"
                                            VerticalAlignment="Bottom"
                                            HorizontalAlignment="Right"
                                            FlowDirection="RightToLeft"
@@ -155,7 +157,7 @@
 
                                 <TextBlock Name="SubmittedClockText"
                                            Grid.Row="1"
-                                           Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                           Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Send'}"
                                            VerticalAlignment="Bottom"
                                            HorizontalAlignment="Left"
                                            FlowDirection="LeftToRight"
@@ -168,7 +170,7 @@
                                   Margin="4"
                                   Background="Transparent"
                                   HorizontalAlignment="Left"
-                                  Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                  Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Received'}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="20"
@@ -222,7 +224,7 @@
 
                                 <TextBlock Name="ReceivedClockText2"
                                            Grid.Row="1"
-                                           Visibility="{Binding IsReceived,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                           Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Received'}"
                                            VerticalAlignment="Bottom"
                                            HorizontalAlignment="Right"
                                            FlowDirection="RightToLeft"
@@ -230,7 +232,7 @@
 
                                 <TextBlock Name="SubmittedClockText2"
                                            Grid.Row="1"
-                                           Visibility="{Binding IsSent,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                           Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Send'}"
                                            VerticalAlignment="Bottom"
                                            HorizontalAlignment="Left"
                                            FlowDirection="LeftToRight"
@@ -274,7 +276,6 @@
                               HorizontalAlignment="Stretch"
                               ZoomMode="Disabled"
                               IsVerticalScrollChainingEnabled="True"
-                             
                               HorizontalScrollMode="Disabled"
                               HorizontalScrollBarVisibility="Disabled"
                               VerticalScrollMode="Enabled"
@@ -290,7 +291,8 @@
                          Width="auto"
                          Height="40"
                          MinHeight="40"
-                         MaxHeight="40">
+                         MaxHeight="40"
+                         Command="{Binding AddCommand}">
                     <SymbolIcon Symbol="Attach" />
                 </Button>
                 <Button  Grid.Column="3"

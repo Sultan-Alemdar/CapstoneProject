@@ -17,8 +17,9 @@ namespace DesktopApp.ViewModels
     {
         public System.Type TypeOfEnumExist => typeof(MessageModel.EnumIsExist);
         public System.Type TypeOfEnumStatus => typeof(FileModel.EnumStatus);
+        public System.Type TypeOfMessageEnumEvent => typeof(MessageModel.EnumEvent);
 
-    
+
         private StackPanel _pastInteractionStackPanel;
         public StackPanel PastInteractionStackPanel { get => _pastInteractionStackPanel; set => Set<StackPanel>("PastInteractionStackPanel", ref this._pastInteractionStackPanel, value); }
 
@@ -33,11 +34,13 @@ namespace DesktopApp.ViewModels
         public RemoteConnectionViewModel()
         {
             PastInteractionStackPanel = new StackPanel();
-         
-    
+
+
             _disconnectFromPeerCommand = new GalaSoft.MvvmLight.Command.RelayCommand(DiscconectFromPeer, DiscconectFromCanExecute);
+
+            _addCommand = new GalaSoft.MvvmLight.Command.RelayCommand(Add, AddCanExecute);
         }
 
-     
+
     }
 }

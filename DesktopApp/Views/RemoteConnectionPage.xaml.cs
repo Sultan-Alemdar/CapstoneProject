@@ -23,9 +23,7 @@ namespace DesktopApp.Views
     {
         private CoreDispatcher _coreDispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
 
-        private Visibility closeButonVisibility = Visibility.Collapsed;
-        private Visibility openButtonVisibility = Visibility.Visible;
-
+      
        
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -51,12 +51,6 @@
                        FontSize="17"
                        FontWeight="Medium"
                        HorizontalAlignment="Left">İleti Kutusu</TextBlock>
-            <Button VerticalAlignment="Stretch"
-                    HorizontalAlignment="Right"
-                    CornerRadius="4">
-                <Image Stretch="Uniform"
-                       Source="../../Assets/Arrows/minimize.svg" />
-            </Button>
 
         </Grid>
 

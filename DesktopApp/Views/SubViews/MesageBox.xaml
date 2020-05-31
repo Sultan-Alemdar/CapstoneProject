@@ -62,7 +62,7 @@
                   Background="Transparent"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
-                  ItemsSource="{Binding MessageItems}"
+                  ItemsSource="{Binding AllMessagesOnInterfaceCollection}"
                   SelectionMode="None"
                   ElementSoundMode="FocusOnly">
             <ListView.ItemsPanel>

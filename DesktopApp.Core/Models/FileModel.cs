@@ -86,7 +86,7 @@ namespace DesktopApp.Core.Models
             _fileName = fileName;
             _fileType = fileType;
             _totalSize = totalSize;
-            SetOfferedStateConfig();
+          
         }
 
 
@@ -95,7 +95,7 @@ namespace DesktopApp.Core.Models
         {
             this.Percent = 0;//sadece tetikleme.
         }
-        private void SetOfferedStateConfig()
+        public void SetOfferedStateConfig()
         {
             this._fileState = FileModel.EnumFileState.Offered;
             this._proccesStatus = FileModel.EnumProccesStatus.Waiting;

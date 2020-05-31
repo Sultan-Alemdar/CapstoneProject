@@ -24,11 +24,11 @@ namespace DesktopApp.ViewModels
         private StackPanel _pastInteractionStackPanel;
         public StackPanel PastInteractionStackPanel { get => _pastInteractionStackPanel; set => Set<StackPanel>("PastInteractionStackPanel", ref this._pastInteractionStackPanel, value); }
 
-        private ObservableCollection<FileModel> _fileItems = new ObservableCollection<FileModel>();
-        public ObservableCollection<FileModel> FileItems { get => _fileItems; set => Set<ObservableCollection<FileModel>>("FileItems", ref this._fileItems, value); }
+        private ObservableCollection<FileModel> _allFilesOnInterfaceCollection = new ObservableCollection<FileModel>();
+        public ObservableCollection<FileModel> AllFilesOnInterfaceCollection { get => _allFilesOnInterfaceCollection; set => Set<ObservableCollection<FileModel>>("AllFilesOnInterfaceCollection", ref this._allFilesOnInterfaceCollection, value); }
 
-        private ObservableCollection<MessageModel> _messageItems = new ObservableCollection<MessageModel>();
-        public ObservableCollection<MessageModel> MessageItems { get => _messageItems; set => Set<ObservableCollection<MessageModel>>("MessageItems", ref this._messageItems, value); }
+        private ObservableCollection<MessageModel> _allMessagesOnInterfaceCollection = new ObservableCollection<MessageModel>();
+        public ObservableCollection<MessageModel> AllMessagesOnInterfaceCollection { get => _allMessagesOnInterfaceCollection; set => Set<ObservableCollection<MessageModel>>("AllMessagesOnInterfaceCollection", ref this._allMessagesOnInterfaceCollection, value); }
 
         public AdapterViewModel AdapterViewModel => AdapterViewModel.Instance;
 
@@ -39,9 +39,9 @@ namespace DesktopApp.ViewModels
 
             _disconnectFromPeerCommand = new GalaSoft.MvvmLight.Command.RelayCommand(DiscconectFromPeer, DiscconectFromCanExecute);
 
-            _addCommand = new GalaSoft.MvvmLight.Command.RelayCommand(Add, AddCanExecute);
+            _offerFileCommand = new GalaSoft.MvvmLight.Command.RelayCommand(OfferFile, OfferFileCanExecute);
 
-            _sendCommand = new GalaSoft.MvvmLight.Command.RelayCommand(Send,SendCanExecute);
+            _sendCommand = new GalaSoft.MvvmLight.Command.RelayCommand(Send, SendCanExecute);
 
 
             //Conductor.Instance.MessageChannel.OnBufferedAmountLow += MessageChannel_OnBufferedAmountLow;
@@ -60,29 +60,29 @@ namespace DesktopApp.ViewModels
 
         private void FileChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
         {
- 
+
         }
 
         private void FileChannel_OnError(Org.WebRtc.IRTCError Event)
         {
-         
+
         }
 
         private void FileChannel_OnClose()
         {
-       
+
         }
 
         private void FileChannel_OnOpen()
         {
-          
+
         }
 
         private void FileChannel_OnBufferedAmountLow()
         {
-       
+
         }
 
-        
+
     }
 }

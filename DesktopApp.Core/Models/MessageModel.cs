@@ -21,17 +21,9 @@ namespace DesktopApp.Core.Models
         public enum EnumSeen
         {
             No = 0,
-            Yes = 0,
+            Yes = 1,
         }
 
-        public enum EnumMessageType
-        {
-            PlainText = 0,
-            Offer = 1,
-            Answer = 2,
-            Decline = 3,
-            Waiting = 4
-        }
         private EnumSeen _seen = EnumSeen.No;
 
         private readonly string _id; //<PID>546</PID><MID>53</MID>
@@ -52,7 +44,7 @@ namespace DesktopApp.Core.Models
         public FileModel File { get => _file; set => SetProperty<FileModel>(ref this._file, value, "File"); }
 
         public EnumEvent Event { get => _event; set => SetProperty<EnumEvent>(ref this._event, value, "Event"); }
-        public EnumSeen Seen { get => _seen; private set => SetProperty<EnumSeen>(ref this._seen, value, "Seen"); }
+        public EnumSeen Seen { get => _seen;  set => SetProperty<EnumSeen>(ref this._seen, value, "Seen"); }
 
         public MessageModel(string messageId, string time, EnumEvent eventt, string text, FileModel file = null)
         {
@@ -89,6 +81,7 @@ namespace DesktopApp.Core.Models
                 if (this.File != null)
                     this.File.Event = FileModel.EnumEvent.Download;
             }
+            
 
         }
     }

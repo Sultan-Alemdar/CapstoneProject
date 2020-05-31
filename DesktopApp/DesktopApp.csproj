@@ -156,7 +156,7 @@
     <Compile Include="Services\SuspensionState.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="ViewModels\OperationsViewModel.cs" />
-    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\MessageBoxRemoteConnectionViewModel.cs" />
+    <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\ChannelRemoteConnectionPageViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\TopBarRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\RemoteConnectionViewModel\WebRTCRemoteConnectionViewModel.cs" />
     <Compile Include="ViewModels\PartialClases\SettingsViewModel\WebRTCSettingsViewModel.cs" />

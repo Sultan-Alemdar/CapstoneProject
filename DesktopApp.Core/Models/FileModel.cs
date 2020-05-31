@@ -13,7 +13,7 @@ namespace DesktopApp.Core.Models
             Upload = 0,
             Download = 1,
         }
-        public enum EnumStatus
+        public enum EnumProccesStatus
         {
             Waiting = 0,
             Progressing = 1,
@@ -25,7 +25,8 @@ namespace DesktopApp.Core.Models
             Offered = 0,
             Accepted = 1,
             Declined = 2,
-            Downloaded = 3
+            Shared = 3,
+
         }
         private readonly string _fileId; //<PID>546</PID><MID>53</MID>
         private readonly string _fileName = "Deneme Dokümanı";      //deneme
@@ -36,7 +37,7 @@ namespace DesktopApp.Core.Models
         private ulong _percent = 0;       //total/proggresedSİze
         private ulong _progressedSize = 0;         //1024kb
         private readonly ulong _totalSize = 0;      //1024kb
-        private EnumStatus _status = EnumStatus.Waiting;     //cancelled, progressing, completed
+        private EnumProccesStatus _proccesStatus = EnumProccesStatus.Waiting;     //cancelled, progressing, completed
         private EnumEvent _event = EnumEvent.Upload;       //upload,download
 
         public string FileId { get => _fileId; }
@@ -66,15 +67,10 @@ namespace DesktopApp.Core.Models
         }
         public ulong TotalSize { get => _totalSize; }
         public ulong ProgressedSize { get => _progressedSize; set => SetProperty<ulong>(ref this._progressedSize, value, "ProgresedSize"); }
-        public EnumStatus Status { get => _status; private set => SetProperty<EnumStatus>(ref this._status, value, "Status"); }
+        public EnumProccesStatus ProccesStatus { get => _proccesStatus; private set => SetProperty<EnumProccesStatus>(ref this._proccesStatus, value, "ProccesStatus"); }
         public EnumEvent Event { get => _event; set => SetProperty<EnumEvent>(ref this._event, value, "Event"); }
 
-        private void SetOfferedStateConfig()
-        {
-            this._fileState = FileModel.EnumFileState.Offered;
-            this._status = FileModel.EnumStatus.Waiting;
-            this._event = EnumEvent.Upload;
-        }
+
 
         /// <summary>
         /// FileModel constructor. It gets readonly paremeters only. Instance will be set as offred  state config.
@@ -95,43 +91,36 @@ namespace DesktopApp.Core.Models
 
 
 
-        public static void ShowPercent(FileModel fileModel)
+        public void ShowPercent()
         {
-            fileModel.Percent = 0;//sadece tetikleme.
-
+            this.Percent = 0;//sadece tetikleme.
+        }
+        private void SetOfferedStateConfig()
+        {
+            this._fileState = FileModel.EnumFileState.Offered;
+            this._proccesStatus = FileModel.EnumProccesStatus.Waiting;
+            this._event = EnumEvent.Upload;
+        }
+        public void SetDeclinedStateConfig()
+        {
+            this.FileState = FileModel.EnumFileState.Declined;
+            this.ProccesStatus = FileModel.EnumProccesStatus.Cancelled;
+        }
+        public void SetAcceptedStateConfig()
+        {
+            this.FileState = FileModel.EnumFileState.Accepted;
+            this.ProccesStatus = FileModel.EnumProccesStatus.Progressing;
+        }
+        public void SetSharedStateConfig()
+        {
+            this.FileState = FileModel.EnumFileState.Shared;
+            this.ProccesStatus = FileModel.EnumProccesStatus.Completed;
         }
 
+        public bool IsDeclined => (_fileState == EnumFileState.Declined && _proccesStatus == EnumProccesStatus.Cancelled);
+        public bool IsAccepted => (_fileState == EnumFileState.Accepted && _proccesStatus == EnumProccesStatus.Progressing);
+        public bool IsShared => (_fileState == EnumFileState.Shared && _proccesStatus == EnumProccesStatus.Completed);
 
-        public static void SetDeclinedStateConfig(FileModel fileModel)
-        {
-            fileModel.FileState = FileModel.EnumFileState.Declined;
-            fileModel.Status = FileModel.EnumStatus.Cancelled;
-        }
-        public static void SetAcceptedStateConfig(FileModel fileModel)
-        {
-            fileModel.FileState = FileModel.EnumFileState.Accepted;
-            fileModel.Status = FileModel.EnumStatus.Progressing;
-        }
-        public static void SetDownloadedStateConfig(FileModel fileModel)
-        {
-            fileModel.FileState = FileModel.EnumFileState.Downloaded;
-            fileModel.Status = FileModel.EnumStatus.Completed;
-        }
-
-        //public static void SwitchBehaivor(FileModel fileModel)
-        //{
-        //    if (fileModel.Event == EnumEvent.Update)
-        //    {
-        //        fileModel.Event = EnumEvent.Download;
-        //        fileModel.Is = EnumEvent.Download;
-        //    }
-        //    else
-        //    {
-        //        fileModel.Event = EnumEvent.Download;
-
-        //    }
-        //    fileModel.FileState = FileModel.EnumFileState.Downloaded;
-        //    fileModel.Event = FileModel.EnumEvent.;
-        //}
+  
     }
 }

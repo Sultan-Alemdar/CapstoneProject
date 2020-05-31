@@ -59,17 +59,19 @@ namespace DesktopApp.Core.Models
             _event = @event;
         }
         /// <summary>
-        /// It provides visibility behavior integrity at both peer side. A peer who is a receiver, must call this method to be provided a receiver behavior to message.
+        /// It provides visibility behavior integrity at both peer side. A peer who is a receiver, must call this method to be provided a receiver threatment to message.
         /// </summary>
         /// <param name="message"></param>
-        public static void SwitchBehaivor(MessageModel message)
+        public void SwitchTreatment()
         {
-            if (message.Event == EnumEvent.Send)
+
+            if (this.Event == EnumEvent.Send)
             {
-                message.Event = EnumEvent.Received;
-                if (message.File != null)
-                    message.File.Event = FileModel.EnumEvent.Download;
+                this.Event = EnumEvent.Received;
+                if (this.File != null)
+                    this.File.Event = FileModel.EnumEvent.Download;
             }
+
         }
     }
 }

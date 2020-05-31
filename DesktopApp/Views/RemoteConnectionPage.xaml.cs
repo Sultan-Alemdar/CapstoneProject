@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 using System.Threading.Tasks;
 using DesktopApp.Core.Models;
-using DesktopApp.Old.Core.Models;
+
 using DesktopApp.ViewModels;
 using PeerConnectionClientOperators.Signalling;
 using Windows.Foundation;

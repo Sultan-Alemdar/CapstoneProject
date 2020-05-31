@@ -85,13 +85,6 @@ namespace PeerConnectionClientOperators.Signalling
 
         }
 
-        public void SendMessage(string jsonString)
-        {
-            if (_messageChannel.ReadyState == RTCDataChannelState.Open)
-                _fileChannel.Send(jsonString);
-
-        }
-
 
 
 

@@ -90,7 +90,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Signalling\Conductor.cs" />
-    <Compile Include="Signalling\PartialClasses\Conductor.cs" />
+    <Compile Include="Signalling\PartialClasses\PartialConductor.cs" />
     <Compile Include="Signalling\Signalling.cs" />
     <Compile Include="Stats\PeerConnectionStateChange.cs" />
     <Compile Include="Stats\StatsController.cs" />

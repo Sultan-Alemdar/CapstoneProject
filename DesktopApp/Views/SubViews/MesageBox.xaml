@@ -280,11 +280,13 @@
                               HorizontalScrollBarVisibility="Disabled"
                               VerticalScrollMode="Enabled"
                               VerticalScrollBarVisibility="Auto">
-                    <RichEditBox  FontSize="20"
-                                  Margin="4"
-                                  MinHeight="20"
-                                  MaxHeight="400"
-                                  MinWidth="300" />
+                    <TextBox  FontSize="20"
+                              Margin="4"
+                              MinHeight="20"
+                              MaxHeight="400"
+                              MinWidth="300"
+                              TextWrapping="Wrap"
+                              Text="{Binding MessageText,Mode=TwoWay}" />
                 </ScrollViewer>
                 <Button  Grid.Column="2"
                          Margin="2"

@@ -22,39 +22,44 @@ namespace DesktopApp.ViewModels
 {
     public sealed partial class RemoteConnectionViewModel : ViewModelBase
     {
-        private static object _fileSendingObject = new object();
 
+        private readonly RelayCommand _sendCommand;
+        private readonly RelayCommand _addCommand;
 
+        public RelayCommand AddCommand => _addCommand;
+
+        public RelayCommand SendCommand => _sendCommand;
 
         List<FileModel> _pickedByteFileList = new List<FileModel>();
         List<StorageFile> _strorageFiles = new List<StorageFile>();
 
-        // List<Tuple<StorageFile, FileModel, MessageModel>> _messagess = new List<Tuple<StorageFile, FileModel, MessageModel>>();
+        Dictionary<string, MessageModel> _defaultTypeSendedMessages = new Dictionary<string, MessageModel>();
+        //Dictionary<string, MessageModel> _defaultTypeSendedMessages = new Dictionary<string, MessageModel>();
 
         //Tüm mesajları ve bilgilerini temsil ediyor. Ana kaynak yani mesaj veritabanı.
         Dictionary<string, Tuple<MessageModel, FileModel, StorageFile>> _messageDic = new Dictionary<string, Tuple<MessageModel, FileModel, StorageFile>>();
 
-        private RelayCommand _addCommand;
 
-        public RelayCommand AddCommand
+
+
+
+        /// <summary>
+        /// Temel, yalın mesaj gönderme işlemi.
+        /// </summary>
+        private void Send()
         {
-            get => _addCommand; set
-            {
-                Set<RelayCommand>(ref _addCommand, value, "AddCommand");
-            }
-
+            SendDefaultTypeMessageAsync(null);
+        }
+        private bool SendCanExecute()
+        {
+            return true;
         }
 
+        public string MessageText { get; set; }
 
 
-        private BitmapImage storageItemThumbnail;
-        public BitmapImage StorageItemThumbnail
-        {
-            get => storageItemThumbnail; set
-            {
-                Set<BitmapImage>(ref storageItemThumbnail, value, "StorageItemThumbnail");
-            }
-        }
+
+
 
         private async void Add()
         {
@@ -73,28 +78,11 @@ namespace DesktopApp.ViewModels
             var files = await picker.PickMultipleFilesAsync();
             if (files.Count > 0)
             {
-
-
-                // Application now has read/write access to the picked file(s)
                 foreach (Windows.Storage.StorageFile file in files)
                 {
-                    int count = _messageDic.Count;
-                    var fileprops = await file.GetBasicPropertiesAsync();
-                    int myId, messageId;
-                    var id = CreateId(out myId, out messageId);
-
-                    FileModel fileModel = new FileModel(id, file.Name, file.FileType.Substring(1), fileprops.Size);
-
-                    MessageModel messageModel = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Send, null, fileModel);
-
-                    var messageInfo = new Tuple<MessageModel, FileModel, StorageFile>(messageModel, fileModel, file);
-                    _messageDic.Add(id, messageInfo);
-                    MessageItems.Add(messageModel);
-                    SendMessageAsync(messageModel);
+                    SendDefaultTypeMessageAsync(file);
                 }
-
             }
-
         }
 
         private async void MessageChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
@@ -107,6 +95,7 @@ namespace DesktopApp.ViewModels
                      switch (channelMessage.About)
                      {
                          case ChannelMessageModel.EnumAboutWhat.BeSeen:
+
                              break;
                          case ChannelMessageModel.EnumAboutWhat.Answer:
                              // gönderdiğin dosyayı kabul ettim, yollamaya başla gibi yani.
@@ -125,14 +114,25 @@ namespace DesktopApp.ViewModels
 
                      return;
                  }
+                 #region DefaultMessageBehavior
                  MessageModel messageModel = channelMessage.MessageModel;
-
                  messageModel.SwitchTreatment();
                  MessageItems.Add(messageModel);
-                 //it will waite for accept.
+                 SendNotifyMessageAsync(messageModel.Id, ChannelMessageModel.EnumAboutWhat.BeSeen);
+                 #endregion
+
 
              });
 
+        }
+        private async void SendNotifyMessageAsync(string Id, ChannelMessageModel.EnumAboutWhat enumAboutWhat)
+        {
+            await Task.Run(() =>
+           {
+               var channelMessageModel = ChannelMessageModel.GetNotifyType(Id, enumAboutWhat);
+               string strChannelMessageModel = JsonConvert.SerializeObject(channelMessageModel);
+               Conductor.Instance.MessageChannel.Send(strChannelMessageModel);
+           });
         }
         private async void SendFileAsync(MessageModel messageModel)
         {
@@ -141,7 +141,7 @@ namespace DesktopApp.ViewModels
            {
                try
                {
-                   if (!_messageDic.TryGetValue(messageModel.MessageId, out Tuple<MessageModel, FileModel, StorageFile> messageInfo))
+                   if (!_messageDic.TryGetValue(messageModel.Id, out Tuple<MessageModel, FileModel, StorageFile> messageInfo))
                        return;
                    if (!(Conductor.Instance.FileChannel.ReadyState == Org.WebRtc.RTCDataChannelState.Open))
                        Debug.WriteLine("[Warning] ChannelRemoteConnectionPageViewModel : File channel is not open.");
@@ -186,7 +186,7 @@ namespace DesktopApp.ViewModels
 
 
                    }
-                   _messageDic.Remove(messageModel.MessageId);//çöplüğü boşalt
+                   _messageDic.Remove(messageModel.Id);//çöplüğü boşalt
 
                }
                catch (ArgumentOutOfRangeException ou)
@@ -209,7 +209,6 @@ namespace DesktopApp.ViewModels
 
            }, cancellationToken);
 
-
         }
 
         private void CalculateIndex(ref ulong i, ulong totalSize)
@@ -227,22 +226,23 @@ namespace DesktopApp.ViewModels
 
         private void MessageChannel_OnError(Org.WebRtc.IRTCError Event)
         {
-            throw new NotImplementedException();
+
         }
 
         private void MessageChannel_OnClose()
         {
-            throw new NotImplementedException();
+
         }
 
         private void MessageChannel_OnOpen()
         {
-            throw new NotImplementedException();
+
+
         }
 
         private void MessageChannel_OnBufferedAmountLow()
         {
-            throw new NotImplementedException();
+
         }
 
         public string CreateId(out int myId, out int messageId)
@@ -261,12 +261,33 @@ namespace DesktopApp.ViewModels
             return builder.ToString();
         }
 
-        private async void SendMessageAsync(MessageModel message)
+        /// <summary>
+        /// All messages must go via this method to data channel. It provides default comunication. Simple or default message type comunication.
+        /// </summary>
+        /// <param name="file">It will be represent file input stream on later, if user wants to share a file.</param>
+        private async void SendDefaultTypeMessageAsync(StorageFile file = null)
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                string strMessageModel = JsonConvert.SerializeObject(message);
-                Conductor.Instance.MessageChannel.Send(strMessageModel);
+                var id = CreateId(out int myId, out int messageId);
+                MessageModel messageModel = null;
+                if (file != null)
+                {
+                    var fileprops = await file.GetBasicPropertiesAsync();
+
+                    FileModel fileModel = new FileModel(id, file.Name, file.FileType.Substring(1), fileprops.Size);
+
+                    messageModel = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Send, null, fileModel);
+
+                    var messageInfo = new Tuple<MessageModel, FileModel, StorageFile>(messageModel, fileModel, file);
+                    _messageDic.Add(id, messageInfo);
+                }
+                messageModel = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Send, MessageText);
+                _defaultTypeSendedMessages.Add(id, messageModel);
+                MessageItems.Add(messageModel);
+                var channelMessageModel = ChannelMessageModel.GetDefaultType(messageModel);
+                string strChannelMessageModel = JsonConvert.SerializeObject(channelMessageModel);
+                Conductor.Instance.MessageChannel.Send(strChannelMessageModel);
             });
         }
         private bool AddCanExecute()

@@ -18,7 +18,23 @@ namespace DesktopApp.Core.Models
             Received = 0,
             Send = 1
         }
-        private readonly string _messageId; //<PID>546</PID><MID>53</MID>
+        public enum EnumSeen
+        {
+            No = 0,
+            Yes = 0,
+        }
+
+        public enum EnumMessageType
+        {
+            PlainText = 0,
+            Offer = 1,
+            Answer = 2,
+            Decline = 3,
+            Waiting = 4
+        }
+        private EnumSeen _seen = EnumSeen.No;
+
+        private readonly string _id; //<PID>546</PID><MID>53</MID>
         private readonly string _text = "Deneme Mesajı";      //ben kimim gibi mesala
         private readonly string _time = "13:10";      //13:14
         private readonly EnumIsExist _isFileExist = EnumIsExist.Yes;
@@ -27,7 +43,7 @@ namespace DesktopApp.Core.Models
 
         private EnumEvent _event;//sended received
 
-        public string MessageId { get => _messageId; }
+        public string Id { get => _id; }
         public string Text { get => _text; }
         public string Time { get => _time; }
         public EnumIsExist IsFileExist { get => _isFileExist; }
@@ -36,10 +52,11 @@ namespace DesktopApp.Core.Models
         public FileModel File { get => _file; set => SetProperty<FileModel>(ref this._file, value, "File"); }
 
         public EnumEvent Event { get => _event; set => SetProperty<EnumEvent>(ref this._event, value, "Event"); }
+        public EnumSeen Seen { get => _seen; private set => SetProperty<EnumSeen>(ref this._seen, value, "Seen"); }
 
-        public MessageModel(string messageId, string time, EnumEvent @event, string text, FileModel file = null)
+        public MessageModel(string messageId, string time, EnumEvent eventt, string text, FileModel file = null)
         {
-            _messageId = messageId;
+            _id = messageId;
             _time = time;
             if (text == "" || text == null)
             {
@@ -56,7 +73,7 @@ namespace DesktopApp.Core.Models
                 _isFileExist = EnumIsExist.No;
 
             _file = file;
-            _event = @event;
+            _event = eventt;
         }
         /// <summary>
         /// It provides visibility behavior integrity at both peer side. A peer who is a receiver, must call this method to be provided a receiver threatment to message.
@@ -68,6 +85,7 @@ namespace DesktopApp.Core.Models
             if (this.Event == EnumEvent.Send)
             {
                 this.Event = EnumEvent.Received;
+                Seen = EnumSeen.Yes;
                 if (this.File != null)
                     this.File.Event = FileModel.EnumEvent.Download;
             }

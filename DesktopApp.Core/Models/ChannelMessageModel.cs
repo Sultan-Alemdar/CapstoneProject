@@ -23,23 +23,23 @@ namespace DesktopApp.Core.Models
         }
 
         private MessageModel _messageModel = null;
-        private readonly string _messageModelId = null;
+        private readonly string _id = null;
         private readonly EnumMessageType _messageType = EnumMessageType.Default;
 
         private readonly EnumAboutWhat _aboutWhat = EnumAboutWhat.Answer;
 
         public MessageModel MessageModel { get => _messageModel; private set => _messageModel = value; }
 
-        public string MessageModelId => _messageModelId;
+        public string MessageModelId => _id;
 
         public EnumMessageType MessageType => _messageType;
 
         public EnumAboutWhat About => _aboutWhat;
 
-        private ChannelMessageModel(MessageModel messageModel, string messageModelId, EnumMessageType messageType, EnumAboutWhat aboutWhat)
+        private ChannelMessageModel(MessageModel messageModel, string id, EnumMessageType messageType, EnumAboutWhat aboutWhat)
         {
             _messageModel = messageModel;
-            _messageModelId = messageModelId;
+            _id = id;
             _messageType = messageType;
             _aboutWhat = aboutWhat;
         }
@@ -51,9 +51,9 @@ namespace DesktopApp.Core.Models
             return new ChannelMessageModel(messageModel, null, EnumMessageType.Default, EnumAboutWhat.Null);
         }
 
-        public static ChannelMessageModel GetNotifyType(string messageModelId, EnumAboutWhat aboutWhat)
+        public static ChannelMessageModel GetNotifyType(string id, EnumAboutWhat aboutWhat)
         {
-            return new ChannelMessageModel(null, messageModelId, EnumMessageType.Notify, aboutWhat);
+            return new ChannelMessageModel(null, id, EnumMessageType.Notify, aboutWhat);
         }
     }
 }

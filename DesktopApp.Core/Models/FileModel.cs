@@ -16,31 +16,35 @@ namespace DesktopApp.Core.Models
         public enum EnumProccesStatus
         {
             Waiting = 0,
+            InQueue = 4,
             Progressing = 1,
             Completed = 2,
-            Cancelled = 3,
+            Declined = 3,
+            WritingToStorageError = 5
         }
         public enum EnumFileState
         {
             Offered = 0,
             Accepted = 1,
-            Declined = 2,
-            Shared = 3,
-
+            Canceled = 2,
+            Endded = 3,
+            Started = 4,
+            Failure = 5
         }
-        private readonly string _fileId; //<PID>546</PID><MID>53</MID>
+        private readonly string _id; //<PID>546</PID><MID>53</MID>
         private readonly string _fileName = "Deneme Dokümanı";      //deneme
         private readonly string _fileType = "pdf";       //pdf ...
-
+        private readonly string _fileDisplayName;
+        private readonly string _fileDisplayType;
         private EnumFileState _fileState = EnumFileState.Offered;       //offered, accepted, declined
         private ulong _actionSpeed = 0;       //kbp
         private ulong _percent = 0;       //total/proggresedSİze
         private ulong _progressedSize = 0;         //1024kb
         private readonly ulong _totalSize = 0;      //1024kb
         private EnumProccesStatus _proccesStatus = EnumProccesStatus.Waiting;     //cancelled, progressing, completed
-        private EnumEvent _event = EnumEvent.Upload;       //upload,download
+        private EnumEvent _event = EnumEvent.Download;       //upload,download
 
-        public string FileId { get => _fileId; }
+        public string Id { get => _id; }
         public string FileName { get => _fileName; }
         public string FileType { get => _fileType; }
 
@@ -80,13 +84,14 @@ namespace DesktopApp.Core.Models
         /// <param name="fileName"></param>
         /// <param name="fileType"></param>
         /// <param name="totalSize"></param>
-        public FileModel(string fileId, string fileName, string fileType, ulong totalSize)
+        public FileModel(string fileId, string fileName, string fileType, ulong totalSize, string fileDisplayName, string fileDisplayType)
         {
-            _fileId = fileId;
+            _id = fileId;
             _fileName = fileName;
             _fileType = fileType;
             _totalSize = totalSize;
-          
+            _fileDisplayName = fileDisplayName;
+            _fileDisplayType = fileDisplayType;
         }
 
 
@@ -101,26 +106,40 @@ namespace DesktopApp.Core.Models
             this._proccesStatus = FileModel.EnumProccesStatus.Waiting;
             this._event = EnumEvent.Upload;
         }
-        public void SetDeclinedStateConfig()
+        public void SetCanceledStateConfig()
         {
-            this.FileState = FileModel.EnumFileState.Declined;
-            this.ProccesStatus = FileModel.EnumProccesStatus.Cancelled;
+            this.FileState = FileModel.EnumFileState.Canceled;
+            this.ProccesStatus = FileModel.EnumProccesStatus.Declined;
         }
         public void SetAcceptedStateConfig()
         {
             this.FileState = FileModel.EnumFileState.Accepted;
-            this.ProccesStatus = FileModel.EnumProccesStatus.Progressing;
+            this.ProccesStatus = FileModel.EnumProccesStatus.InQueue;
         }
-        public void SetSharedStateConfig()
+        public void SetEndedStateConfig()
         {
-            this.FileState = FileModel.EnumFileState.Shared;
+            this.FileState = FileModel.EnumFileState.Endded;
             this.ProccesStatus = FileModel.EnumProccesStatus.Completed;
         }
+        public void SetStartedStateConfig()
+        {
+            this.FileState = FileModel.EnumFileState.Started;
+            this.ProccesStatus = FileModel.EnumProccesStatus.Progressing;
+        }
+        public void SetFailureStateConfig()
+        {
+            this.FileState = FileModel.EnumFileState.Failure;
+            this.ProccesStatus = FileModel.EnumProccesStatus.WritingToStorageError;
+        }
 
-        public bool IsDeclined => (_fileState == EnumFileState.Declined && _proccesStatus == EnumProccesStatus.Cancelled);
-        public bool IsAccepted => (_fileState == EnumFileState.Accepted && _proccesStatus == EnumProccesStatus.Progressing);
-        public bool IsShared => (_fileState == EnumFileState.Shared && _proccesStatus == EnumProccesStatus.Completed);
+        public bool IsCanceled => (_fileState == EnumFileState.Canceled && _proccesStatus == EnumProccesStatus.Declined);
+        public bool IsAccepted => (_fileState == EnumFileState.Accepted && _proccesStatus == EnumProccesStatus.InQueue);
+        public bool IsStarted => (_fileState == EnumFileState.Accepted && _proccesStatus == EnumProccesStatus.Progressing);
+        public bool IsEnded => (_fileState == EnumFileState.Endded && _proccesStatus == EnumProccesStatus.Completed);
+        public bool IsDownload => (_event == EnumEvent.Download);
 
-  
+        public string FileDisplayName => _fileDisplayName;
+
+        public string FileDisplayType => _fileDisplayType;
     }
 }

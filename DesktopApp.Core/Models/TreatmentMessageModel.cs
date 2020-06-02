@@ -10,13 +10,16 @@ namespace DesktopApp.Core.Models
         public enum EnumMessageType
         {
             PlainText = 0,
-            FileOffer = 1,
-            FileOfferAnswer = 2,
-            FileWaiting = 3,
-            FileOfferDeclined = 4,
-            FileOfferCompleted = 5,
-            FileOfferError = 6,
-            SeenOfPlainTextOrFileOfferMessage = 7,
+            Offer = 1,
+            Accepted = 2,
+            Canceled = 3,
+            Start = 4,
+            Continue = 8,
+            End = 5,
+            Error = 6,
+            Waiting = 7,
+            Failure = 8,
+            SeenOfPlainTextOrOfferMessage = 9,
         }
 
 
@@ -74,36 +77,47 @@ namespace DesktopApp.Core.Models
 
         public static TreatmentMessageModel GetFileOfferType(MessageModel messageModel)
         {
-            return new TreatmentMessageModel(messageModel, EnumMessageType.FileOffer);
+            return new TreatmentMessageModel(messageModel, EnumMessageType.Offer);
         }
 
-        public static TreatmentMessageModel GetFileOfferAnswerType(string id)
+        public static TreatmentMessageModel GetAcceptedType(string id)
         {
-            return new TreatmentMessageModel(id, EnumMessageType.FileOfferAnswer);
+            return new TreatmentMessageModel(id, EnumMessageType.Accepted);
         }
 
-        public static TreatmentMessageModel GetFileWaitingType(string id, string expectedChunkId, string expectedNextChunkId)
+        public static TreatmentMessageModel GetWaitingType(string id, string expectedChunkId, string expectedNextChunkId)
         {
-            return new TreatmentMessageModel(id, EnumMessageType.FileWaiting, expectedChunkId, expectedNextChunkId);
+            return new TreatmentMessageModel(id, EnumMessageType.Waiting, expectedChunkId, expectedNextChunkId);
         }
 
-        public static TreatmentMessageModel GetFileOfferDeclinedType(string id)
+        public static TreatmentMessageModel GetFileCanceledType(string id)
         {
-            return new TreatmentMessageModel(id, EnumMessageType.FileOfferDeclined);
+            return new TreatmentMessageModel(id, EnumMessageType.Canceled);
         }
 
-        public static TreatmentMessageModel GetFileOfferCompletedType(string id)
+        public static TreatmentMessageModel GetEndType(string id)
         {
-            return new TreatmentMessageModel(id, EnumMessageType.FileOfferCompleted);
+            return new TreatmentMessageModel(id, EnumMessageType.End);
         }
-
-        public static TreatmentMessageModel GetFileOfferErrorType(string id, string errorMessage)
+        public static TreatmentMessageModel GetContinueType(string id)
         {
-            return new TreatmentMessageModel(id, errorMessage, EnumMessageType.FileOfferError);
+            return new TreatmentMessageModel(id, EnumMessageType.Continue);
         }
-        public static TreatmentMessageModel GetSeenOfPlainTextOrFileOfferMessageType(string id)
+        public static TreatmentMessageModel GetStartType(string id)
         {
-            return new TreatmentMessageModel(id, EnumMessageType.SeenOfPlainTextOrFileOfferMessage);
+            return new TreatmentMessageModel(id, EnumMessageType.Start);
+        }
+        public static TreatmentMessageModel GetFailureType(string id)
+        {
+            return new TreatmentMessageModel(id, EnumMessageType.Failure);
+        }
+        public static TreatmentMessageModel GetErrorType(string id, string errorMessage)
+        {
+            return new TreatmentMessageModel(id, errorMessage, EnumMessageType.Error);
+        }
+        public static TreatmentMessageModel GetSeenOfPlainTextOrOfferMessageType(string id)
+        {
+            return new TreatmentMessageModel(id, EnumMessageType.SeenOfPlainTextOrOfferMessage);
         }
     }
 }

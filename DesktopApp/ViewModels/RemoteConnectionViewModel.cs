@@ -39,16 +39,18 @@ namespace DesktopApp.ViewModels
 
             _disconnectFromPeerCommand = new GalaSoft.MvvmLight.Command.RelayCommand(DiscconectFromPeer, DiscconectFromCanExecute);
 
-            _offerFileCommand = new GalaSoft.MvvmLight.Command.RelayCommand(OfferFile, OfferFileCanExecute);
+            _offerCommand = new GalaSoft.MvvmLight.Command.RelayCommand(Offer, OfferCanExecute);
 
             _sendCommand = new GalaSoft.MvvmLight.Command.RelayCommand(Send, SendCanExecute);
 
+            _acceptCommand = new GalaSoft.MvvmLight.Command.RelayCommand<string>(Accept, AcceptCanExecute);
+            _downloadStream = new System.IO.MemoryStream();
 
             //Conductor.Instance.MessageChannel.OnBufferedAmountLow += MessageChannel_OnBufferedAmountLow;
             //Conductor.Instance.MessageChannel.OnOpen += MessageChannel_OnOpen;
             //Conductor.Instance.MessageChannel.OnClose += MessageChannel_OnClose;
             //Conductor.Instance.MessageChannel.OnError += MessageChannel_OnError;
-            //Conductor.Instance.MessageChannel.OnMessage += MessageChannel_OnMessage; ;
+            // Conductor.Instance.MessageChannel.OnMessage += MessageChannel_OnMessage; ;
 
             //Conductor.Instance.FileChannel.OnBufferedAmountLow += FileChannel_OnBufferedAmountLow; ;
             //Conductor.Instance.FileChannel.OnOpen += FileChannel_OnOpen; ;
@@ -58,30 +60,9 @@ namespace DesktopApp.ViewModels
 
         }
 
-        private void FileChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
-        {
 
-        }
 
-        private void FileChannel_OnError(Org.WebRtc.IRTCError Event)
-        {
 
-        }
-
-        private void FileChannel_OnClose()
-        {
-
-        }
-
-        private void FileChannel_OnOpen()
-        {
-
-        }
-
-        private void FileChannel_OnBufferedAmountLow()
-        {
-
-        }
 
 
     }

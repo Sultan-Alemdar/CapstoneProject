@@ -66,16 +66,16 @@ namespace DesktopApp.Views
         {
             int myid, messageid;
             var id = ViewModel.CreateId(out myid, out messageid);
-            FileModel fileModel = new FileModel(id, "AhmetSaruhan", "pdf", 12053);
+            FileModel fileModel = new FileModel(id, "AhmetSaruhan", "pdf", 12053,"PDF Dökümanı","asdqwd");
             MessageModel messageModel = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Send, null, fileModel);
 
-            FileModel file = new FileModel("asdasd", "AhmetSaruhan", "pdf", 12053);
+            FileModel file = new FileModel("asdasd", "AhmetSaruhan", "pdf", 12053, "PDF Dökümanı","sad");
             MessageModel ms = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Received, null, fileModel);
 
-            ViewModel.MessageItems.Add(messageModel);
-            ViewModel.FileItems.Add(fileModel);
-            ViewModel.MessageItems.Add(ms);
-            ViewModel.FileItems.Add(file);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(messageModel);
+            ViewModel.AllFilesOnInterfaceCollection.Add(fileModel);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(ms);
+            ViewModel.AllFilesOnInterfaceCollection.Add(file);
         }
 
 

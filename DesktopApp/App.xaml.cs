@@ -49,7 +49,7 @@ namespace DesktopApp
 
         private ActivationService CreateActivationService()
         {
-            return new ActivationService(this, typeof(ViewModels.RemoteConnectionViewModel));
+            return new ActivationService(this, typeof(ViewModels.OperationsViewModel));
         }
 
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)

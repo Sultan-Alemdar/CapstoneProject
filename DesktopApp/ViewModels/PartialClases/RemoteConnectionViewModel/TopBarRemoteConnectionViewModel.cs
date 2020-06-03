@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using DesktopApp.Constants;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using PeerConnectionClientOperators.Signalling;
 using System;
@@ -34,17 +35,15 @@ namespace DesktopApp.ViewModels
 
         private async void DiscconectFromPeer()
         {
-            await Task.Run(() =>
-            {
-                if (AdapterViewModel.DisconnectFromPeerCommand.CanExecute(this))
-                {
-                    AdapterViewModel.DisconnectFromPeerCommand.Execute(this);
-                }
-            });
+            await Conductor.Instance.DisconnectFromPeer();
+            await RunOnUI(Windows.UI.Core.CoreDispatcherPriority.High, () =>
+              {
+                  ViewModelLocator.Current.NavigationService.Navigate(MyConstants.OPERATIONS_VIEW_MODEL_FULL_NAME);
+              });
         }
-        private bool DiscconectFromCanExecute()
+        private bool DiscconectFromPeerCanExecute()
         {
-            return AdapterViewModel.DisconnectFromPeerCommand.CanExecute(this);
+            return true;
         }
 
     }

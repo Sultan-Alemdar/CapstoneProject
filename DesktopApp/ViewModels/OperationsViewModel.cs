@@ -148,9 +148,20 @@ namespace DesktopApp.ViewModels
                    });
 
                  Conductor.Instance.Signaller.OnMyIdCast += Signaller_OnMyIdCast;
+                 Conductor.Instance.OnPeerConnectionCreated += Instance_OnPeerConnectionCreated;
 
              });
         }
+
+        private async void Instance_OnPeerConnectionCreated()
+        {
+            await RunOnUI(CoreDispatcherPriority.High, () =>
+            {
+                _viewModelLocator.NavigationService.Navigate(MyConstants.REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME);
+            });
+        }
+
+    
 
         private async void Instance_OnInitialized()
         {

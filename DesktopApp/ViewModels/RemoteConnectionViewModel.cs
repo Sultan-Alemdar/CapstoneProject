@@ -37,7 +37,7 @@ namespace DesktopApp.ViewModels
             PastInteractionStackPanel = new StackPanel();
 
 
-            _disconnectFromPeerCommand = new GalaSoft.MvvmLight.Command.RelayCommand(DiscconectFromPeer, DiscconectFromCanExecute);
+            _disconnectFromPeerCommand = new GalaSoft.MvvmLight.Command.RelayCommand(DiscconectFromPeer, DiscconectFromPeerCanExecute);
 
             _offerCommand = new GalaSoft.MvvmLight.Command.RelayCommand(Offer, OfferCanExecute);
 

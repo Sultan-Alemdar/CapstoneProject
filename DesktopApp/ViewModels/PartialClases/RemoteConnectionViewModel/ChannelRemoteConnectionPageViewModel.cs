@@ -68,13 +68,13 @@ namespace DesktopApp.ViewModels
 
         private void SendMessage(TreatmentMessageModel treatmentMessageModel)
         {
-            //if (!(Conductor.Instance.MessageChannel.ReadyState == Org.WebRtc.RTCDataChannelState.Open))
-            //{
-            //    Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Channel was not open, Message could not bening sended");
-            //    return;
-            //}
-            //string strChannelMessageModel = JsonConvert.SerializeObject(treatmentMessageModel);
-            //Conductor.Instance.MessageChannel.Send(strChannelMessageModel);
+            if (!(Conductor.Instance.MessageChannel.ReadyState == Org.WebRtc.RTCDataChannelState.Open))
+            {
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Channel was not open, Message could not bening sended");
+                return;
+            }
+            string strChannelMessageModel = JsonConvert.SerializeObject(treatmentMessageModel);
+            Conductor.Instance.MessageChannel.Send(strChannelMessageModel);
         }
 
 

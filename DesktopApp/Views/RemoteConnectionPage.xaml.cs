@@ -16,6 +16,9 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
+using Windows.Storage;
+using Windows.Storage.Provider;
+using System.IO;
 
 namespace DesktopApp.Views
 {
@@ -66,10 +69,10 @@ namespace DesktopApp.Views
         {
             int myid, messageid;
             var id = ViewModel.CreateId(out myid, out messageid);
-            FileModel fileModel = new FileModel(id, "AhmetSaruhan", "pdf", 12053,"PDF Dökümanı","asdqwd");
+            FileModel fileModel = new FileModel(id, "AhmetSaruhan", "pdf", 12053, "PDF Dökümanı", "asdqwd");
             MessageModel messageModel = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Send, null, fileModel);
 
-            FileModel file = new FileModel("asdasd", "AhmetSaruhan", "pdf", 12053, "PDF Dökümanı","sad");
+            FileModel file = new FileModel("asdasd", "AhmetSaruhan", "pdf", 12053, "PDF Dökümanı", "sad");
             MessageModel ms = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Received, null, fileModel);
 
             ViewModel.AllMessagesOnInterfaceCollection.Add(messageModel);
@@ -78,6 +81,76 @@ namespace DesktopApp.Views
             ViewModel.AllFilesOnInterfaceCollection.Add(file);
         }
 
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".txt");
+            picker.FileTypeFilter.Add(".doc");
+            picker.FileTypeFilter.Add(".docx");
+            picker.FileTypeFilter.Add(".");
 
+            var files = await picker.PickMultipleFilesAsync();
+            if (files.Count > 0)
+            {
+
+                foreach (StorageFile storageFile in files)
+                {
+                    
+                    using (var stream = await storageFile.OpenStreamForReadAsync())
+                    {
+                        _downloadStream = new MemoryStream((int)stream.Length);
+                        int bufferSize = 16 * 1024;
+                        long total = (long)stream.Length;
+                        while (stream.Position < total)
+                        {
+                            byte[] buffer = new byte[bufferSize];
+                            //await stream.ReadAsync(buffer, (int)i, (int)(i + bufferSize));
+                            await stream.ReadAsync(buffer, 0, (int)bufferSize);
+                            if (stream.Position + bufferSize > total)
+                                bufferSize = (int)(total - stream.Position);
+                            GetMemory(buffer);
+                        }
+
+                    }
+                }
+            }
+        }
+        private MemoryStream _downloadStream = new MemoryStream();
+        private void GetMemory(byte[] chunk)
+        {
+            _downloadStream.Write(chunk, 0, chunk.Length);
+        }
+        private async void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+
+            var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+            savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
+            savePicker.FileTypeChoices.Add("png", new List<string>() { "." + "png" });
+            savePicker.SuggestedFileName = "Deneme";
+            Windows.Storage.StorageFile storageFile = await savePicker.PickSaveFileAsync();
+            CachedFileManager.DeferUpdates(storageFile);
+            // write to file
+
+
+            await FileIO.WriteBytesAsync(storageFile, _downloadStream.GetBuffer());
+            FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(storageFile);
+            if (status == FileUpdateStatus.Complete)
+            {
+                Debug.WriteLine("[Info] ChannelRemoteConnectionPageViewModel : File {0} was saved.", storageFile.Name);
+                // endedMessage.File.SetEndedStateConfig();
+            }
+            else
+            {
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : File {0} could not being saved.", storageFile.Name);
+                //endedMessage.File.SetFailureStateConfig();
+            }
+            _downloadStream = new MemoryStream();
+           // _downloadStream.Write(chunk, 0, chunk.Length);
+        }
     }
 }

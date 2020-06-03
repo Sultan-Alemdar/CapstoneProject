@@ -57,7 +57,7 @@
         </Grid>
 
 
-        <ListView Name="MessengerList"
+        <ListView x:Name="MessengerList"
                   Grid.Row="1"
                   Background="Transparent"
                   HorizontalAlignment="Stretch"
@@ -111,8 +111,8 @@
                                             Background="Transparent"
                                             HorizontalContentAlignment="Left"
                                             HorizontalAlignment="Left"
-                                            Command="{Binding AcceptCommand}"
-                                            CommandParameter="{Binding File.Id}"
+                                            Tag="{Binding File.Id}"
+                                            Click="SubmitedReceivedMessageBodyFile_Click"
                                             Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
                                         <StackPanel Orientation="Horizontal"
                                                     VerticalAlignment="Stretch"
@@ -138,8 +138,8 @@
                                                 <muxc:ProgressBar Margin="1"
                                                                   Value="{Binding File.Percent}"
                                                                   IsIndeterminate="True"
-                                                                  ShowPaused="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
-                                                                  ShowError="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Cancelled'}" />
+                                                                  ShowPaused="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
+                                                                  ShowError="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Declined'}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Button>
@@ -187,8 +187,8 @@
                                             Background="Transparent"
                                             HorizontalContentAlignment="Left"
                                             HorizontalAlignment="Left"
-                                            Command="{Binding OfferFileAnswerCommand}"
-                                            CommandParameter="{Binding File.Id}"
+                                            Tag="{Binding File.Id}"
+                                            Click="SubmitedReceivedMessageBodyFile_Click"
                                             Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
                                         <StackPanel Orientation="Horizontal"
                                                     VerticalAlignment="Stretch"
@@ -214,8 +214,8 @@
                                                 <muxc:ProgressBar Margin="1"
                                                                   Value="{Binding File.Percent}"
                                                                   IsIndeterminate="True"
-                                                                  ShowPaused="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
-                                                                  ShowError="{Binding File.EnumStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Cancelled'}" />
+                                                                  ShowPaused="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
+                                                                  ShowError="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Declined'}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Button>

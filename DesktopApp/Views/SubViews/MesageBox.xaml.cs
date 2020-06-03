@@ -25,5 +25,13 @@ namespace DesktopApp.Views.SubViews
         {
             this.InitializeComponent();
         }
+
+        private void SubmitedReceivedMessageBodyFile_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.AcceptCommand.CanExecute(((Button)sender).Tag))
+            {
+                ViewModel.AcceptCommand.Execute(((Button)sender).Tag);
+            }
+        }
     }
 }

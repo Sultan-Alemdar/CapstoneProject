@@ -1,4 +1,5 @@
 ﻿using DesktopApp.Core.Models.Base;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,18 +32,18 @@ namespace DesktopApp.Core.Models
             Started = 4,
             Failure = 5
         }
-        private readonly string _id; //<PID>546</PID><MID>53</MID>
-        private readonly string _fileName = "Deneme Dokümanı";      //deneme
-        private readonly string _fileType = "pdf";       //pdf ...
-        private readonly string _fileDisplayName;
-        private readonly string _fileDisplayType;
-        private EnumFileState _fileState = EnumFileState.Offered;       //offered, accepted, declined
-        private ulong _actionSpeed = 0;       //kbp
-        private ulong _percent = 0;       //total/proggresedSİze
-        private ulong _progressedSize = 0;         //1024kb
-        private readonly ulong _totalSize = 0;      //1024kb
-        private EnumProccesStatus _proccesStatus = EnumProccesStatus.Waiting;     //cancelled, progressing, completed
-        private EnumEvent _event = EnumEvent.Download;       //upload,download
+        [JsonProperty] private readonly string _id; //<PID>546</PID><MID>53</MID>
+        [JsonProperty] private readonly string _fileName = "Deneme Dokümanı";      //deneme
+        [JsonProperty] private readonly string _fileType = "pdf";       //pdf ...
+        [JsonProperty] private readonly string _fileDisplayName;
+        [JsonProperty] private readonly string _fileDisplayType;
+        [JsonProperty] private EnumFileState _fileState = EnumFileState.Offered;       //offered, accepted, declined
+        [JsonProperty] private ulong _actionSpeed = 0;       //kbp
+        [JsonProperty] private ulong _percent = 0;       //total/proggresedSİze
+        [JsonProperty] private ulong _progressedSize = 0;         //1024kb
+        [JsonProperty] private readonly ulong _totalSize = 0;      //1024kb
+        [JsonProperty] private EnumProccesStatus _proccesStatus = EnumProccesStatus.Waiting;     //cancelled, progressing, completed
+        [JsonProperty] private EnumEvent _event = EnumEvent.Download;       //upload,download
 
         public string Id { get => _id; }
         public string FileName { get => _fileName; }
@@ -134,7 +135,7 @@ namespace DesktopApp.Core.Models
 
         public bool IsCanceled => (_fileState == EnumFileState.Canceled && _proccesStatus == EnumProccesStatus.Declined);
         public bool IsAccepted => (_fileState == EnumFileState.Accepted && _proccesStatus == EnumProccesStatus.InQueue);
-        public bool IsStarted => (_fileState == EnumFileState.Accepted && _proccesStatus == EnumProccesStatus.Progressing);
+        public bool IsStarted => (_fileState == EnumFileState.Started && _proccesStatus == EnumProccesStatus.Progressing);
         public bool IsEnded => (_fileState == EnumFileState.Endded && _proccesStatus == EnumProccesStatus.Completed);
         public bool IsDownload => (_event == EnumEvent.Download);
 

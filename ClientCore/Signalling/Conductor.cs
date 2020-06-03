@@ -1020,7 +1020,8 @@ namespace PeerConnectionClientOperators.Signalling
 #if ORTCLIB
             OrtcStatsManager.Instance.Initialize(_peerConnection);
 #endif
-            OnPeerConnectionCreated?.Invoke();
+            CreateDataChannels(); /////////////////////////////////////////////////////////a//////////////////////////////////////////////////////////
+            OnPeerConnectionCreated?.Invoke();////////b////////////
 
             PeerConnection.OnIceCandidate += PeerConnection_OnIceCandidate;
 #if ORTCLIB
@@ -1792,7 +1793,7 @@ namespace PeerConnectionClientOperators.Signalling
                 var offerOptions = new RTCOfferOptions();
                 offerOptions.OfferToReceiveAudio = true;
                 offerOptions.OfferToReceiveVideo = true;
-                CreateDataChannels(); /////////////////////////////////////////////////////////a//////////////////////////////////////////////////////////
+               
                 var offer = await PeerConnection.CreateOffer(offerOptions);
 
                 if (IsNullOrEmpty(offer.Sdp))

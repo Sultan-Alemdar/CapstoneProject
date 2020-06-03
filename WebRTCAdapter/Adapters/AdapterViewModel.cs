@@ -1199,7 +1199,7 @@ namespace WebRTCAdapter.Adapters
             set { SetProperty(ref _scrollBarVisibility, value); }
         }
 
-        private bool _cameraEnabled = true;
+        private bool _cameraEnabled = false;
 
         /// <summary>
         /// Camera on/off toggle button.
@@ -1229,7 +1229,7 @@ namespace WebRTCAdapter.Adapters
             }
         }
 
-        private bool _microphoneIsOn = true;
+        private bool _microphoneIsOn = false;
 
         /// <summary>
         /// Microphone on/off toggle button.

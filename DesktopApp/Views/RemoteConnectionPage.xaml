@@ -72,16 +72,24 @@
                                   HorizontalAlignment="Right"
                                   Width="150"
                                   Height="200" />
-                    <Button Content="Button"
-                            HorizontalAlignment="Left"
-                            Height="148"
-                            Margin="921,344,0,0"
-                            VerticalAlignment="Top"
-                            Width="285"
-                            Click="Button_Click" />
+
                 </Grid>
 
-                <subViews:TopBar  />
+                <subViews:TopBar />
+                <Button Content="Button"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Width="305"
+                        Height="200"
+                        Margin="570,222,0,0"
+                        Click="Button_Click_1"/>
+                <Button Content="Button"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Width="305"
+                        Height="200"
+                        Margin="1002,222,0,0"
+                        Click="Button_Click_2"/>
 
             </Grid>
 

@@ -1,4 +1,5 @@
 ﻿using DesktopApp.Core.Models.Base;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,16 +25,16 @@ namespace DesktopApp.Core.Models
             Yes = 1,
         }
 
-        private EnumSeen _seen = EnumSeen.No;
+        [JsonProperty] private EnumSeen _seen = EnumSeen.No;
 
-        private readonly string _id; //<PID>546</PID><MID>53</MID>
-        private readonly string _text = "Deneme Mesajı";      //ben kimim gibi mesala
-        private readonly string _time = "13:10";      //13:14
-        private readonly EnumIsExist _isFileExist = EnumIsExist.Yes;
-        private readonly EnumIsExist _isTextExist = EnumIsExist.Yes;
-        private FileModel _file = null;
+        [JsonProperty] private readonly string _id; //<PID>546</PID><MID>53</MID>
+        [JsonProperty] private readonly string _text = "Deneme Mesajı";      //ben kimim gibi mesala
+        [JsonProperty] private readonly string _time = "13:10";      //13:14
+        [JsonProperty] private readonly EnumIsExist _isFileExist = EnumIsExist.Yes;
+        [JsonProperty] private readonly EnumIsExist _isTextExist = EnumIsExist.Yes;
+        [JsonProperty] private FileModel _file = null;
 
-        private EnumEvent _event;//sended received
+        [JsonProperty] private EnumEvent _event;//sended received
 
         public string Id { get => _id; }
         public string Text { get => _text; }
@@ -44,7 +45,7 @@ namespace DesktopApp.Core.Models
         public FileModel File { get => _file; set => SetProperty<FileModel>(ref this._file, value, "File"); }
 
         public EnumEvent Event { get => _event; set => SetProperty<EnumEvent>(ref this._event, value, "Event"); }
-        public EnumSeen Seen { get => _seen;  set => SetProperty<EnumSeen>(ref this._seen, value, "Seen"); }
+        public EnumSeen Seen { get => _seen; set => SetProperty<EnumSeen>(ref this._seen, value, "Seen"); }
 
         public MessageModel(string messageId, string time, EnumEvent eventt, string text, FileModel file = null)
         {
@@ -81,7 +82,7 @@ namespace DesktopApp.Core.Models
                 if (this.File != null)
                     this.File.Event = FileModel.EnumEvent.Download;
             }
-            
+
 
         }
     }

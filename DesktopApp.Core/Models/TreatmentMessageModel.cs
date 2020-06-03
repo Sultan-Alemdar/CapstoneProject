@@ -1,4 +1,5 @@
 ﻿using DesktopApp.Core.Models.Base;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,12 +24,12 @@ namespace DesktopApp.Core.Models
         }
 
 
-        private readonly string _id = null;
-        private readonly string _expectedChunkId = null;
-        private readonly string _expectedNextChunkId = null;
-        private readonly string _errorMessage = null;
-        private readonly MessageModel _messageModel = null;
-        private readonly EnumMessageType _messageType;
+        [JsonProperty] private readonly string _id = null;
+        [JsonProperty] private readonly string _expectedChunkId = null;
+        [JsonProperty] private readonly string _expectedNextChunkId = null;
+        [JsonProperty] private readonly string _errorMessage = null;
+        [JsonProperty] private readonly MessageModel _messageModel = null;
+        [JsonProperty] private readonly EnumMessageType _messageType;
 
 
 

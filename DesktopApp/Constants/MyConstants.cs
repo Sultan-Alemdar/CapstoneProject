@@ -17,7 +17,7 @@ namespace DesktopApp.Constants
         public static readonly string ID_END_TAG = "</PID>";
         public static readonly string MESSAGE_START_TAG = "<MID>";
         public static readonly string MESSAGE_END_TAG = "</MID>";
-        public static readonly ulong MAX_ONE_CHUNK_SIZE = 254 * 1024; //byte cinsinden;
-        public static readonly ulong CHUNK_SIZE = 16 * 1024; // for multi sending.
+        public static readonly int MAX_ONE_CHUNK_SIZE = 254 * 1024; //byte cinsinden;
+        public static readonly int CHUNK_SIZE = 16 * 1024; // for multi sending.
     }
 }

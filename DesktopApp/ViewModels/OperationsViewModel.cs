@@ -182,6 +182,8 @@ namespace DesktopApp.ViewModels
                  }
                  AdapterViewModel.IsConnecting = true;
                  Conductor.Instance.StartLogin(ip, port);
+                 
+            
              });
         }
 

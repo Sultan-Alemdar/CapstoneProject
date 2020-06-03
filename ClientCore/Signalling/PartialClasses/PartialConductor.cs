@@ -15,18 +15,20 @@ namespace PeerConnectionClientOperators.Signalling
         private RTCDataChannel _fileChannel;
         public RTCDataChannel MessageChannel { get => _messageChannel; }
         public RTCDataChannel FileChannel { get => _fileChannel; }
-
+        public delegate void DataChannelsWasCreated();
+        public event DataChannelsWasCreated OnDataChanelWasCreated;
         private const string FILE_CHANNEL = "FileChannel", MESSAGE_CHANNEL = "MessageChannel";
 
 
         public void CreateDataChannels()
         {
+            OnDataChanelWasCreated += () => { };
             try
             {
 
                 RTCDataChannelInit DataChannelInit2 = new RTCDataChannelInit
                 {
-                    Negotiated = false,
+                    Negotiated = true,
                     Id = 2,
                     Ordered = true
                 };
@@ -41,7 +43,7 @@ namespace PeerConnectionClientOperators.Signalling
 
                 RTCDataChannelInit DataChannelInit = new RTCDataChannelInit
                 {
-                    Negotiated = false,
+                    Negotiated = true,
                     Id = 1,
                     Ordered = true
                 };
@@ -53,7 +55,7 @@ namespace PeerConnectionClientOperators.Signalling
                 _fileChannel.OnClose += _fileChannel_OnClose;
 
 
-
+                OnDataChanelWasCreated.Invoke();
 
             }
             catch (Exception e)

@@ -21,7 +21,8 @@
         <helpers:EnumToBooleanConverter x:Key="EnumMessageEventToBooleanConverter"
                                         EnumType="{x:Bind Path=ViewModel.TypeOfMessageEnumEvent}" />
         <helpers:EnumToBooleanConverter x:Key="EnumStatusToBooleanConverter"
-                                        EnumType="{x:Bind Path=ViewModel.TypeOfEnumStatus}" />
+                                        EnumType="{x:Bind Path=ViewModel.EnumProccesStatus}" />
+        <helpers:ByteToKBConverter x:Key="ByteToKBConverter" />
     </UserControl.Resources>
     <Grid  x:Name="MessengerPanel"
            Grid.Row="1"
@@ -127,19 +128,24 @@
                                                        RelativePanel.AlignRightWithPanel="True"
                                                        Height="18"
                                                        Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
-
+                                                <ProgressRing RelativePanel.AlignVerticalCenterWithPanel="True"
+                                                              RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                                              Name="ProgressingRight"
+                                                              Foreground="Red"
+                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
+                                                <ProgressRing Name="InQueueRight"
+                                                              Foreground="Blue"
+                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='InQueue'}" />
                                             </RelativePanel>
                                             <StackPanel Margin="4,0,0,0"
                                                         Orientation="Vertical">
                                                 <TextBlock Margin="1"
                                                            Text="{Binding File.FileName}"></TextBlock>
-                                                <TextBlock Margin="1"
-                                                           Text="{Binding File.TotalSize}"></TextBlock>
-                                                <muxc:ProgressBar Margin="1"
-                                                                  Value="{Binding File.Percent}"
-                                                                  IsIndeterminate="True"
-                                                                  ShowPaused="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
-                                                                  ShowError="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Declined'}" />
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Margin="1"
+                                                               Text="{Binding File.TotalSize, Converter= {StaticResource ByteToKBConverter},Mode=OneWay}" />
+                                                    <TextBlock Text="KB" />
+                                                </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
                                     </Button>
@@ -203,19 +209,26 @@
                                                        RelativePanel.AlignRightWithPanel="True"
                                                        Height="18"
                                                        Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
+                                                <ProgressRing RelativePanel.AlignVerticalCenterWithPanel="True"
+                                                              RelativePanel.AlignHorizontalCenterWithPanel="True"
+                                                              Name="ProgressingLeft"
+                                                              Foreground="Red"
+                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
+                                                <ProgressRing Name="InQueueLeft"
+                                                              Foreground="Blue"
+                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='InQueue'}" />
 
                                             </RelativePanel>
                                             <StackPanel Margin="4,0,0,0"
                                                         Orientation="Vertical">
                                                 <TextBlock Margin="1"
                                                            Text="{Binding File.FileName}"></TextBlock>
-                                                <TextBlock Margin="1"
-                                                           Text="{Binding File.TotalSize}"></TextBlock>
-                                                <muxc:ProgressBar Margin="1"
-                                                                  Value="{Binding File.Percent}"
-                                                                  IsIndeterminate="True"
-                                                                  ShowPaused="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Waiting'}"
-                                                                  ShowError="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Declined'}" />
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Margin="1"
+                                                               Text="{Binding File.TotalSize, Converter= {StaticResource ByteToKBConverter},Mode=OneWay}" />
+                                                    <TextBlock Margin="3,0,0,0"
+                                                        Text="KB" />
+                                                </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
                                     </Button>

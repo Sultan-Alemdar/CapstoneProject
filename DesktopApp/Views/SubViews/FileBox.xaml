@@ -15,7 +15,7 @@
                     Value="{StaticResource ControlCornerRadius}" />
         </Style>
         <helpers:StringToImageConverter x:Key="StringToImageConverter" />
-
+        <helpers:ByteToKBConverter x:Key="ByteToKBConverter" />
     </UserControl.Resources>
     <Grid x:Name="FilePanel"
           Grid.Row="0"
@@ -44,7 +44,7 @@
                        FontSize="17"
                        FontWeight="Medium"
                        HorizontalAlignment="Left">Dosya Trafiği Kutusu</TextBlock>
-            
+
 
         </Grid>
         <ListView Name="FileList"
@@ -115,17 +115,19 @@
 
                                     <TextBlock Name="SpeedTextBlock"
                                                Margin="3,0,0,0"
-                                               Text="{Binding ActionSpeed}" />
+                                               Text="{Binding ActionSpeed, Converter= {StaticResource ByteToKBConverter}}" />
                                     <TextBlock     Margin="3,0,0,0"
-                                                   Text="-" />
+                                                   Text="KBPS - " />
 
                                     <TextBlock     Margin="3,0,0,0"
-                                                   Text="{Binding ProgressedSize}" />
+                                                   Text="{Binding ProgressedSize, Converter= {StaticResource ByteToKBConverter}}" />
                                     <TextBlock     Margin="3,0,0,0"
                                                    Text="/" />
                                     <TextBlock Name="PercentTextBlock"
                                                Margin="3,0,0,0"
-                                               Text="{Binding TotalSize}" />
+                                               Text="{Binding TotalSize, Converter= {StaticResource ByteToKBConverter},Mode=OneWay}" />
+                                    <TextBlock     Margin="3,0,0,0"
+                                                   Text="KB" />
 
                                 </StackPanel>
                                 <StackPanel  Grid.Row="2"

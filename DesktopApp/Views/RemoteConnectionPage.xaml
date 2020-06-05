@@ -74,7 +74,7 @@
                                   Height="200" />
 
                 </Grid>
-
+            
                 <subViews:TopBar />
                 <Button Content="Button"
                         HorizontalAlignment="Left"
@@ -90,6 +90,20 @@
                         Height="200"
                         Margin="1002,222,0,0"
                         Click="Button_Click_2"/>
+                <Button Content="File ekle&#xD;&#xA;"
+                        HorizontalAlignment="Left"
+                        Height="159"
+                        Margin="774,492,0,0"
+                        VerticalAlignment="Top"
+                        Width="381"
+                        Click="Button_Click_3" />
+                <Button Content="prop arttır&#xD;&#xA;"
+                        HorizontalAlignment="Left"
+                        Height="114"
+                        Margin="801,747,0,0"
+                        VerticalAlignment="Top"
+                        Width="354"
+                        Click="Button_Click_4" />
 
             </Grid>
 

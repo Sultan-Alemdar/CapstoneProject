@@ -142,6 +142,7 @@
     <Compile Include="BackgroundTasks\PeerConnectionTask.cs" />
     <Compile Include="Constants\MyConstants.cs" />
     <Compile Include="Helpers\BoolToVisConverter.cs" />
+    <Compile Include="Helpers\ByteToKBConverter.cs" />
     <Compile Include="Helpers\EnumToHorzontalConverter.cs" />
     <Compile Include="Helpers\IntToInformationConverter.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />

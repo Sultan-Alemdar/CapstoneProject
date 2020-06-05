@@ -38,9 +38,9 @@ namespace DesktopApp.Core.Models
         [JsonProperty] private readonly string _fileDisplayName;
         [JsonProperty] private readonly string _fileDisplayType;
         [JsonProperty] private EnumFileState _fileState = EnumFileState.Offered;       //offered, accepted, declined
-        [JsonProperty] private ulong _actionSpeed = 0;       //kbp
-        [JsonProperty] private ulong _percent = 0;       //total/proggresedSİze
-        [JsonProperty] private ulong _progressedSize = 0;         //1024kb
+        [JsonProperty] private long _actionSpeed = 0;       //kbp
+        [JsonProperty] private float _percent = 0;       //total/proggresedSİze
+        [JsonProperty] private long _progressedSize = 0;         //1024kb
         [JsonProperty] private readonly ulong _totalSize = 0;      //1024kb
         [JsonProperty] private EnumProccesStatus _proccesStatus = EnumProccesStatus.Waiting;     //cancelled, progressing, completed
         [JsonProperty] private EnumEvent _event = EnumEvent.Download;       //upload,download
@@ -52,12 +52,12 @@ namespace DesktopApp.Core.Models
 
 
         public EnumFileState FileState { get => _fileState; set => SetProperty<EnumFileState>(ref this._fileState, value, "FileState"); }
-        public ulong ActionSpeed { get => _actionSpeed; set => SetProperty<ulong>(ref this._actionSpeed, value, "ActionSpeed"); }
-        public ulong Percent
+        public long ActionSpeed { get => _actionSpeed; set => SetProperty<long>(ref this._actionSpeed, value, "ActionSpeed"); }
+        public float Percent
         {
-            get => (this._progressedSize / this._totalSize) * 100; private set
+            get => _percent; private set
             {
-                ulong val = 0;
+                float val = 0;
                 if (TotalSize == 0)
                     throw new ArgumentNullException();
                 else if (_progressedSize == 0)
@@ -66,12 +66,16 @@ namespace DesktopApp.Core.Models
                     val = 0;
                 }
                 else
-                    val = (this._progressedSize / this._totalSize) * 100;
-                SetProperty<ulong>(ref this._percent, val, "Percent");
+                {
+                    val = (float)((_progressedSize * 100) / (long)_totalSize);
+
+
+                }
+                SetProperty<float>(ref this._percent, val, "Percent");
             }
         }
-        public ulong TotalSize { get => _totalSize; }
-        public ulong ProgressedSize { get => _progressedSize; set => SetProperty<ulong>(ref this._progressedSize, value, "ProgresedSize"); }
+        public long TotalSize { get => (long)_totalSize; }
+        public long ProgressedSize { get => _progressedSize; set => SetProperty<long>(ref this._progressedSize, value, "ProgressedSize"); }
         public EnumProccesStatus ProccesStatus { get => _proccesStatus; private set => SetProperty<EnumProccesStatus>(ref this._proccesStatus, value, "ProccesStatus"); }
         public EnumEvent Event { get => _event; set => SetProperty<EnumEvent>(ref this._event, value, "Event"); }
 
@@ -85,12 +89,12 @@ namespace DesktopApp.Core.Models
         /// <param name="fileName"></param>
         /// <param name="fileType"></param>
         /// <param name="totalSize"></param>
-        public FileModel(string fileId, string fileName, string fileType, ulong totalSize, string fileDisplayName, string fileDisplayType)
+        public FileModel(string fileId, string fileName, string fileType, long totalSize, string fileDisplayName, string fileDisplayType)
         {
             _id = fileId;
             _fileName = fileName;
             _fileType = fileType;
-            _totalSize = totalSize;
+            _totalSize = (ulong)totalSize;
             _fileDisplayName = fileDisplayName;
             _fileDisplayType = fileDisplayType;
         }

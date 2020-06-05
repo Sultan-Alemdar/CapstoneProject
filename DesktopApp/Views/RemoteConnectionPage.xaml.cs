@@ -92,6 +92,7 @@ namespace DesktopApp.Views
             picker.FileTypeFilter.Add(".txt");
             picker.FileTypeFilter.Add(".doc");
             picker.FileTypeFilter.Add(".docx");
+            picker.FileTypeFilter.Add(".7z");
             picker.FileTypeFilter.Add(".");
 
             var files = await picker.PickMultipleFilesAsync();
@@ -100,7 +101,7 @@ namespace DesktopApp.Views
 
                 foreach (StorageFile storageFile in files)
                 {
-                    
+
                     using (var stream = await storageFile.OpenStreamForReadAsync())
                     {
                         _downloadStream = new MemoryStream((int)stream.Length);
@@ -130,27 +131,46 @@ namespace DesktopApp.Views
 
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
-            savePicker.FileTypeChoices.Add("png", new List<string>() { "." + "png" });
+            savePicker.FileTypeChoices.Add("7z", new List<string>() { "." + "7z" });
             savePicker.SuggestedFileName = "Deneme";
             Windows.Storage.StorageFile storageFile = await savePicker.PickSaveFileAsync();
             CachedFileManager.DeferUpdates(storageFile);
             // write to file
 
+            await Task.Run(async () =>
+            {
 
-            await FileIO.WriteBytesAsync(storageFile, _downloadStream.GetBuffer());
-            FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(storageFile);
-            if (status == FileUpdateStatus.Complete)
-            {
-                Debug.WriteLine("[Info] ChannelRemoteConnectionPageViewModel : File {0} was saved.", storageFile.Name);
-                // endedMessage.File.SetEndedStateConfig();
-            }
-            else
-            {
-                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : File {0} could not being saved.", storageFile.Name);
-                //endedMessage.File.SetFailureStateConfig();
-            }
-            _downloadStream = new MemoryStream();
-           // _downloadStream.Write(chunk, 0, chunk.Length);
+                await FileIO.WriteBytesAsync(storageFile, _downloadStream.GetBuffer());
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(storageFile);
+                if (status == FileUpdateStatus.Complete)
+                {
+                    Debug.WriteLine("[Info] ChannelRemoteConnectionPageViewModel : File {0} was saved.", storageFile.Name);
+                    // endedMessage.File.SetEndedStateConfig();
+                }
+                else
+                {
+                    Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : File {0} could not being saved.", storageFile.Name);
+                    //endedMessage.File.SetFailureStateConfig();
+                }
+                _downloadStream = new MemoryStream();
+
+            });
+            // _downloadStream.Write(chunk, 0, chunk.Length);
+        }
+        private FileModel fileModel = new FileModel("Dnk", "Deneme", "pdf", 50064, "Pdf Dosyası", "*.pdf");
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            MessageModel messageModel = new MessageModel("Dnk", "10:10:10", MessageModel.EnumEvent.Send, "", fileModel);
+            ViewModel.AllFilesOnInterfaceCollection.Add(fileModel);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(messageModel);
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            fileModel.ActionSpeed += 10000;
+            fileModel.ProgressedSize += 10000;
+            fileModel.ShowPercent();
         }
     }
 }

@@ -40,7 +40,7 @@ namespace DesktopApp.ViewModels
             InInteraction = 1,
 
         }
-        private MemoryStream _downloadStream;
+
         private MachineState _state = MachineState.Idle;
 
 
@@ -53,13 +53,14 @@ namespace DesktopApp.ViewModels
 
 
 
-
+        private Stream _downloadStream;
         private List<FileModel> _taskQueue = new List<FileModel>();
 
         private Dictionary<string, MessageModel> _allMessagesDictionary = new Dictionary<string, MessageModel>();
         private Dictionary<string, StorageFile> _allStoregeFilesDictionary = new Dictionary<string, StorageFile>();
 
         private Dictionary<string, Stream> _allUploadStreamsDictionary = new Dictionary<string, Stream>();
+        private Dictionary<string, Stream> _allDownloadStreamsDictionary = new Dictionary<string, Stream>();
 
 
 
@@ -335,9 +336,9 @@ namespace DesktopApp.ViewModels
                         bufferSize = (int)(total - stream.Position);
                     Conductor.Instance.FileChannel.Send(buffer);
 
-                    if ((Conductor.Instance.FileChannel.BufferedAmount + (ulong)bufferSize) > 15*1024*1024)
+                    if ((Conductor.Instance.FileChannel.BufferedAmount + (ulong)bufferSize) > 15 * 1024 * 1024)
                     {
-                        Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : FileChannel buffer was full, Operation is going sleep until channel will be ready :" + fileModel.FileName);
+                        Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : FileChannel buffer is full, Operation is going to sleep until channel will be ready :" + fileModel.FileName);
                         //cancellationTokenSource.Cancel();
 
                         r = false;
@@ -437,7 +438,9 @@ namespace DesktopApp.ViewModels
                             }
                             startedMessage.File.SetStartedStateConfig();
                             _state = MachineState.InInteraction;
-                            _downloadStream = new MemoryStream((int)startedMessage.File.TotalSize);
+                            _allStoregeFilesDictionary.TryGetValue(id, out StorageFile currentStorageFile);
+                            _downloadStream = await currentStorageFile.OpenStreamForWriteAsync();
+
                             _timer = new System.Timers.Timer(1000);
                             var startedFileModel = startedMessage.File;
                             _timer.Enabled = true;
@@ -470,38 +473,17 @@ namespace DesktopApp.ViewModels
                             {
                                 Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Message could not find to realize saving file operation. File Id :" + id);
                             }
-
-                            if (storageFile != null)
+                            _downloadStream.Dispose();
+                            file.SetEndedStateConfig();
+                            _state = MachineState.Idle;
+                            _allStoregeFilesDictionary.Remove(id);
+                            if (_taskQueue.Count > 0)
                             {
-                                CachedFileManager.DeferUpdates(storageFile);
-                                // write to file
-                                await FileIO.WriteBytesAsync(storageFile, _downloadStream.GetBuffer());
-                                _downloadStream.Dispose();
-                                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(storageFile);
-                                if (status == FileUpdateStatus.Complete)
-                                {
-                                    Debug.WriteLine("[Info] ChannelRemoteConnectionPageViewModel : File {0} was saved.", storageFile.ToString());
+                                FileModel next = _taskQueue.First<FileModel>();
 
-                                    endedMessage.File.SetEndedStateConfig();
-                                }
-                                else
-                                {
-                                    Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : File {0} could not being saved.", storageFile.ToString());
-                                    endedMessage.File.SetFailureStateConfig();
-                                }
-                                if (_taskQueue.Count > 0)
-                                {
-                                    FileModel next = _taskQueue.First<FileModel>();
+                                await SendFileNotifyMessageAsync(TreatmentMessageModel.GetNextType(next.Id));
 
-                                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetNextType(next.Id));
-
-                                }
-                                _state = MachineState.Idle;
-                                _allStoregeFilesDictionary.Remove(id);
                             }
-
-
-
                             break;
 
                         case TreatmentMessageModel.EnumMessageType.Canceled:
@@ -520,7 +502,8 @@ namespace DesktopApp.ViewModels
                 }
                 else
                 {
-                    GetChunk(Event.Binary);
+
+                    await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
                 }
 
             }
@@ -530,19 +513,8 @@ namespace DesktopApp.ViewModels
                 throw;
             }
         }
-        private void GetChunk(byte[] chunk)
-        {
-            try
-            {
-                _downloadStream.Write(chunk, 0, chunk.Length);
 
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("[Error] ChannelRemoteConnection : Error was occured in downloading proccess :" + e.Message);
-            }
 
-        }
 
 
         private async Task<bool> HandleCanceledTask(FileModel fileModel)

@@ -25,6 +25,7 @@ namespace DesktopApp.ViewModels
 {
     public sealed partial class RemoteConnectionViewModel : ViewModelBase
     {
+        private System.Timers.Timer _timer;
         private string _messageText;
         public string MessageText { get => _messageText; set => Set<string>("MessageText", ref _messageText, value); }
         private readonly RelayCommand _sendCommand;
@@ -57,7 +58,8 @@ namespace DesktopApp.ViewModels
 
         private Dictionary<string, MessageModel> _allMessagesDictionary = new Dictionary<string, MessageModel>();
         private Dictionary<string, StorageFile> _allStoregeFilesDictionary = new Dictionary<string, StorageFile>();
-        //private Dictionary<string, StorageFile> _allAcceptedFilesDictionary= new Dictionary<string, StorageFile>();
+
+        private Dictionary<string, Stream> _allUploadStreamsDictionary = new Dictionary<string, Stream>();
 
 
 
@@ -215,7 +217,9 @@ namespace DesktopApp.ViewModels
                 _state = MachineState.Idle;
                 return;
             }
-            CancellationToken cancellationToken = new CancellationToken();
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
             _state = MachineState.InInteraction;
             try
             {
@@ -225,65 +229,31 @@ namespace DesktopApp.ViewModels
 
                 if (!_allStoregeFilesDictionary.TryGetValue(fileModel.Id, out StorageFile storageFile))
                     return;
-                _taskQueue.Remove(fileModel);//delete from task queue;
+
                 fileModel.SetStartedStateConfig();
 
                 //upload
                 await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(fileModel.Id));
-                using (var stream = await storageFile.OpenStreamForReadAsync())
-                {
-                    if (fileModel.TotalSize <= MyConstants.MAX_ONE_CHUNK_SIZE)
-                    {//küçük dosya
-                        byte[] buffer = new byte[fileModel.TotalSize];
-                        await stream.ReadAsync(buffer, 0, (int)fileModel.TotalSize);
-                        Conductor.Instance.FileChannel.Send(buffer);
-                    }
-                    else
-                    { //büyük dosya
+                var stream = await storageFile.OpenStreamForReadAsync();
 
-                        long total = (long)fileModel.TotalSize;
-                        int bufferSize = MyConstants.CHUNK_SIZE;
-                        _timer = new System.Timers.Timer(1000);
-                        _timer.Elapsed += async (sender, e) =>
-                        {
-                            await RunOnUI(CoreDispatcherPriority.High, () =>
-                             {
-                                 fileModel.ActionSpeed = stream.Position - fileModel.ProgressedSize;
-                                 fileModel.ProgressedSize = stream.Position;
-                                 fileModel.ShowPercent();
-                             });
-                        };
-                        _timer.AutoReset = true;
-                        _timer.Enabled = true;
-                        while (stream.Position < total)
-                        {
-                            if (stream.Position >= total)
-                                break;
-                            if (CheckCancellationRequested(cancellationToken) || !fileModel.IsStarted)
-                            {
-                                Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : File upload operation was canceled. File state is " + fileModel.FileState);
-                                if (await HandleCanceledTask(fileModel))
-                                {
-                                    return;
-                                }
-                            }
-                            byte[] buffer = new byte[bufferSize];
-                            await stream.ReadAsync(buffer, 0, bufferSize);
-                            if (stream.Position + bufferSize > total)
-                                bufferSize = (int)(total - stream.Position);
-                            Conductor.Instance.FileChannel.Send(buffer);
+                _allUploadStreamsDictionary.Add(fileModel.Id, stream);
 
-                        }
-                        _timer.Enabled = false;
-                    }
-
-                    // fileModel.ActionSpeed = stream.Position - fileModel.ProgressedSize;
-                    fileModel.ProgressedSize = stream.Position;
-                    //fileModel.ShowPercent();
+                if (fileModel.TotalSize <= MyConstants.MAX_ONE_CHUNK_SIZE)
+                {//küçük dosya
+                    byte[] buffer = new byte[fileModel.TotalSize];
+                    await stream.ReadAsync(buffer, 0, (int)fileModel.TotalSize);
+                    Conductor.Instance.FileChannel.Send(buffer);
+                    await ReleaseFileResources(fileModel, stream);
                 }
-                _state = MachineState.Idle;
-                await SendFileNotifyMessageAsync(TreatmentMessageModel.GetEndType(fileModel.Id));
-                fileModel.SetEndedStateConfig();
+                else
+                { //büyük dosya
+
+                    long total = (long)fileModel.TotalSize;
+                    int bufferSize = MyConstants.CHUNK_SIZE;
+
+                    await UploadFile(cancellationTokenSource, fileModel, stream);
+
+                }
                 #region CatchSide
 
             }
@@ -306,7 +276,85 @@ namespace DesktopApp.ViewModels
 
             #endregion
         }
-        private System.Timers.Timer _timer;
+        private async Task ReleaseFileResources(FileModel fileModel, Stream stream)
+        {
+            _taskQueue.Remove(fileModel);//delete from task queue;
+            _state = MachineState.Idle;
+            _allUploadStreamsDictionary.Remove(fileModel.Id);
+            await RunOnUI(CoreDispatcherPriority.High, async () =>
+            {
+                fileModel.ProgressedSize = stream.Position;
+                if (fileModel.IsCanceled)
+                {
+                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetFileCanceledType(fileModel.Id));
+                    fileModel.SetCanceledStateConfig();
+                }
+                else
+                {
+                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetEndType(fileModel.Id));
+                    fileModel.SetEndedStateConfig();
+                }
+            });
+            stream.Dispose();
+        }
+        private static object _uploadLock = new object();
+        private async Task<bool> UploadFile(CancellationTokenSource cancellationTokenSource, FileModel fileModel, Stream stream)
+        {
+            var total = fileModel.TotalSize;
+            var bufferSize = MyConstants.CHUNK_SIZE;
+            _timer = new System.Timers.Timer(1000);
+            _timer.AutoReset = true;
+            _timer.Elapsed += async (sender, e) =>
+            {
+                await RunOnUI(CoreDispatcherPriority.High, () =>
+                {
+                    fileModel.ActionSpeed = stream.Position - fileModel.ProgressedSize;
+                    fileModel.ProgressedSize = stream.Position;
+
+                });
+            };
+            _timer.Enabled = true;
+            return await Task<bool>.Run(async () =>
+            {
+                var r = true;
+                while (stream.Position < total)
+                {
+                    if (stream.Position >= total)
+                        break;
+                    if (!fileModel.IsStarted)
+                    {
+                        Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : File upload operation was canceled. File state is " + fileModel.FileState);
+                        //fileModel.SetCanceledStateConfig();
+
+                        r = false;
+                    }
+
+                    byte[] buffer = new byte[bufferSize];
+                    await stream.ReadAsync(buffer, 0, bufferSize);
+                    if (stream.Position + bufferSize > total)
+                        bufferSize = (int)(total - stream.Position);
+                    Conductor.Instance.FileChannel.Send(buffer);
+
+                    if ((Conductor.Instance.FileChannel.BufferedAmount + (ulong)bufferSize) > 15*1024*1024)
+                    {
+                        Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : FileChannel buffer was full, Operation is going sleep until channel will be ready :" + fileModel.FileName);
+                        //cancellationTokenSource.Cancel();
+
+                        r = false;
+                    }
+                }
+
+                _timer.Enabled = false;
+                await RunOnUI(CoreDispatcherPriority.High, () =>
+                {
+                    fileModel.ActionSpeed = -1;
+                });
+                await ReleaseFileResources(fileModel, stream);
+                return r ? true : false;
+            });
+        }
+
+
 
 
         private async void MessageChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
@@ -487,11 +535,6 @@ namespace DesktopApp.ViewModels
             try
             {
                 _downloadStream.Write(chunk, 0, chunk.Length);
-                if (_downloadStream.Position == 0)
-                {
-                    var a = 1;
-                }
-
 
             }
             catch (Exception e)
@@ -601,8 +644,32 @@ namespace DesktopApp.ViewModels
 
         private void FileChannel_OnBufferedAmountLow()
         {
-            Debug.WriteLine("[Info] ChannelRemoteConnecctionPageViewModel : FileChannel is state of buffered amount low :");
+
+            lock (_uploadLock)
+            {
+                if (_state == MachineState.Idle)
+                    return;
+                FileModel fileModel = _taskQueue.First();
+                if (fileModel == null)
+                {
+                    return;
+
+                }
+                if (!fileModel.IsStarted)
+                    return;
+
+                if (!_allUploadStreamsDictionary.TryGetValue(fileModel.Id, out Stream stream))
+                {
+                    Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Stream could not find. File Id:  : " + fileModel.Id);
+                    return;
+                }
+
+
+                UploadFile(null, fileModel, stream);
+            }
         }
+
+
         #endregion
 
 

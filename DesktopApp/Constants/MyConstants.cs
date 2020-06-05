@@ -19,5 +19,6 @@ namespace DesktopApp.Constants
         public static readonly string MESSAGE_END_TAG = "</MID>";
         public static readonly int MAX_ONE_CHUNK_SIZE = 254 * 1024; //byte cinsinden;
         public static readonly int CHUNK_SIZE = 16 * 1024; // for multi sending.
+        public static readonly ulong DC_SAFE_BUFFER_SIZE = 15 * 1024 * 1024; // DC buffer size aslı 16 mb
     }
 }

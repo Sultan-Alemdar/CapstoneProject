@@ -174,6 +174,7 @@ namespace DesktopApp.ViewModels
                 return;
             }
             messageModel.File.SetAcceptedStateConfig();
+            _taskQueue.Add(messageModel.File);
             await UpdateAllDataStrucuresAndInterface(messageModel.Id, null, messageModel.File, storageFile);
             await SendFileNotifyMessageAsync(TreatmentMessageModel.GetAcceptedType(messageModel.Id));
 
@@ -390,10 +391,10 @@ namespace DesktopApp.ViewModels
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                Debug.WriteLine("[Error] ChannelRemoteConnectionViewModel : On Message channel event:" + e.Message);
             }
 
         }
@@ -465,10 +466,7 @@ namespace DesktopApp.ViewModels
                             }
                             var file = endedMessage.File;
                             _taskQueue.Remove(file);
-
-                            // file.ActionSpeed = _downloadStream.Position - file.ProgressedSize;
-                            file.ProgressedSize = _downloadStream.Position;
-                            //file.ShowPercent();
+                            file.ProgressedSize -= _downloadStream.Position;
                             if (!_allStoregeFilesDictionary.TryGetValue(id, out StorageFile storageFile))
                             {
                                 Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Message could not find to realize saving file operation. File Id :" + id);
@@ -481,7 +479,15 @@ namespace DesktopApp.ViewModels
                             {
                                 FileModel next = _taskQueue.First<FileModel>();
 
-                                await SendFileNotifyMessageAsync(TreatmentMessageModel.GetNextType(next.Id));
+                                if (next.Event == FileModel.EnumEvent.Upload)
+                                {
+                                    _state = MachineState.InInteraction;
+                                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(next.Id));
+                                    next.SetStartedStateConfig();
+                                    await StartUpload();
+                                }
+                                else
+                                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetNextType(next.Id));
 
                             }
                             break;
@@ -496,7 +502,12 @@ namespace DesktopApp.ViewModels
                             _taskQueue.Remove(canceledMessage.File);
                             //TODO: clear stream. if it is necessary.
                             break;
-                        case TreatmentMessageModel.EnumMessageType.Waiting:
+                        case TreatmentMessageModel.EnumMessageType.Next:
+                            var requested = _taskQueue.First<FileModel>();
+                            _state = MachineState.InInteraction;
+                            await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(requested.Id));
+                            requested.SetStartedStateConfig();
+                            await StartUpload();
                             break;
                     }
                 }
@@ -507,10 +518,9 @@ namespace DesktopApp.ViewModels
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Error was occcured in FileChannel on message :" +e.Message);
             }
         }
 

@@ -8,6 +8,7 @@
       xmlns:utilities="using:WebRTCAdapter.Utilities"
       xmlns:subViews="using:DesktopApp.Views.SubViews"
       xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       Background="{ThemeResource RegionBrush}"
       DataContext="{x:Bind ViewModel}"
       mc:Ignorable="d">
@@ -74,7 +75,7 @@
                                   Height="200" />
 
                 </Grid>
-            
+
                 <subViews:TopBar />
                 <Button Content="Button"
                         HorizontalAlignment="Left"
@@ -82,14 +83,14 @@
                         Width="305"
                         Height="200"
                         Margin="570,222,0,0"
-                        Click="Button_Click_1"/>
+                        Click="Button_Click_1" />
                 <Button Content="Button"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
                         Width="305"
                         Height="200"
                         Margin="1002,222,0,0"
-                        Click="Button_Click_2"/>
+                        Click="Button_Click_2" />
                 <Button Content="File ekle&#xD;&#xA;"
                         HorizontalAlignment="Left"
                         Height="159"
@@ -104,7 +105,26 @@
                         VerticalAlignment="Top"
                         Width="354"
                         Click="Button_Click_4" />
-
+                <Button Content="GEt Fileand show thumb3&#xD;&#xA;&#xD;&#xA;"
+                        HorizontalAlignment="Left"
+                        Height="79"
+                        Margin="198,522,0,0"
+                        VerticalAlignment="Top"
+                        Width="228"
+                        Click="Button_Click_5" />
+                <Image HorizontalAlignment="Left"
+                       Height="177"
+                       Margin="144,684,0,0"
+                       VerticalAlignment="Top"
+                       Width="360"
+                       Name="Thum" />
+                <controls:RadialProgressBar  Thickness="3"
+                                             Value="50"
+                                             Maximum="110"
+                                             Width="18"
+                                             Height="18"
+                                             VerticalAlignment="Center"
+                                             HorizontalAlignment="Left"></controls:RadialProgressBar>
 
             </Grid>
 

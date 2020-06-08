@@ -157,7 +157,25 @@ namespace DesktopApp.ViewModels
             picker.FileTypeFilter.Add(".doc");
             picker.FileTypeFilter.Add(".docx");
             picker.FileTypeFilter.Add(".7z");
-            picker.FileTypeFilter.Add(".");
+            picker.FileTypeFilter.Add(".flash");
+            picker.FileTypeFilter.Add(".fla");
+            picker.FileTypeFilter.Add(".iso");
+            picker.FileTypeFilter.Add(".mp3");
+            picker.FileTypeFilter.Add(".mp4");
+            picker.FileTypeFilter.Add(".xml");
+            picker.FileTypeFilter.Add(".psd");
+            picker.FileTypeFilter.Add(".svg");
+            picker.FileTypeFilter.Add(".zip");
+            picker.FileTypeFilter.Add(".css");
+            picker.FileTypeFilter.Add(".html");
+            picker.FileTypeFilter.Add(".exe");
+            picker.FileTypeFilter.Add(".dwg");
+            picker.FileTypeFilter.Add(".csv");
+            picker.FileTypeFilter.Add(".photoshop");
+            picker.FileTypeFilter.Add(".search");
+            picker.FileTypeFilter.Add(".ai");
+            picker.FileTypeFilter.Add(".avi");
+
 
             var files = await picker.PickMultipleFilesAsync();
             if (files.Count > 0)
@@ -175,7 +193,7 @@ namespace DesktopApp.ViewModels
 
             FileModel fileModel = new FileModel(id, storageFile.Name, storageFile.FileType.Substring(1), (long)fileprops.Size, storageFile.DisplayName, storageFile.DisplayType);
             fileModel.SetOfferedStateConfig();
-            MessageModel messageModel = new MessageModel(id, DateTime.Now.ToString("mm:ss"), MessageModel.EnumEvent.Send, null, fileModel);
+            MessageModel messageModel = new MessageModel(id, DateTime.Now.ToString("hh:mm"), MessageModel.EnumEvent.Send, null, fileModel);
             await UpdateAllDataStrucuresAndInterface(id, messageModel, null, storageFile);
             TreatmentMessageModel treatmentMessageModel = TreatmentMessageModel.GetFileOfferType(messageModel);
             SendMessage(treatmentMessageModel);

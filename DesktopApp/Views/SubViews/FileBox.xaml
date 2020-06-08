@@ -102,6 +102,7 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Name="FileNameTextBlock"
                                            FontWeight="Black"
+                                           Margin="0,6"
                                            Text="{Binding FileName}"
                                            Grid.Row="0" />
 
@@ -144,10 +145,14 @@
                                                       HorizontalAlignment="Stretch"
                                                       Visibility="{Binding ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
                                     <Button Name="OpenFolder"
-                                            VerticalAlignment="Stretch"
+                                            Height="42"
+                                            Margin="13,2,0,2"
+                                            Background="Transparent"
                                             Click="OpenFolder_Click"
+
                                             Visibility="{Binding ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Completed'}">
-                                        <SymbolIcon  Symbol="OpenLocal" />
+                                        <Image 
+                                               Source="../../Assets/OperationIcons/open-folder.svg" />
                                     </Button>
                                 </Grid>
 

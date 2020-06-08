@@ -12,6 +12,8 @@ namespace DesktopApp.Helpers
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             string ss = value.ToString();
+            if (ss == "7z")
+                ss = "zip-1";
             return (string)parameter + "/" + ss + ".svg";
         }
 

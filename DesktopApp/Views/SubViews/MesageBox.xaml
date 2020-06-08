@@ -26,7 +26,7 @@
     </UserControl.Resources>
     <Grid  x:Name="MessengerPanel"
            Grid.Row="1"
-           Background="#212121"
+           Background="Black"
            Margin="7"
            VerticalAlignment="Stretch"
            HorizontalAlignment="Stretch"
@@ -90,34 +90,36 @@
 
                             <Grid Grid.Row="0"
                                   Name="SubmitedMessageBody"
-                                  Margin="4"
-                                  Background="Transparent"
                                   HorizontalAlignment="Right"
-                                  BorderThickness="3"
-                                  CornerRadius="4"
+                                  BorderThickness="{StaticResource ButtonBorderThemeThickness}"
+                                  CornerRadius="{StaticResource ControlCornerRadius}"
                                   BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
                                   Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Send'}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
-                                    <RowDefinition Height="20"
-                                                   MinHeight="20"
-                                                   MaxHeight="20" />
                                 </Grid.RowDefinitions>
 
-                                <StackPanel Name="SubmitedMessageStack"
-                                            Orientation="Vertical"
-                                            Margin="9">
+                                <Button Name="SubmitedReceivedMessageBodyFile"
+                                        Width="auto"
+                                        Height="auto"
+                                        HorizontalContentAlignment="Stretch"
+                                        HorizontalAlignment="Stretch"
+                                        Tag="{Binding File.Id}"
+                                        Click="SubmitedReceivedMessageBodyFile_Click"
+                                        BorderThickness="{StaticResource ButtonBorderThemeThickness}"
+                                        CornerRadius="{StaticResource ControlCornerRadius}"
+                                        BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
+                                        Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                    <StackPanel Width="auto"
+                                                Height="auto"
+                                                VerticalAlignment="Stretch"
+                                                HorizontalAlignment="Stretch"
+                                                Orientation="Vertical">
 
-                                    <Button Name="SubmitedReceivedMessageBodyFile"
-                                            Background="Transparent"
-                                            HorizontalContentAlignment="Left"
-                                            HorizontalAlignment="Left"
-                                            Tag="{Binding File.Id}"
-                                            Click="SubmitedReceivedMessageBodyFile_Click"
-                                            Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
-                                        <StackPanel Orientation="Horizontal"
+                                        <StackPanel Name="FileBodyStack"
+                                                    Orientation="Horizontal"
                                                     VerticalAlignment="Stretch"
-                                                    HorizontalAlignment="Left">
+                                                    HorizontalAlignment="Stretch">
                                             <RelativePanel Height="60"
                                                            Width="54">
                                                 <Image Name="SubmitedMessageBodyFileImage"
@@ -128,74 +130,92 @@
                                                        RelativePanel.AlignRightWithPanel="True"
                                                        Height="18"
                                                        Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
-                                                <ProgressRing RelativePanel.AlignVerticalCenterWithPanel="True"
-                                                              RelativePanel.AlignHorizontalCenterWithPanel="True"
-                                                              Name="ProgressingRight"
-                                                              Foreground="Red"
-                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
-                                                <ProgressRing Name="InQueueRight"
-                                                              Foreground="Blue"
-                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='InQueue'}" />
                                             </RelativePanel>
-                                            <StackPanel Margin="4,0,0,0"
-                                                        Orientation="Vertical">
+                                            <StackPanel Orientation="Vertical">
                                                 <TextBlock Margin="1"
                                                            Text="{Binding File.FileName}"></TextBlock>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Margin="1"
                                                                Text="{Binding File.TotalSize, Converter= {StaticResource ByteToBigOneConverter},Mode=OneWay}" />
-                                                    
+
                                                 </StackPanel>
+                                                <ProgressRing Name="InQueueRight"
+                                                              Margin="3,3,3,0"
+                                                              Foreground="Blue"
+                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='InQueue'}" />
+                                                <muxc:ProgressBar Maximum="{Binding File.TotalSize}"
+                                                                  Value="{Binding File.ProgressedSize}"
+                                                                  Height="5"
+                                                                  Width="120"
+                                                                  Margin="3,0,3,0"
+                                                                  Foreground="Green"
+                                                                  HorizontalAlignment="Stretch"
+                                                                  Visibility="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
+
                                             </StackPanel>
                                         </StackPanel>
-                                    </Button>
+                                        <TextBlock Name="SubmittedFileClockText"
+                                                   Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Send'}"
+                                                   VerticalAlignment="Bottom"
+                                                   HorizontalAlignment="Left"
+                                                   FlowDirection="LeftToRight"
+                                                   Text="{Binding Time}" />
+                                    </StackPanel>
+                                </Button>
+                                <Button BorderThickness="{StaticResource ButtonBorderThemeThickness}"
+                                        CornerRadius="{StaticResource ControlCornerRadius}"
+                                        BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}" Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}" >
+                                    <StackPanel Width="auto"
+                                                Height="auto"
+                                                VerticalAlignment="Stretch"
+                                                HorizontalAlignment="Stretch"
+                                                Orientation="Vertical">
+                                        
                                     <TextBlock Name="SubmittedMessageBodyText"
                                                TextWrapping="Wrap"
-                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                               Margin="5"
                                                Text="{Binding Text}" />
-                                </StackPanel>
+                                        <TextBlock Name="SubmittedTextClockText"
+                                                   Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Send'}"
+                                                   VerticalAlignment="Bottom"
+                                                   HorizontalAlignment="Left"
+                                                   FlowDirection="LeftToRight"
+                                                   Text="{Binding Time}" />
+                                    </StackPanel>
+                                </Button>
+                                
 
-                                <TextBlock Name="ReceivedClockText"
-                                           Grid.Row="1"
-                                           Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Received'}"
-                                           VerticalAlignment="Bottom"
-                                           HorizontalAlignment="Right"
-                                           FlowDirection="RightToLeft"
-                                           Text="{Binding Time}" />
-
-                                <TextBlock Name="SubmittedClockText"
-                                           Grid.Row="1"
-                                           Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Send'}"
-                                           VerticalAlignment="Bottom"
-                                           HorizontalAlignment="Left"
-                                           FlowDirection="LeftToRight"
-                                           Text="{Binding Time}" />
 
                             </Grid>
 
                             <Grid Grid.Row="0"
                                   Name="ReceivedMessageBody"
-                                  Margin="4"
-                                  Background="Transparent"
+                                  BorderThickness="3"
+                                  CornerRadius="{StaticResource ControlCornerRadius}"
+                                  BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
                                   HorizontalAlignment="Left"
                                   Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Received'}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
-                                    <RowDefinition Height="20"
-                                                   MinHeight="20"
-                                                   MaxHeight="20" />
+                                    
                                 </Grid.RowDefinitions>
 
-                                <StackPanel Name="ReceivedMessageStack"
-                                            Orientation="Vertical">
-
+                           
                                     <Button Name="ReceivedMessageBodyFile"
-                                            Background="Transparent"
+                                          
                                             HorizontalContentAlignment="Left"
                                             HorizontalAlignment="Left"
-                                            Tag="{Binding File.Id}"
+                                        BorderThickness="{StaticResource ButtonBorderThemeThickness}"
+                                        CornerRadius="{StaticResource ControlCornerRadius}"
+                                        BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
+                                        Tag="{Binding File.Id}"
                                             Click="SubmitedReceivedMessageBodyFile_Click"
                                             Visibility="{Binding IsFileExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                    <StackPanel Width="auto"
+                                                Height="auto"
+                                                VerticalAlignment="Stretch"
+                                                HorizontalAlignment="Stretch"
+                                                Orientation="Vertical">
                                         <StackPanel Orientation="Horizontal"
                                                     VerticalAlignment="Stretch"
                                                     HorizontalAlignment="Left">
@@ -209,15 +229,6 @@
                                                        RelativePanel.AlignRightWithPanel="True"
                                                        Height="18"
                                                        Source="{Binding File.Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
-                                                <ProgressRing RelativePanel.AlignVerticalCenterWithPanel="True"
-                                                              RelativePanel.AlignHorizontalCenterWithPanel="True"
-                                                              Name="ProgressingLeft"
-                                                              Foreground="Red"
-                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
-                                                <ProgressRing Name="InQueueLeft"
-                                                              Foreground="Blue"
-                                                              IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='InQueue'}" />
-
                                             </RelativePanel>
                                             <StackPanel Margin="4,0,0,0"
                                                         Orientation="Vertical">
@@ -227,33 +238,54 @@
                                                     <TextBlock Margin="1"
                                                                Text="{Binding File.TotalSize, Converter= {StaticResource ByteToBigOneConverter},Mode=OneWay}" />
                                                     <TextBlock Margin="3,0,0,0"
-                                                        Text="KB" />
+                                                               Text="KB" />
                                                 </StackPanel>
                                             </StackPanel>
+                                            <ProgressRing Name="InQueueLeft"
+                                                          Margin="3,3,3,0"
+                                                          Foreground="Blue"
+                                                          IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='InQueue'}" />
+                                            <muxc:ProgressBar Maximum="{Binding File.TotalSize}"
+                                                              Value="{Binding File.ProgressedSize}"
+                                                              Height="5"
+                                                              Width="120"
+                                                              Margin="3,0,3,0"
+                                                              Foreground="Green"
+                                                              HorizontalAlignment="Stretch"
+                                                              Visibility="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
                                         </StackPanel>
-                                    </Button>
+                                        <TextBlock Name="ReceivedFileClockText2"
+                                                   Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Received'}"
+                                                   VerticalAlignment="Bottom"
+                                                   HorizontalAlignment="Right"
+                                                   FlowDirection="RightToLeft"
+                                                   Text="{Binding Time}" />
+                                    </StackPanel>
+                                </Button>
+                                <Button  BorderThickness="{StaticResource ButtonBorderThemeThickness}"
+                                         CornerRadius="{StaticResource ControlCornerRadius}"
+                                         BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
+                                         Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}">
+                                    <StackPanel Width="auto"
+                                                Height="auto"
+                                                VerticalAlignment="Stretch"
+                                                HorizontalAlignment="Stretch"
+                                                Orientation="Vertical">
+                                        <TextBlock Name="ReceivedMessageBodyText"
+                                                   TextWrapping="Wrap"
+                                                   Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
+                                                   Text="{Binding Text}" />
+                                        <TextBlock Name="ReceivedTextClockText2"
+                                                   Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Received'}"
+                                                   VerticalAlignment="Bottom"
+                                                   HorizontalAlignment="Right"
+                                                   FlowDirection="RightToLeft"
+                                                   Text="{Binding Time}" />
 
-                                    <TextBlock Name="ReceivedMessageBodyText"
-                                               TextWrapping="Wrap"
-                                               Visibility="{Binding IsTextExist,Converter={StaticResource EnumExistToBooleanConverter},ConverterParameter='Yes'}"
-                                               Text="{Binding Text}" />
-                                </StackPanel>
 
-                                <TextBlock Name="ReceivedClockText2"
-                                           Grid.Row="1"
-                                           Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Received'}"
-                                           VerticalAlignment="Bottom"
-                                           HorizontalAlignment="Right"
-                                           FlowDirection="RightToLeft"
-                                           Text="{Binding Time}" />
 
-                                <TextBlock Name="SubmittedClockText2"
-                                           Grid.Row="1"
-                                           Visibility="{Binding Event,Converter={StaticResource EnumMessageEventToBooleanConverter},ConverterParameter='Send'}"
-                                           VerticalAlignment="Bottom"
-                                           HorizontalAlignment="Left"
-                                           FlowDirection="LeftToRight"
-                                           Text="{Binding Time}" />
+                                    </StackPanel>
+                                </Button>
 
                             </Grid>
                         </Grid>

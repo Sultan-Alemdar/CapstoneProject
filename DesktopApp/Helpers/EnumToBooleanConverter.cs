@@ -24,7 +24,7 @@ namespace DesktopApp.Helpers
                 return enumValue.Equals(value);
             }
 
-            throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
+            return false;//    throw new ArgumentException("ExceptionEnumToBooleanConverterParameterMustBeAnEnumName".GetLocalized());
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

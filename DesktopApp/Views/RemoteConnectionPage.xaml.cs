@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Documents;
 using Windows.Storage;
 using Windows.Storage.Provider;
 using System.IO;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace DesktopApp.Views
 {
@@ -159,8 +160,10 @@ namespace DesktopApp.Views
         }
         private FileModel fileModel = new FileModel("Dnk", "Deneme", "pdf", 50064, "Pdf Dosyası", "*.pdf");
 
+
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            fileModel.SetStartedStateConfig();
             MessageModel messageModel = new MessageModel("Dnk", "10:10:10", MessageModel.EnumEvent.Send, "", fileModel);
             ViewModel.AllFilesOnInterfaceCollection.Add(fileModel);
             ViewModel.AllMessagesOnInterfaceCollection.Add(messageModel);
@@ -173,5 +176,34 @@ namespace DesktopApp.Views
             fileModel.ShowPercent();
         }
 
+        private async void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            picker.FileTypeFilter.Add(".jpg");
+            picker.FileTypeFilter.Add(".jpeg");
+            picker.FileTypeFilter.Add(".png");
+            picker.FileTypeFilter.Add(".txt");
+            picker.FileTypeFilter.Add(".doc");
+            picker.FileTypeFilter.Add(".docx");
+            picker.FileTypeFilter.Add(".7z");
+            picker.FileTypeFilter.Add(".");
+
+            var file = await picker.PickSingleFileAsync();
+            var props = await file.GetBasicPropertiesAsync();
+            #region ThumtoBitmap
+            var tumb = await file.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.SingleItem);
+
+            //     var thumb = await file.GetScaledImageAsThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.PicturesView);
+            if (tumb != null)
+            {
+                BitmapImage img = new BitmapImage();
+                await img.SetSourceAsync(tumb);
+                Thum.Source = img;
+            }
+
+            #endregion
+        }
     }
 }

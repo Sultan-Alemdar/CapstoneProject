@@ -172,5 +172,6 @@ namespace DesktopApp.Views
             fileModel.ProgressedSize += 10000;
             fileModel.ShowPercent();
         }
+
     }
 }

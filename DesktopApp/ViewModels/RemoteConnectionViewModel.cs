@@ -44,24 +44,26 @@ namespace DesktopApp.ViewModels
             _sendCommand = new GalaSoft.MvvmLight.Command.RelayCommand(Send, SendCanExecute);
 
             _acceptCommand = new GalaSoft.MvvmLight.Command.RelayCommand<string>(Accept, AcceptCanExecute);
-            _downloadStream = new System.IO.MemoryStream();
+            _cancelCommand = new GalaSoft.MvvmLight.Command.RelayCommand<string>(CancelExecute);
+            _openFileDirectoryCommand = new GalaSoft.MvvmLight.Command.RelayCommand<string>(OpenFileDirectoryExecute);
+            _openFileCommand = new GalaSoft.MvvmLight.Command.RelayCommand<string>(OpenFileExecuteAsync);
 
             Conductor.Instance.OnDataChanelWasCreated += Instance_OnDataChanelWasCreated;
             if (Conductor.Instance.MessageChannel != null)
             {
                 Conductor.Instance.MessageChannel.OnBufferedAmountLow += MessageChannel_OnBufferedAmountLow;
-            Conductor.Instance.MessageChannel.OnOpen += MessageChannel_OnOpen;
-            Conductor.Instance.MessageChannel.OnClose += MessageChannel_OnClose;
-            Conductor.Instance.MessageChannel.OnError += MessageChannel_OnError;
-            Conductor.Instance.MessageChannel.OnMessage += MessageChannel_OnMessage; ;
+                Conductor.Instance.MessageChannel.OnOpen += MessageChannel_OnOpen;
+                Conductor.Instance.MessageChannel.OnClose += MessageChannel_OnClose;
+                Conductor.Instance.MessageChannel.OnError += MessageChannel_OnError;
+                Conductor.Instance.MessageChannel.OnMessage += MessageChannel_OnMessage; ;
 
-            Conductor.Instance.FileChannel.OnBufferedAmountLow += FileChannel_OnBufferedAmountLow; ;
-            Conductor.Instance.FileChannel.OnOpen += FileChannel_OnOpen; ;
-            Conductor.Instance.FileChannel.OnClose += FileChannel_OnClose; ;
-            Conductor.Instance.FileChannel.OnError += FileChannel_OnError; ;
-            Conductor.Instance.FileChannel.OnMessage += FileChannel_OnMessage;
+                Conductor.Instance.FileChannel.OnBufferedAmountLow += FileChannel_OnBufferedAmountLow; ;
+                Conductor.Instance.FileChannel.OnOpen += FileChannel_OnOpen; ;
+                Conductor.Instance.FileChannel.OnClose += FileChannel_OnClose; ;
+                Conductor.Instance.FileChannel.OnError += FileChannel_OnError; ;
+                Conductor.Instance.FileChannel.OnMessage += FileChannel_OnMessage;
             }
-            
+
         }
 
         private void Instance_OnDataChanelWasCreated()

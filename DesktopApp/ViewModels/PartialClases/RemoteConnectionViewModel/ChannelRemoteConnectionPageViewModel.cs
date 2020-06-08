@@ -20,11 +20,13 @@ using System.Threading;
 using Windows.Storage.Provider;
 using Windows.UI.Core;
 using System.ComponentModel.DataAnnotations;
+using Windows.System;
 
 namespace DesktopApp.ViewModels
 {
     public sealed partial class RemoteConnectionViewModel : ViewModelBase
     {
+        private static object _uploadLock = new object();
         private System.Timers.Timer _timer;
         private string _messageText;
         public string MessageText { get => _messageText; set => Set<string>("MessageText", ref _messageText, value); }
@@ -33,7 +35,9 @@ namespace DesktopApp.ViewModels
         private RelayCommand<string> _acceptCommand;
         private CoreDispatcher _coreDispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         private static object _lockObject = new object();
-
+        private readonly RelayCommand<string> _cancelCommand;
+        private readonly RelayCommand<string> _openFileDirectoryCommand;
+        private readonly RelayCommand<string> _openFileCommand;
         private enum MachineState
         {
             Idle = 0,
@@ -52,16 +56,18 @@ namespace DesktopApp.ViewModels
         public RelayCommand SendCommand => _sendCommand;
 
 
-
         private Stream _downloadStream;
         private List<FileModel> _taskQueue = new List<FileModel>();
 
+        public RelayCommand<string> CancelCommand { get => _cancelCommand; }
+
+        public RelayCommand<string> OpenFileDirectoryCommand => _openFileDirectoryCommand;
+
+        public RelayCommand<string> OpenFileCommand => _openFileCommand;
+
         private Dictionary<string, MessageModel> _allMessagesDictionary = new Dictionary<string, MessageModel>();
         private Dictionary<string, StorageFile> _allStoregeFilesDictionary = new Dictionary<string, StorageFile>();
-
-        private Dictionary<string, Stream> _allUploadStreamsDictionary = new Dictionary<string, Stream>();
-        private Dictionary<string, Stream> _allDownloadStreamsDictionary = new Dictionary<string, Stream>();
-
+        private Dictionary<string, Stream> _allStreamsDictionary = new Dictionary<string, Stream>();
 
 
         private async Task SendSeenMessageAsync(string id)
@@ -84,6 +90,35 @@ namespace DesktopApp.ViewModels
             Conductor.Instance.MessageChannel.Send(strChannelMessageModel);
         }
 
+
+        private async void CancelExecute(string id)
+        {
+            _allMessagesDictionary.TryGetValue(id, out MessageModel messageModel);
+            var file = messageModel.File;
+            await ReleaseFileResourcesAndApplyConfiguration(file, FileModel.EnumFileState.Canceled);
+            await SendFileNotifyMessageAsync(TreatmentMessageModel.GetFileCanceledType(id));
+
+        }
+        private async void OpenFileExecuteAsync(string id)
+        {
+            _allStoregeFilesDictionary.TryGetValue(id, out StorageFile storageFile);
+            await RunOnUI(CoreDispatcherPriority.Normal, async () =>
+            {
+                await Launcher.LaunchFileAsync(storageFile);
+            });
+        }
+        private async void OpenFileDirectoryExecute(string id)
+        {
+            _allStoregeFilesDictionary.TryGetValue(id, out StorageFile storageFile);
+            string path = storageFile.Path;
+            string folder = path.Substring(0, path.LastIndexOf("\\"));
+            await RunOnUI(CoreDispatcherPriority.Normal, async () =>
+            {
+                FolderLauncherOptions options = new FolderLauncherOptions();
+                options.ItemsToSelect.Add(storageFile);
+                await Launcher.LaunchFolderPathAsync(folder, options);
+            });
+        }
 
 
         private async void Send()
@@ -194,7 +229,7 @@ namespace DesktopApp.ViewModels
 
         private async Task UpdateAllDataStrucuresAndInterface(string id, MessageModel messageModel, FileModel fileModel, StorageFile storageFile)
         {
-            await RunOnUI(CoreDispatcherPriority.High, () =>
+            await RunOnUI(CoreDispatcherPriority.Normal, () =>
             {
                 if (fileModel != null)
                     AllFilesOnInterfaceCollection.Add(fileModel);
@@ -229,23 +264,22 @@ namespace DesktopApp.ViewModels
                 if (!(Conductor.Instance.FileChannel.ReadyState == Org.WebRtc.RTCDataChannelState.Open))
                     Debug.WriteLine("[Warning] ChannelRemoteConnectionPageViewModel : File channel is not open.");
 
-                if (!_allStoregeFilesDictionary.TryGetValue(fileModel.Id, out StorageFile storageFile))
+
+                if (!LoadFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Started, out StorageFile storageFile))
                     return;
 
-                fileModel.SetStartedStateConfig();
-
-                //upload
                 await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(fileModel.Id));
                 var stream = await storageFile.OpenStreamForReadAsync();
+                _allStreamsDictionary.Add(fileModel.Id, stream);
 
-                _allUploadStreamsDictionary.Add(fileModel.Id, stream);
 
                 if (fileModel.TotalSize <= MyConstants.MAX_ONE_CHUNK_SIZE)
                 {//küçük dosya
                     byte[] buffer = new byte[fileModel.TotalSize];
                     await stream.ReadAsync(buffer, 0, (int)fileModel.TotalSize);
                     Conductor.Instance.FileChannel.Send(buffer);
-                    await ReleaseFileResources(fileModel, stream);
+                    await ReleaseFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Endded, stream);
+                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetEndType(fileModel.Id));
                 }
                 else
                 { //büyük dosya
@@ -278,28 +312,58 @@ namespace DesktopApp.ViewModels
 
             #endregion
         }
-        private async Task ReleaseFileResources(FileModel fileModel, Stream stream)
+        private async Task ReleaseFileResourcesAndApplyConfiguration(FileModel fileModel, FileModel.EnumFileState fileState, Stream stream = null)
         {
-            _taskQueue.Remove(fileModel);//delete from task queue;
-            _state = MachineState.Idle;
-            _allUploadStreamsDictionary.Remove(fileModel.Id);
-            await RunOnUI(CoreDispatcherPriority.High, async () =>
+            if (stream == null)
+                _allStreamsDictionary.TryGetValue(fileModel.Id, out stream);
+            if (!fileModel.IsAccepted)
+                _state = MachineState.Idle;
+            await Task.Run(async () =>
             {
-                fileModel.ProgressedSize = stream.Position;
-                if (fileModel.IsCanceled)
+                await RunOnUI(CoreDispatcherPriority.High, () =>
                 {
-                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetFileCanceledType(fileModel.Id));
-                    fileModel.SetCanceledStateConfig();
-                }
-                else
+                    fileModel.ProgressedSize = stream.Position;
+                });
+                switch (fileState)
                 {
-                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetEndType(fileModel.Id));
-                    fileModel.SetEndedStateConfig();
+                    case FileModel.EnumFileState.Canceled:
+                        _allStoregeFilesDictionary.TryGetValue(fileModel.Id, out StorageFile storageFile);
+                        await storageFile.DeleteAsync();
+                        await RunOnUI(CoreDispatcherPriority.Normal, () =>
+                        {
+                            fileModel.SetCanceledStateConfig();
+                            _allFilesOnInterfaceCollection.Remove(fileModel);
+                        });
+                        break;
+                    case FileModel.EnumFileState.Endded:
+                        await RunOnUI(CoreDispatcherPriority.Normal, () =>
+                        {
+                            fileModel.SetEndedStateConfig();
+                        });
+                        break;
+                    case FileModel.EnumFileState.Failure:
+                        await RunOnUI(CoreDispatcherPriority.Normal, () =>
+                        {
+                            fileModel.SetFailureStateConfig();
+                        });
+                        break;
+                    default:
+                        break;
                 }
             });
-            stream.Dispose();
+
+            if (stream != null)
+            {
+                stream.Dispose();
+                _allStreamsDictionary.Remove(fileModel.Id);
+
+            }
+            _taskQueue.Remove(fileModel);//delete from task queue;
+            if (!fileModel.IsEnded)
+                _allStoregeFilesDictionary.Remove(fileModel.Id);
+
         }
-        private static object _uploadLock = new object();
+
         private async Task<bool> UploadFile(CancellationTokenSource cancellationTokenSource, FileModel fileModel, Stream stream)
         {
             var total = fileModel.TotalSize;
@@ -349,9 +413,10 @@ namespace DesktopApp.ViewModels
                 _timer.Enabled = false;
                 await RunOnUI(CoreDispatcherPriority.High, () =>
                 {
-                    fileModel.ActionSpeed = -1;
+                    fileModel.ActionSpeed = 0;
                 });
-                await ReleaseFileResources(fileModel, stream);
+                await ReleaseFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Endded, stream);
+                await SendFileNotifyMessageAsync(TreatmentMessageModel.GetEndType(fileModel.Id));
                 return r ? true : false;
             });
         }
@@ -361,170 +426,218 @@ namespace DesktopApp.ViewModels
 
         private async void MessageChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
         {
-            try
+            await Task.Run(async () =>
             {
-
-                TreatmentMessageModel treatmentMessageModel = JsonConvert.DeserializeObject<TreatmentMessageModel>(Event.Text);
-                MessageModel messageModel = null;
-                switch (treatmentMessageModel.MessageType)
+                try
                 {
-                    case TreatmentMessageModel.EnumMessageType.PlainText:
-                        messageModel = treatmentMessageModel.MessageModel;
-                        messageModel.SwitchTreatment();
-                        await UpdateAllDataStrucuresAndInterface(messageModel.Id, messageModel, null, null);
-                        await SendSeenMessageAsync(messageModel.Id);
-                        break;
-                    case TreatmentMessageModel.EnumMessageType.Offer:
-                        messageModel = treatmentMessageModel.MessageModel;
-                        messageModel.SwitchTreatment();
-                        await UpdateAllDataStrucuresAndInterface(messageModel.Id, messageModel, null, null);
-                        await SendSeenMessageAsync(messageModel.Id);
-                        break;
-                    case TreatmentMessageModel.EnumMessageType.SeenOfPlainTextOrOfferMessage:
-                        if (_allMessagesDictionary.TryGetValue(treatmentMessageModel.Id, out MessageModel messageForBeen))
-                        {
-                            messageForBeen.Seen = MessageModel.EnumSeen.Yes;
-                        }
-                        break;
-                    default:
-                        break;
+
+                    TreatmentMessageModel treatmentMessageModel = JsonConvert.DeserializeObject<TreatmentMessageModel>(Event.Text);
+                    MessageModel messageModel = null;
+                    switch (treatmentMessageModel.MessageType)
+                    {
+                        case TreatmentMessageModel.EnumMessageType.PlainText:
+                            await RunOnUI(CoreDispatcherPriority.High, () =>
+                             {
+                                 messageModel = treatmentMessageModel.MessageModel;
+                                 messageModel.SwitchTreatment();
+                             });
+                            await UpdateAllDataStrucuresAndInterface(messageModel.Id, messageModel, null, null);
+                            await SendSeenMessageAsync(messageModel.Id);
+                            break;
+                        case TreatmentMessageModel.EnumMessageType.Offer:
+                            await RunOnUI(CoreDispatcherPriority.High, () =>
+                            {
+                                messageModel = treatmentMessageModel.MessageModel;
+                                messageModel.SwitchTreatment();
+                            });
+                            await UpdateAllDataStrucuresAndInterface(messageModel.Id, messageModel, null, null);
+                            await SendSeenMessageAsync(messageModel.Id);
+                            break;
+                        case TreatmentMessageModel.EnumMessageType.SeenOfPlainTextOrOfferMessage:
+                            if (_allMessagesDictionary.TryGetValue(treatmentMessageModel.Id, out MessageModel messageForBeen))
+                            {
+                                await RunOnUI(CoreDispatcherPriority.High, () =>
+                                {
+                                    messageForBeen.Seen = MessageModel.EnumSeen.Yes;
+                                });
+
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
                 }
+                catch (Exception e)
+                {
 
-            }
-            catch (Exception e)
-            {
-
-                Debug.WriteLine("[Error] ChannelRemoteConnectionViewModel : On Message channel event:" + e.Message);
-            }
+                    Debug.WriteLine("[Error] ChannelRemoteConnectionViewModel : On Message channel event:" + e.Message);
+                }
+            });
 
         }
 
         private async void FileChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
         {
+            await Task.Run(async () =>
+           {
+               try
+               {
+                   if (Event.Text != "")
+                   {
 
+                       TreatmentMessageModel treatmentMessageModel = JsonConvert.DeserializeObject<TreatmentMessageModel>(Event.Text);
+
+                       string id = treatmentMessageModel.Id;
+
+                       switch (treatmentMessageModel.MessageType)
+                       {
+                           case TreatmentMessageModel.EnumMessageType.Accepted:
+
+                               if (_allMessagesDictionary.TryGetValue(id, out MessageModel message))
+                               {
+                                   FileModel fileModel = message.File;
+                                   await RunOnUI(CoreDispatcherPriority.High, () =>
+                                   {
+                                       fileModel.SetAcceptedStateConfig();
+                                   });
+                                   _taskQueue.Add(message.File);
+                                   await UpdateAllDataStrucuresAndInterface(fileModel.Id, null, fileModel, null);
+                                   lock (_lockObject)
+                                   {
+                                       if (_state != MachineState.Idle)
+                                           break;
+                                   }
+                                   await StartUpload();
+                                   return;
+                               }
+                               await SendErrorMessageAsync(id, "");
+                               break;
+                           case TreatmentMessageModel.EnumMessageType.Start:
+                               if (!_allMessagesDictionary.TryGetValue(id, out MessageModel startedMessage))
+                               {
+                                   await SendErrorMessageAsync(id, "");
+                                   return;
+                               }
+                               LoadFileResourcesAndApplyConfiguration(startedMessage.File, FileModel.EnumFileState.Started, out StorageFile currentStorageFile);
+                               //  Debug.Assert(_downloadStream == null);
+                               _downloadStream = await currentStorageFile.OpenStreamForWriteAsync();
+                               _allStreamsDictionary.Add(id, _downloadStream);
+                               _timer = new System.Timers.Timer(1000);
+                               var startedFileModel = startedMessage.File;
+                               _timer.Enabled = true;
+                               _timer.AutoReset = true;
+                               _timer.Elapsed += async (sender, e) =>
+                               {
+                                   await RunOnUI(CoreDispatcherPriority.Normal, () =>
+                                   {
+                                       startedFileModel.ActionSpeed = _downloadStream.Position - startedFileModel.ProgressedSize;
+                                       startedFileModel.ProgressedSize = _downloadStream.Position;
+                                       startedFileModel.ShowPercent();
+                                   });
+                               };
+                               break;
+                           case TreatmentMessageModel.EnumMessageType.End:
+
+                               _timer.Enabled = false;
+
+                               if (!_allMessagesDictionary.TryGetValue(id, out MessageModel endedMessage))
+                               {
+                                   await SendErrorMessageAsync(id, "");
+                                   return;
+                               }
+                               await RunOnUI(CoreDispatcherPriority.Normal, () =>
+                               {
+                                   endedMessage.File.ProgressedSize = _downloadStream.Position;
+                                   endedMessage.File.ActionSpeed = 0;
+                               });
+                               await ReleaseFileResourcesAndApplyConfiguration(endedMessage.File, FileModel.EnumFileState.Endded, _downloadStream);
+
+                               if (_taskQueue.Count > 0)
+                               {
+                                   FileModel next = _taskQueue.First<FileModel>();
+
+                                   if (next.Event == FileModel.EnumEvent.Upload)
+                                   {
+                                       _state = MachineState.InInteraction;
+                                       await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(next.Id));
+                                       await RunOnUI(CoreDispatcherPriority.High, () =>
+                                       {
+                                           next.SetStartedStateConfig();
+                                       });
+                                       await StartUpload();
+                                   }
+                                   else
+                                       await SendFileNotifyMessageAsync(TreatmentMessageModel.GetNextType(next.Id));
+
+                               }
+                               break;
+
+                           case TreatmentMessageModel.EnumMessageType.Canceled:
+                               if (!_allMessagesDictionary.TryGetValue(id, out MessageModel canceledMessage))
+                               {
+                                   await SendErrorMessageAsync(id, "");
+                                   return;
+                               }
+                               await ReleaseFileResourcesAndApplyConfiguration(canceledMessage.File, FileModel.EnumFileState.Canceled);
+
+                               break;
+                           case TreatmentMessageModel.EnumMessageType.Next:
+                               var requested = _taskQueue.First<FileModel>();
+                               _state = MachineState.InInteraction;
+                               await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(requested.Id));
+                               await RunOnUI(CoreDispatcherPriority.High, () =>
+                                {
+                                    requested.SetStartedStateConfig();
+                                });
+                               await StartUpload();
+                               break;
+                       }
+                   }
+                   else
+                   {
+
+                       await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
+                   }
+
+               }
+               catch (Exception e)
+               {
+                   Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Error was occcured in FileChannel on message :" + e.Message);
+               }
+           });
+
+        }
+
+        private bool LoadFileResourcesAndApplyConfiguration(FileModel fileModel, FileModel.EnumFileState fileState, out StorageFile storageFile)
+        {
             try
             {
-                if (Event.Text != "")
+                _allStoregeFilesDictionary.TryGetValue(fileModel.Id, out StorageFile sf);
+
+                _state = MachineState.InInteraction;
+                storageFile = sf;
+                switch (fileState)
                 {
-
-                    TreatmentMessageModel treatmentMessageModel = JsonConvert.DeserializeObject<TreatmentMessageModel>(Event.Text);
-
-                    string id = treatmentMessageModel.Id;
-
-                    switch (treatmentMessageModel.MessageType)
-                    {
-                        case TreatmentMessageModel.EnumMessageType.Accepted:
-
-                            if (_allMessagesDictionary.TryGetValue(id, out MessageModel message))
-                            {
-                                FileModel fileModel = message.File;
-                                fileModel.SetAcceptedStateConfig();
-                                _taskQueue.Add(message.File);
-                                await UpdateAllDataStrucuresAndInterface(fileModel.Id, null, fileModel, null);
-                                lock (_lockObject)
-                                {
-                                    if (_state != MachineState.Idle)
-                                        break;
-                                }
-                                await StartUpload();
-                                return;
-                            }
-                            await SendErrorMessageAsync(id, "");
-                            break;
-                        case TreatmentMessageModel.EnumMessageType.Start:
-                            if (!_allMessagesDictionary.TryGetValue(id, out MessageModel startedMessage))
-                            {
-                                await SendErrorMessageAsync(id, "");
-                                return;
-                            }
-                            startedMessage.File.SetStartedStateConfig();
-                            _state = MachineState.InInteraction;
-                            _allStoregeFilesDictionary.TryGetValue(id, out StorageFile currentStorageFile);
-                            _downloadStream = await currentStorageFile.OpenStreamForWriteAsync();
-
-                            _timer = new System.Timers.Timer(1000);
-                            var startedFileModel = startedMessage.File;
-                            _timer.Enabled = true;
-                            _timer.AutoReset = true;
-                            _timer.Elapsed += async (sender, e) =>
-                            {
-                                await RunOnUI(CoreDispatcherPriority.High, () =>
-                                {
-                                    startedFileModel.ActionSpeed = _downloadStream.Position - startedFileModel.ProgressedSize;
-                                    startedFileModel.ProgressedSize = _downloadStream.Position;
-                                    startedFileModel.ShowPercent();
-                                });
-                            };
-                            break;
-                        case TreatmentMessageModel.EnumMessageType.End:
-                            _timer.Enabled = false;
-
-                            if (!_allMessagesDictionary.TryGetValue(id, out MessageModel endedMessage))
-                            {
-                                await SendErrorMessageAsync(id, "");
-                                return;
-                            }
-                            var file = endedMessage.File;
-                            _taskQueue.Remove(file);
-                            file.ProgressedSize -= _downloadStream.Position;
-                            if (!_allStoregeFilesDictionary.TryGetValue(id, out StorageFile storageFile))
-                            {
-                                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Message could not find to realize saving file operation. File Id :" + id);
-                            }
-                            _downloadStream.Dispose();
-                            file.SetEndedStateConfig();
-                            _state = MachineState.Idle;
-                            _allStoregeFilesDictionary.Remove(id);
-                            if (_taskQueue.Count > 0)
-                            {
-                                FileModel next = _taskQueue.First<FileModel>();
-
-                                if (next.Event == FileModel.EnumEvent.Upload)
-                                {
-                                    _state = MachineState.InInteraction;
-                                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(next.Id));
-                                    next.SetStartedStateConfig();
-                                    await StartUpload();
-                                }
-                                else
-                                    await SendFileNotifyMessageAsync(TreatmentMessageModel.GetNextType(next.Id));
-
-                            }
-                            break;
-
-                        case TreatmentMessageModel.EnumMessageType.Canceled:
-                            if (!_allMessagesDictionary.TryGetValue(id, out MessageModel canceledMessage))
-                            {
-                                await SendErrorMessageAsync(id, "");
-                                return;
-                            }
-                            canceledMessage.File.SetCanceledStateConfig();
-                            _taskQueue.Remove(canceledMessage.File);
-                            //TODO: clear stream. if it is necessary.
-                            break;
-                        case TreatmentMessageModel.EnumMessageType.Next:
-                            var requested = _taskQueue.First<FileModel>();
-                            _state = MachineState.InInteraction;
-                            await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(requested.Id));
-                            requested.SetStartedStateConfig();
-                            await StartUpload();
-                            break;
-                    }
+                    case FileModel.EnumFileState.Started:
+                        RunOnUI(CoreDispatcherPriority.High, () =>
+                        {
+                            fileModel.SetStartedStateConfig();
+                        });
+                        break;
+                    default:
+                        return false;
                 }
-                else
-                {
-
-                    await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
-                }
-
+                return true;
             }
             catch (Exception e)
             {
-                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Error was occcured in FileChannel on message :" +e.Message);
+                storageFile = null;
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : File resources reload operation ended with error :" + e.Message);
+                return false;
+
             }
         }
-
-
 
 
         private async Task<bool> HandleCanceledTask(FileModel fileModel)
@@ -640,7 +753,7 @@ namespace DesktopApp.ViewModels
                 if (!fileModel.IsStarted)
                     return;
 
-                if (!_allUploadStreamsDictionary.TryGetValue(fileModel.Id, out Stream stream))
+                if (!_allStreamsDictionary.TryGetValue(fileModel.Id, out Stream stream))
                 {
                     Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Stream could not find. File Id:  : " + fileModel.Id);
                     return;
@@ -650,8 +763,6 @@ namespace DesktopApp.ViewModels
                 UploadFile(null, fileModel, stream);
             }
         }
-
-
         #endregion
 
 

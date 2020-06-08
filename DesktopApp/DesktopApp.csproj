@@ -142,7 +142,7 @@
     <Compile Include="BackgroundTasks\PeerConnectionTask.cs" />
     <Compile Include="Constants\MyConstants.cs" />
     <Compile Include="Helpers\BoolToVisConverter.cs" />
-    <Compile Include="Helpers\ByteToKBConverter.cs" />
+    <Compile Include="Helpers\ByteToBigOneConverter.cs" />
     <Compile Include="Helpers\EnumToHorzontalConverter.cs" />
     <Compile Include="Helpers\IntToInformationConverter.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
@@ -261,8 +261,10 @@
     <Content Include="Assets\Arrows\minimize.svg" />
     <Content Include="Assets\bars.svg" />
     <Content Include="Assets\File_Operations_Svg\cancel.svg" />
-    <Content Include="Assets\File_Operations_Svg\check.svg" />
+    <Content Include="Assets\File_Operations_Svg\Completed.svg" />
     <Content Include="Assets\File_Operations_Svg\Download.svg" />
+    <Content Include="Assets\File_Operations_Svg\InQueue.svg" />
+    <Content Include="Assets\File_Operations_Svg\Progressing.svg" />
     <Content Include="Assets\File_Operations_Svg\refresh.svg" />
     <Content Include="Assets\File_Operations_Svg\Upload.svg" />
     <Content Include="Assets\File_Type_Icons_Svg\after-effects.svg" />

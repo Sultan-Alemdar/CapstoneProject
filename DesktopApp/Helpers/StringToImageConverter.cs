@@ -11,7 +11,6 @@ namespace DesktopApp.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-
             string ss = value.ToString();
             return (string)parameter + "/" + ss + ".svg";
         }

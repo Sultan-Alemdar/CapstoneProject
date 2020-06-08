@@ -22,7 +22,7 @@
                                         EnumType="{x:Bind Path=ViewModel.TypeOfMessageEnumEvent}" />
         <helpers:EnumToBooleanConverter x:Key="EnumStatusToBooleanConverter"
                                         EnumType="{x:Bind Path=ViewModel.EnumProccesStatus}" />
-        <helpers:ByteToKBConverter x:Key="ByteToKBConverter" />
+        <helpers:ByteToBigOneConverter x:Key="ByteToBigOneConverter" />
     </UserControl.Resources>
     <Grid  x:Name="MessengerPanel"
            Grid.Row="1"
@@ -143,8 +143,8 @@
                                                            Text="{Binding File.FileName}"></TextBlock>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Margin="1"
-                                                               Text="{Binding File.TotalSize, Converter= {StaticResource ByteToKBConverter},Mode=OneWay}" />
-                                                    <TextBlock Text="KB" />
+                                                               Text="{Binding File.TotalSize, Converter= {StaticResource ByteToBigOneConverter},Mode=OneWay}" />
+                                                    
                                                 </StackPanel>
                                             </StackPanel>
                                         </StackPanel>
@@ -225,7 +225,7 @@
                                                            Text="{Binding File.FileName}"></TextBlock>
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Margin="1"
-                                                               Text="{Binding File.TotalSize, Converter= {StaticResource ByteToKBConverter},Mode=OneWay}" />
+                                                               Text="{Binding File.TotalSize, Converter= {StaticResource ByteToBigOneConverter},Mode=OneWay}" />
                                                     <TextBlock Margin="3,0,0,0"
                                                         Text="KB" />
                                                 </StackPanel>

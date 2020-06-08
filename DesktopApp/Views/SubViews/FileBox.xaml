@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:models="using:DesktopApp.Core.Models"
              xmlns:helpers="using:DesktopApp.Helpers"
+             xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
@@ -15,7 +16,9 @@
                     Value="{StaticResource ControlCornerRadius}" />
         </Style>
         <helpers:StringToImageConverter x:Key="StringToImageConverter" />
-        <helpers:ByteToKBConverter x:Key="ByteToKBConverter" />
+        <helpers:ByteToBigOneConverter x:Key="ByteToBigOneConverter" />
+        <helpers:EnumToBooleanConverter x:Key="EnumStatusToBooleanConverter"
+                                        EnumType="{x:Bind Path=ViewModel.EnumProccesStatus}" />
     </UserControl.Resources>
     <Grid x:Name="FilePanel"
           Grid.Row="0"
@@ -49,7 +52,8 @@
         </Grid>
         <ListView Name="FileList"
                   Grid.Row="1"
-                  ItemsSource="{Binding AllFilesOnInterfaceCollection}">
+                  ItemsSource="{Binding AllFilesOnInterfaceCollection}"
+                  SelectionMode="None">
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel VerticalAlignment="Bottom"
@@ -115,37 +119,38 @@
 
                                     <TextBlock Name="SpeedTextBlock"
                                                Margin="3,0,0,0"
-                                               Text="{Binding ActionSpeed, Converter= {StaticResource ByteToKBConverter}}" />
-                                    <TextBlock     Margin="3,0,0,0"
-                                                   Text="KBPS - " />
+                                               Text="{Binding ActionSpeed, Converter= {StaticResource ByteToBigOneConverter}}" />
+                                    <TextBlock Text="/s - " />
 
                                     <TextBlock     Margin="3,0,0,0"
-                                                   Text="{Binding ProgressedSize, Converter= {StaticResource ByteToKBConverter}}" />
+                                                   Text="{Binding ProgressedSize, Converter= {StaticResource ByteToBigOneConverter}}" />
                                     <TextBlock     Margin="3,0,0,0"
-                                                   Text="/" />
+                                                   Text=" / " />
                                     <TextBlock Name="PercentTextBlock"
                                                Margin="3,0,0,0"
-                                               Text="{Binding TotalSize, Converter= {StaticResource ByteToKBConverter},Mode=OneWay}" />
-                                    <TextBlock     Margin="3,0,0,0"
-                                                   Text="KB" />
+                                               Text="{Binding TotalSize, Converter= {StaticResource ByteToBigOneConverter},Mode=OneWay}" />
+
 
                                 </StackPanel>
-                                <StackPanel  Grid.Row="2"
-                                             Orientation="Horizontal">
-                                    <Button Name="RemoveUp"
-                                            Width="auto"
-                                            Height="auto"
-                                            HorizontalContentAlignment="Stretch"
-                                            Background="Transparent">
-                                        <Image  Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
+                                <Grid Grid.Row="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <muxc:ProgressBar Maximum="{Binding TotalSize}"
+                                                      Value="{Binding ProgressedSize}"
+                                                      Height="5"
+                                                      Margin="5"
+                                                      Foreground="Green"
+                                                      HorizontalAlignment="Stretch"
+                                                      Visibility="{Binding ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
+                                    <Button Name="OpenFolder"
+                                            VerticalAlignment="Stretch"
+                                            Click="OpenFolder_Click"
+                                            Visibility="{Binding ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Completed'}">
+                                        <SymbolIcon  Symbol="OpenLocal" />
                                     </Button>
-                                    <Button Name="RemoveDown"
-                                            Width="auto"
-                                            Height="auto"
-                                            HorizontalContentAlignment="Stretch">
-                                        <Image Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
-                                    </Button>
-                                </StackPanel>
+                                </Grid>
+
                             </Grid>
 
 
@@ -154,11 +159,12 @@
                                     Grid.Column="2"
                                     Background="Transparent"
                                     VerticalAlignment="Stretch"
-                                    HorizontalAlignment="Stretch">
+                                    HorizontalAlignment="Stretch"
+                                    Click="SubmitedReceivedMessageBodyFile_Click">
 
                                 <Image Name="ActionImage"
                                        Stretch="Fill"
-                                       Source="{Binding Event,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
+                                       Source="{Binding ProccesStatus,Converter={StaticResource StringToImageConverter},ConverterParameter='../../Assets/File_Operations_Svg/'}" />
 
                             </Button>
 

@@ -1,8 +1,11 @@
-﻿using System;
+﻿using DesktopApp.Core.Models;
+using DesktopApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -19,9 +22,30 @@ namespace DesktopApp.Views.SubViews
 {
     public sealed partial class FileBox : UserControl
     {
+        public RemoteConnectionViewModel ViewModel => this.DataContext as RemoteConnectionViewModel;
         public FileBox()
         {
             this.InitializeComponent();
+        }
+        private void SubmitedReceivedMessageBodyFile_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            var fileModel = (FileModel)button.DataContext;
+            if (fileModel.IsAccepted || fileModel.IsStarted)
+            {
+                ViewModel.CancelCommand.Execute(fileModel.Id);
+            }
+            else
+                ViewModel.OpenFileCommand.Execute(fileModel.Id);
+
+
+        }
+
+        private void OpenFolder_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            var fileModel = (FileModel)button.DataContext;
+            ViewModel.OpenFileDirectoryCommand.Execute(fileModel.Id);
         }
     }
 }

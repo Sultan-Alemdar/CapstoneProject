@@ -403,7 +403,7 @@ namespace DesktopApp.ViewModels
             _timer.AutoReset = true;
             _timer.Elapsed += async (sender, e) =>
             {
-                await RunOnUI(CoreDispatcherPriority.High, () =>
+                await RunOnUI(CoreDispatcherPriority.Normal, () =>
                 {
                     fileModel.ActionSpeed = stream.Position - fileModel.ProgressedSize;
                     fileModel.ProgressedSize = stream.Position;
@@ -441,7 +441,7 @@ namespace DesktopApp.ViewModels
                 }
 
                 _timer.Enabled = false;
-                await RunOnUI(CoreDispatcherPriority.High, () =>
+                await RunOnUI(CoreDispatcherPriority.Normal, () =>
                 {
                     fileModel.ActionSpeed = 0;
                 });
@@ -466,7 +466,7 @@ namespace DesktopApp.ViewModels
                     switch (treatmentMessageModel.MessageType)
                     {
                         case TreatmentMessageModel.EnumMessageType.PlainText:
-                            await RunOnUI(CoreDispatcherPriority.High, () =>
+                            await RunOnUI(CoreDispatcherPriority.Normal, () =>
                              {
                                  messageModel = treatmentMessageModel.MessageModel;
                                  messageModel.SwitchTreatment();
@@ -475,7 +475,7 @@ namespace DesktopApp.ViewModels
                             await SendSeenMessageAsync(messageModel.Id);
                             break;
                         case TreatmentMessageModel.EnumMessageType.Offer:
-                            await RunOnUI(CoreDispatcherPriority.High, () =>
+                            await RunOnUI(CoreDispatcherPriority.Normal, () =>
                             {
                                 messageModel = treatmentMessageModel.MessageModel;
                                 messageModel.SwitchTreatment();
@@ -486,7 +486,7 @@ namespace DesktopApp.ViewModels
                         case TreatmentMessageModel.EnumMessageType.SeenOfPlainTextOrOfferMessage:
                             if (_allMessagesDictionary.TryGetValue(treatmentMessageModel.Id, out MessageModel messageForBeen))
                             {
-                                await RunOnUI(CoreDispatcherPriority.High, () =>
+                                await RunOnUI(CoreDispatcherPriority.Normal, () =>
                                 {
                                     messageForBeen.Seen = MessageModel.EnumSeen.Yes;
                                 });
@@ -527,7 +527,7 @@ namespace DesktopApp.ViewModels
                                if (_allMessagesDictionary.TryGetValue(id, out MessageModel message))
                                {
                                    FileModel fileModel = message.File;
-                                   await RunOnUI(CoreDispatcherPriority.High, () =>
+                                   await RunOnUI(CoreDispatcherPriority.Normal, () =>
                                    {
                                        fileModel.SetAcceptedStateConfig();
                                    });
@@ -591,7 +591,7 @@ namespace DesktopApp.ViewModels
                                    {
                                        _state = MachineState.InInteraction;
                                        await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(next.Id));
-                                       await RunOnUI(CoreDispatcherPriority.High, () =>
+                                       await RunOnUI(CoreDispatcherPriority.Normal, () =>
                                        {
                                            next.SetStartedStateConfig();
                                        });
@@ -613,13 +613,13 @@ namespace DesktopApp.ViewModels
                                    _cancellationTokenSource.Cancel();
                                else
                                    await ReleaseFileResourcesAndApplyConfiguration(canceledMessage.File, FileModel.EnumFileState.Canceled);
-                               
+
                                break;
                            case TreatmentMessageModel.EnumMessageType.Next:
                                var requested = _taskQueue.First<FileModel>();
                                _state = MachineState.InInteraction;
                                await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(requested.Id));
-                               await RunOnUI(CoreDispatcherPriority.High, () =>
+                               await RunOnUI(CoreDispatcherPriority.Normal, () =>
                                 {
                                     requested.SetStartedStateConfig();
                                 });
@@ -629,9 +629,13 @@ namespace DesktopApp.ViewModels
                    }
                    else
                    {
-                       if (_downloadStream.CanWrite)
+                       if (_downloadStream != null)
                        {
-                           await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
+
+                           if (_downloadStream.CanWrite)
+                           {
+                               await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
+                           }
                        }
                    }
 
@@ -655,7 +659,7 @@ namespace DesktopApp.ViewModels
                     case FileModel.EnumFileState.Started:
                         if (fileModel.FileState != FileModel.EnumFileState.Started)
                         {
-                            await RunOnUI(CoreDispatcherPriority.High, () =>
+                            await RunOnUI(CoreDispatcherPriority.Normal, () =>
                              {
                                  fileModel.SetStartedStateConfig();
                              });
@@ -771,11 +775,11 @@ namespace DesktopApp.ViewModels
 
 
         #endregion
-        private void FileChannel_OnBufferedAmountLow()
+        private async void FileChannel_OnBufferedAmountLow()
         {
-
-            lock (_uploadLock)
+            await Task.Run(async () =>
             {
+
 
                 var cancellationToken = _cancellationTokenSource.Token;
 
@@ -797,11 +801,10 @@ namespace DesktopApp.ViewModels
                 }
 
 
-                UploadFile(cancellationToken, fileModel, stream);
-            }
+                await UploadFile(cancellationToken, fileModel, stream);
+
+            });
         }
-
-
     }
 }
 #region ThumtoBitmap

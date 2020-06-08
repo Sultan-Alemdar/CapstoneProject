@@ -44,7 +44,7 @@ namespace DesktopApp.ViewModels
             InInteraction = 1,
 
         }
-
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
         private MachineState _state = MachineState.Idle;
 
 
@@ -150,6 +150,7 @@ namespace DesktopApp.ViewModels
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            #region filestype
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".jpeg");
             picker.FileTypeFilter.Add(".png");
@@ -175,7 +176,7 @@ namespace DesktopApp.ViewModels
             picker.FileTypeFilter.Add(".search");
             picker.FileTypeFilter.Add(".ai");
             picker.FileTypeFilter.Add(".avi");
-
+            #endregion
 
             var files = await picker.PickMultipleFilesAsync();
             if (files.Count > 0)
@@ -272,9 +273,9 @@ namespace DesktopApp.ViewModels
                 _state = MachineState.Idle;
                 return;
             }
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-            CancellationToken cancellationToken = cancellationTokenSource.Token;
+            _cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = _cancellationTokenSource.Token;
             _state = MachineState.InInteraction;
             try
             {
@@ -282,8 +283,8 @@ namespace DesktopApp.ViewModels
                 if (!(Conductor.Instance.FileChannel.ReadyState == Org.WebRtc.RTCDataChannelState.Open))
                     Debug.WriteLine("[Warning] ChannelRemoteConnectionPageViewModel : File channel is not open.");
 
-
-                if (!LoadFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Started, out StorageFile storageFile))
+                StorageFile storageFile = await LoadFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Started);
+                if (storageFile == null)
                     return;
 
                 await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(fileModel.Id));
@@ -305,7 +306,7 @@ namespace DesktopApp.ViewModels
                     long total = (long)fileModel.TotalSize;
                     int bufferSize = MyConstants.CHUNK_SIZE;
 
-                    await UploadFile(cancellationTokenSource, fileModel, stream);
+                    await UploadFile(cancellationToken, fileModel, stream);
 
                 }
                 #region CatchSide
@@ -332,21 +333,25 @@ namespace DesktopApp.ViewModels
         }
         private async Task ReleaseFileResourcesAndApplyConfiguration(FileModel fileModel, FileModel.EnumFileState fileState, Stream stream = null)
         {
-            if (stream == null)
-                _allStreamsDictionary.TryGetValue(fileModel.Id, out stream);
+            _timer.Enabled = false;
             if (!fileModel.IsAccepted)
                 _state = MachineState.Idle;
+            if (stream == null)
+                _allStreamsDictionary.TryGetValue(fileModel.Id, out stream);
+
             await Task.Run(async () =>
             {
                 await RunOnUI(CoreDispatcherPriority.High, () =>
                 {
-                    fileModel.ProgressedSize = stream.Position;
+                    if (stream != null)
+                        fileModel.ProgressedSize = stream.Position;
                 });
                 switch (fileState)
                 {
                     case FileModel.EnumFileState.Canceled:
                         _allStoregeFilesDictionary.TryGetValue(fileModel.Id, out StorageFile storageFile);
-                        await storageFile.DeleteAsync();
+                        if (fileModel.Event == FileModel.EnumEvent.Download)
+                            await storageFile.DeleteAsync();
                         await RunOnUI(CoreDispatcherPriority.Normal, () =>
                         {
                             fileModel.SetCanceledStateConfig();
@@ -382,8 +387,16 @@ namespace DesktopApp.ViewModels
 
         }
 
-        private async Task<bool> UploadFile(CancellationTokenSource cancellationTokenSource, FileModel fileModel, Stream stream)
+        private async Task<bool> UploadFile(CancellationToken cancellationToken, FileModel fileModel, Stream stream)
         {
+            var r = true;
+            if (!fileModel.IsStarted || cancellationToken.IsCancellationRequested)
+            {
+                Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : File upload operation was canceled. File state is " + fileModel.FileState);
+                //fileModel.SetCanceledStateConfig();
+                await ReleaseFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Canceled, stream);
+                r = false;
+            }
             var total = fileModel.TotalSize;
             var bufferSize = MyConstants.CHUNK_SIZE;
             _timer = new System.Timers.Timer(1000);
@@ -400,16 +413,16 @@ namespace DesktopApp.ViewModels
             _timer.Enabled = true;
             return await Task<bool>.Run(async () =>
             {
-                var r = true;
+
                 while (stream.Position < total)
                 {
                     if (stream.Position >= total)
                         break;
-                    if (!fileModel.IsStarted)
+                    if (!fileModel.IsStarted || cancellationToken.IsCancellationRequested)
                     {
                         Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : File upload operation was canceled. File state is " + fileModel.FileState);
                         //fileModel.SetCanceledStateConfig();
-
+                        await ReleaseFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Canceled, stream);
                         r = false;
                     }
 
@@ -423,7 +436,6 @@ namespace DesktopApp.ViewModels
                     {
                         Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : FileChannel buffer is full, Operation is going to sleep until channel will be ready :" + fileModel.FileName);
                         //cancellationTokenSource.Cancel();
-
                         r = false;
                     }
                 }
@@ -537,7 +549,7 @@ namespace DesktopApp.ViewModels
                                    await SendErrorMessageAsync(id, "");
                                    return;
                                }
-                               LoadFileResourcesAndApplyConfiguration(startedMessage.File, FileModel.EnumFileState.Started, out StorageFile currentStorageFile);
+                               StorageFile currentStorageFile = await LoadFileResourcesAndApplyConfiguration(startedMessage.File, FileModel.EnumFileState.Started);
                                //  Debug.Assert(_downloadStream == null);
                                _downloadStream = await currentStorageFile.OpenStreamForWriteAsync();
                                _allStreamsDictionary.Add(id, _downloadStream);
@@ -597,8 +609,11 @@ namespace DesktopApp.ViewModels
                                    await SendErrorMessageAsync(id, "");
                                    return;
                                }
-                               await ReleaseFileResourcesAndApplyConfiguration(canceledMessage.File, FileModel.EnumFileState.Canceled);
-
+                               if (canceledMessage.File.IsStarted && canceledMessage.File.Event == FileModel.EnumEvent.Upload)
+                                   _cancellationTokenSource.Cancel();
+                               else
+                                   await ReleaseFileResourcesAndApplyConfiguration(canceledMessage.File, FileModel.EnumFileState.Canceled);
+                               
                                break;
                            case TreatmentMessageModel.EnumMessageType.Next:
                                var requested = _taskQueue.First<FileModel>();
@@ -614,8 +629,10 @@ namespace DesktopApp.ViewModels
                    }
                    else
                    {
-
-                       await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
+                       if (_downloadStream.CanWrite)
+                       {
+                           await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
+                       }
                    }
 
                }
@@ -627,44 +644,41 @@ namespace DesktopApp.ViewModels
 
         }
 
-        private bool LoadFileResourcesAndApplyConfiguration(FileModel fileModel, FileModel.EnumFileState fileState, out StorageFile storageFile)
+        private async Task<StorageFile> LoadFileResourcesAndApplyConfiguration(FileModel fileModel, FileModel.EnumFileState fileState)
         {
             try
             {
                 _allStoregeFilesDictionary.TryGetValue(fileModel.Id, out StorageFile sf);
-
                 _state = MachineState.InInteraction;
-                storageFile = sf;
                 switch (fileState)
                 {
                     case FileModel.EnumFileState.Started:
-                        RunOnUI(CoreDispatcherPriority.High, () =>
+                        if (fileModel.FileState != FileModel.EnumFileState.Started)
                         {
-                            fileModel.SetStartedStateConfig();
-                        });
+                            await RunOnUI(CoreDispatcherPriority.High, () =>
+                             {
+                                 fileModel.SetStartedStateConfig();
+                             });
+                        }
                         break;
+
                     default:
-                        return false;
+                        return null;
                 }
-                return true;
+
+                return sf;
             }
             catch (Exception e)
             {
-                storageFile = null;
+
                 Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : File resources reload operation ended with error :" + e.Message);
-                return false;
+                return null;
 
             }
         }
 
 
-        private async Task<bool> HandleCanceledTask(FileModel fileModel)
-        {
-            fileModel.SetCanceledStateConfig();
-            _state = MachineState.Idle;
-            await SendFileNotifyMessageAsync(TreatmentMessageModel.GetFailureType(fileModel.Id));
-            return true;
-        }
+
 
         private bool CheckCancellationRequested(CancellationToken cancellationToken)
         {
@@ -755,11 +769,16 @@ namespace DesktopApp.ViewModels
             Debug.WriteLine("[Info] ChannelRemoteConnecctionPageViewModel : FileChannel has opened :");
         }
 
+
+        #endregion
         private void FileChannel_OnBufferedAmountLow()
         {
 
             lock (_uploadLock)
             {
+
+                var cancellationToken = _cancellationTokenSource.Token;
+
                 if (_state == MachineState.Idle)
                     return;
                 FileModel fileModel = _taskQueue.First();
@@ -778,11 +797,9 @@ namespace DesktopApp.ViewModels
                 }
 
 
-                UploadFile(null, fileModel, stream);
+                UploadFile(cancellationToken, fileModel, stream);
             }
         }
-        #endregion
-
 
 
     }

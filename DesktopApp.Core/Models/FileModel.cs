@@ -62,7 +62,7 @@ namespace DesktopApp.Core.Models
                     throw new ArgumentNullException();
                 else if (_progressedSize == 0)
                 {
-                    Debug.WriteLine("[FileMOdel] Progressed size is 0:");
+                    
                     val = 0;
                 }
                 else

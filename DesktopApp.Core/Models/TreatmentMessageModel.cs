@@ -19,9 +19,10 @@ namespace DesktopApp.Core.Models
             End = 5,
             Error = 6,
             Waiting = 7,
-            Next=10,
+            Next = 10,
             Failure = 8,
             SeenOfPlainTextOrOfferMessage = 9,
+            Ok = 11,
         }
 
 
@@ -113,6 +114,10 @@ namespace DesktopApp.Core.Models
         public static TreatmentMessageModel GetNextType(string id)
         {
             return new TreatmentMessageModel(id, EnumMessageType.Next);
+        }
+        public static TreatmentMessageModel GetOkType(string id)
+        {
+            return new TreatmentMessageModel(id, EnumMessageType.Ok);
         }
         public static TreatmentMessageModel GetFailureType(string id)
         {

@@ -21,6 +21,7 @@ using Windows.Storage.Provider;
 using Windows.UI.Core;
 using System.ComponentModel.DataAnnotations;
 using Windows.System;
+using System.Collections.Concurrent;
 
 namespace DesktopApp.ViewModels
 {
@@ -95,6 +96,11 @@ namespace DesktopApp.ViewModels
         {
             _allMessagesDictionary.TryGetValue(id, out MessageModel messageModel);
             var file = messageModel.File;
+            if (file.IsStarted)
+            {
+                _downloadCancellationTokenSource.Cancel();
+                _cancellationTokenSource.Cancel();
+            }
             Task releaseResources = ReleaseFileResourcesAndApplyConfiguration(file, FileModel.EnumFileState.Canceled);
             Task sendTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetFileCanceledType(id));
 
@@ -268,77 +274,12 @@ namespace DesktopApp.ViewModels
             });
         }
 
-        private async Task StartUpload()
-        {
-            FileModel fileModel = _taskQueue.First();
-            if (fileModel == null)
-            {//it means queue was ended.
-                _state = MachineState.Idle;
-                return;
-            }
 
-            _cancellationTokenSource = new CancellationTokenSource();
-            CancellationToken cancellationToken = _cancellationTokenSource.Token;
-            _state = MachineState.InInteraction;
-            try
-            {
-
-                if (!(Conductor.Instance.FileChannel.ReadyState == Org.WebRtc.RTCDataChannelState.Open))
-                    Debug.WriteLine("[Warning] ChannelRemoteConnectionPageViewModel : File channel is not open.");
-
-                StorageFile storageFile = LoadFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Started);
-                if (storageFile == null)
-                    return;
-
-                await SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(fileModel.Id));
-                var stream = await storageFile.OpenStreamForReadAsync();
-                _allStreamsDictionary.Add(fileModel.Id, stream);
-
-
-                if (fileModel.TotalSize <= MyConstants.MAX_ONE_CHUNK_SIZE)
-                {//küçük dosya
-                    byte[] buffer = new byte[fileModel.TotalSize];
-                    await stream.ReadAsync(buffer, 0, (int)fileModel.TotalSize);
-                    Conductor.Instance.FileChannel.Send(buffer);
-                    Task releaseTask = ReleaseFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Endded, stream);
-                    Task sendFileNotifyTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetEndType(fileModel.Id));
-                }
-                else
-                { //büyük dosya
-
-                    long total = (long)fileModel.TotalSize;
-                    int bufferSize = MyConstants.CHUNK_SIZE;
-
-                    UploadFile(cancellationToken, fileModel, stream);
-
-                }
-                #region CatchSide
-
-            }
-            catch (ArgumentOutOfRangeException ou)
-            {
-                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Stream out of range error  : " + ou.Message);
-            }
-            catch (OperationCanceledException o)
-            {
-                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Cancelation of task was wanted : " + o.Message);
-            }
-            catch (ArgumentException a)
-            {
-                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Getting from dic was ended with error or stream caused this: " + a.Message);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Error was occurred : " + e.Message);
-            }
-
-            #endregion
-        }
         private async Task ReleaseFileResourcesAndApplyConfiguration(FileModel fileModel, FileModel.EnumFileState fileState, Stream stream = null)
         {
 
             _timer.Enabled = false;
-            if (!fileModel.IsAccepted)
+            if (fileModel.IsStarted)
                 _state = MachineState.Idle;
             if (stream == null)
                 _allStreamsDictionary.TryGetValue(fileModel.Id, out stream);
@@ -389,7 +330,70 @@ namespace DesktopApp.ViewModels
                 _allStoregeFilesDictionary.Remove(fileModel.Id);
 
         }
+        private async Task StartUpload()
+        {
+            FileModel fileModel = _taskQueue.First();
+            if (fileModel == null)
+            {//it means queue was ended.
+                _state = MachineState.Idle;
+                return;
+            }
 
+            _cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = _cancellationTokenSource.Token;
+            _state = MachineState.InInteraction;
+            try
+            {
+
+                if (!(Conductor.Instance.FileChannel.ReadyState == Org.WebRtc.RTCDataChannelState.Open))
+                    Debug.WriteLine("[Warning] ChannelRemoteConnectionPageViewModel : File channel is not open.");
+
+                StorageFile storageFile = LoadFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Started);
+                if (storageFile == null)
+                    return;
+                var stream = await storageFile.OpenStreamForReadAsync();
+                _allStreamsDictionary.Add(fileModel.Id, stream);
+
+
+                if (fileModel.TotalSize <= MyConstants.MAX_ONE_CHUNK_SIZE)
+                {//küçük dosya
+                    byte[] buffer = new byte[fileModel.TotalSize];
+                    await stream.ReadAsync(buffer, 0, (int)fileModel.TotalSize);
+                    Conductor.Instance.FileChannel.Send(buffer);
+                    Task releaseTask = ReleaseFileResourcesAndApplyConfiguration(fileModel, FileModel.EnumFileState.Endded, stream);
+                    Task sendFileNotifyTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetEndType(fileModel.Id));
+                }
+                else
+                { //büyük dosya
+
+                    long total = (long)fileModel.TotalSize;
+                    int bufferSize = MyConstants.CHUNK_SIZE;
+
+                    UploadFile(cancellationToken, fileModel, stream);
+
+                }
+                #region CatchSide
+
+            }
+            catch (ArgumentOutOfRangeException ou)
+            {
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Stream out of range error  : " + ou.Message);
+            }
+            catch (OperationCanceledException o)
+            {
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Cancelation of task was wanted : " + o.Message);
+            }
+            catch (ArgumentException a)
+            {
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Getting from dic was ended with error or stream caused this: " + a.Message);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Error was occurred : " + e.Message);
+            }
+
+            #endregion
+        }
         private void UploadFile(CancellationToken cancellationToken, FileModel fileModel, Stream stream)
         {
             _uploading = true;
@@ -532,6 +536,7 @@ namespace DesktopApp.ViewModels
             // Debug.WriteLine("Message From File Channel..................");
             //try
             //{
+
             if (Event.Text != "")
             {
                 Task task = Task.Run(async () =>
@@ -558,8 +563,7 @@ namespace DesktopApp.ViewModels
                                      if (_state != MachineState.Idle)
                                          break;
                                  }
-                                 Task uploadTask = StartUpload();
-                                 return;
+                                 Task sendStartTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(fileModel.Id));
                              }
                              await SendErrorMessageAsync(id, "");
                              break;
@@ -571,8 +575,12 @@ namespace DesktopApp.ViewModels
                              }
                              StorageFile currentStorageFile = LoadFileResourcesAndApplyConfiguration(startedMessage.File, FileModel.EnumFileState.Started);
                              //  Debug.Assert(_downloadStream == null);
+                             _cancellationTokenSource = new CancellationTokenSource();
+                             _downloadCancellationTokenSource = new CancellationTokenSource();
                              _downloadStream = await currentStorageFile.OpenStreamForWriteAsync();
+                             _bufferQueue = new ConcurrentQueue<byte[]>();
                              _allStreamsDictionary.Add(id, _downloadStream);
+                             Task sendOkTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetOkType(id));
                              _timer = new System.Timers.Timer(1000);
                              var startedFileModel = startedMessage.File;
                              _timer.Enabled = true;
@@ -581,13 +589,29 @@ namespace DesktopApp.ViewModels
                              {
                                  Task updateUI = RunOnUI(CoreDispatcherPriority.Normal, () =>
                                   {
-                                      startedFileModel.ActionSpeed = _downloadStream.Position - startedFileModel.ProgressedSize;
-                                      startedFileModel.ProgressedSize = _downloadStream.Position;
-                                      startedFileModel.ShowPercent();
+                                      //startedFileModel.ActionSpeed = _downloadStream.Position - startedFileModel.ProgressedSize;
+                                      //startedFileModel.ProgressedSize = _downloadStream.Position;
+                                      //startedFileModel.ShowPercent();
+                                      startedFileModel.ActionSpeed = _downloadedSize - startedFileModel.ProgressedSize;
+                                      startedFileModel.ProgressedSize = _downloadedSize;
+                                      //startedFileModel.ShowPercent();
                                   });
                              };
                              break;
+                         case TreatmentMessageModel.EnumMessageType.Ok:
+                             if (!_allMessagesDictionary.TryGetValue(id, out MessageModel okMessage))
+                             {
+                                 await SendErrorMessageAsync(id, "");
+                                 break;
+                             }
+                             var okFileModel = okMessage.File;
+                             _downloadCancellationTokenSource = new CancellationTokenSource();
+                             _cancellationTokenSource = new CancellationTokenSource();
+                             Task uploadTask = StartUpload();
+
+                             break;
                          case TreatmentMessageModel.EnumMessageType.End:
+                             _downloadedSize = 0;
                              _timer.Enabled = false;
                              _cancellationTokenSource.Cancel();
                              if (!_allMessagesDictionary.TryGetValue(id, out MessageModel endedMessage))
@@ -595,23 +619,10 @@ namespace DesktopApp.ViewModels
                                  Task sendError = SendErrorMessageAsync(id, "");
                                  return;
                              }
-                             //if (_downloadStream == null)
-                             //    Thread.SpinWait(1000);
-                             //if (_downloadStream == null)
-                             //    Thread.SpinWait(1000);
-                             //if (_downloadStream == null)
-                             //    Thread.SpinWait(1000);
-                             //if (_downloadStream == null)
-                             //{
-                             //    Debug.WriteLine("[Error] : ChannelRemoteConnectionPageViewModel : _downloadStream is null :");
-                             //    Task release = ReleaseFileResourcesAndApplyConfiguration(endedMessage.File, FileModel.EnumFileState.Failure);
-                             //    return;
-                             //}
                              var endedStream = _downloadStream;
                              var endedQueue = _bufferQueue;
                              _downloadStream = null;
-                             _bufferQueue = new Queue<byte[]>();
-
+                             _bufferQueue = null;
                              await RunOnUI(CoreDispatcherPriority.Normal, () =>
                               {
                                   endedMessage.File.ProgressedSize = endedStream.Position;
@@ -619,12 +630,20 @@ namespace DesktopApp.ViewModels
                               });
                              Task write = Task.Run(() =>
                               {
-                                  while (endedQueue.Count > 0)
+                                  try
                                   {
-                                      if (!endedStream.CanWrite)
-                                          continue;
-                                      var len = endedQueue.Peek().Length;
-                                      endedStream.Write(endedQueue.Dequeue(), 0, len);
+                                      while (endedQueue.Count > 0)
+                                      {
+                                          if (!endedQueue.TryDequeue(out byte[] buffer))
+                                              continue;
+                                          var len = buffer.Length;
+                                          endedStream.Write(buffer, 0, len);
+                                      }
+
+                                  }
+                                  catch (InvalidOperationException e)
+                                  {
+                                      Debug.WriteLine("[Error] : ChannelRemoteConectionPageViewModel : writing of package operation in end case has given a error." + e.Message);
                                   }
                               });
                              Task cons = write.ContinueWith((t) =>
@@ -639,12 +658,12 @@ namespace DesktopApp.ViewModels
                                           if (next.Event == FileModel.EnumEvent.Upload)
                                           {
                                               _state = MachineState.InInteraction;
-                                              Task sendFileNotifyTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(next.Id));
+                                              Task sendFileNotifyTask2 = SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(next.Id));
                                               Task update = RunOnUI(CoreDispatcherPriority.Normal, () =>
                                                {
                                                    next.SetStartedStateConfig();
                                                });
-                                              Task startUpload2 = StartUpload();
+                                              // Task startUpload2 = StartUpload();
                                           }
                                           else
                                           {
@@ -663,14 +682,37 @@ namespace DesktopApp.ViewModels
                                  await SendErrorMessageAsync(id, "");
                                  return;
                              }
-                             if (canceledMessage.File.IsStarted && canceledMessage.File.Event == FileModel.EnumEvent.Upload)
+                             if (canceledMessage.File.IsStarted )
+                             {
                                  _cancellationTokenSource.Cancel();
+                                 Task release = ReleaseFileResourcesAndApplyConfiguration(canceledMessage.File, FileModel.EnumFileState.Canceled);
+                                 Task cont = release.ContinueWith((t) =>
+                                   {
+                                       if (_taskQueue.Count > 0)
+                                       {
+                                           FileModel next = _taskQueue.First<FileModel>();
+                                           if (next.Event == FileModel.EnumEvent.Upload)
+                                           {
+                                               _state = MachineState.InInteraction;
+                                               Task update = RunOnUI(CoreDispatcherPriority.Normal, () =>
+                                                {
+                                                    next.SetStartedStateConfig();
+                                                });
+                                               Task sendFileNotifyTask2 = SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(next.Id));
+                                               //Task startUpload2 = StartUpload();
+
+                                           }
+                                           else
+                                           {
+                                               Task sendFileNotifyTask2 = SendFileNotifyMessageAsync(TreatmentMessageModel.GetNextType(next.Id));
+                                           }
+                                       }
+                                   });
+                             }
                              else
                              {
-                                 Task releaseTask = ReleaseFileResourcesAndApplyConfiguration(canceledMessage.File, FileModel.EnumFileState.Canceled);
-
+                                 Task releaseCanceledFile = ReleaseFileResourcesAndApplyConfiguration(canceledMessage.File, FileModel.EnumFileState.Canceled);
                              }
-
                              break;
                          case TreatmentMessageModel.EnumMessageType.Next:
                              var requested = _taskQueue.First<FileModel>();
@@ -680,7 +722,9 @@ namespace DesktopApp.ViewModels
                               {
                                   requested.SetStartedStateConfig();
                               });
-                             Task startUpload = StartUpload();
+                             //  Task sendNexStartTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(requested.Id));
+                             //Task startUpload = StartUpload();
+
                              break;
                      }
                  });
@@ -689,9 +733,15 @@ namespace DesktopApp.ViewModels
             {
                 //await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
                 //  await _memo.ReadAsync(Event.Binary, 0, Event.Binary.Length);
+                var downloadCancelationToken = _downloadCancellationTokenSource.Token;
+                if (downloadCancelationToken.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 _bufferQueue.Enqueue(Event.Binary);
-                if (_bufferQueue.Count > 1280 && (_downloadStream != null || _downloadStream.CanWrite))
+                _downloadedSize += Event.Binary.Length;
+                if (_bufferQueue.Count > 2 && (_downloadStream != null || _downloadStream.CanWrite))
                 {
                     if (_isWriting)
                         return;
@@ -706,28 +756,39 @@ namespace DesktopApp.ViewModels
                         var cancellationToken = _cancellationTokenSource.Token;
                         Task write = Task.Run(() =>
                          {
-                             if (cancellationToken.IsCancellationRequested)
-                             {
-                                 return;
-                             }
-                             while (queue.Count > 100)
+                             try
                              {
                                  if (cancellationToken.IsCancellationRequested)
                                  {
+                                     _isWriting = false;
                                      return;
                                  }
-                                 var len = queue.Peek().Length;
-                                 if (cancellationToken.IsCancellationRequested)
+                                 while (queue.Count > 2)
                                  {
-                                     return;
-                                 }
-                                 stream.Write(queue.Dequeue(), 0, len);
-                                 if (cancellationToken.IsCancellationRequested)
-                                 {
-                                     return;
+                                     if (cancellationToken.IsCancellationRequested)
+                                     {
+                                         _isWriting = false;
+                                         return;
+                                     }
+                                     if (!queue.TryDequeue(out byte[] buffer))
+                                         continue;
+                                     var len = buffer.Length;
+                                     stream.Write(buffer, 0, len);
+                                     if (cancellationToken.IsCancellationRequested)
+                                     {
+                                         _isWriting = false;
+                                         return;
+                                     }
                                  }
                              }
-                             _isWriting = false;
+                             catch (InvalidOperationException e)
+                             {
+                                 Debug.WriteLine("[Error] : ChannelRemoteConectionPageViewModel : writing of package operation in async has given a error." + e.Message);
+                             }
+                             finally
+                             {
+                                 _isWriting = false;
+                             }
                          });
                     }
                 }
@@ -741,38 +802,13 @@ namespace DesktopApp.ViewModels
 
 
         }
+        private long _downloadedSize = 0;
+        private CancellationTokenSource _downloadCancellationTokenSource;
         private static object _writingObject = new object();
         private bool _isWriting = false;
-        private void StartPartialWrite(CancellationToken cancellationToken)
-        {
-            if (_isWriting)
-                return;
-            _isWriting = true;
-            Task.Run(async () =>
-           {
 
-               while (_bufferQueue.Count > 200)
-               {
-                   if (cancellationToken.IsCancellationRequested)
-                   {
-                       return;
-                   }
-                   var len = _bufferQueue.Peek().Length;
-                   if (cancellationToken.IsCancellationRequested)
-                   {
-                       return;
-                   }
-                   await _downloadStream.WriteAsync(_bufferQueue.Dequeue(), 0, len);
-                   if (cancellationToken.IsCancellationRequested)
-                   {
-                       return;
-                   }
-               }
-               _isWriting = false;
-           });
-        }
 
-        private Queue<byte[]> _bufferQueue = new Queue<byte[]>();
+        private ConcurrentQueue<byte[]> _bufferQueue = new ConcurrentQueue<byte[]>();
         private StorageFile LoadFileResourcesAndApplyConfiguration(FileModel fileModel, FileModel.EnumFileState fileState)
         {
             try

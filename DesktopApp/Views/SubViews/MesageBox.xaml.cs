@@ -28,10 +28,17 @@ namespace DesktopApp.Views.SubViews
 
         private void SubmitedReceivedMessageBodyFile_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.AcceptCommand.CanExecute(((Button)sender).Tag))
+            string id = (string)((Button)sender).Tag;
+            ViewModel.AllMessagesDictionary.TryGetValue(id, out Core.Models.MessageModel messageModel);
+            var file = messageModel.File;
+            if (file.FileState != Core.Models.FileModel.EnumFileState.Offered)
+                ViewModel._fileListView.ScrollIntoView(file);
+
+            if (ViewModel.AcceptCommand.CanExecute(id))
             {
-                ViewModel.AcceptCommand.Execute(((Button)sender).Tag);
+                ViewModel.AcceptCommand.Execute(id);
             }
+
         }
     }
 }

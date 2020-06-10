@@ -66,6 +66,8 @@ namespace DesktopApp.ViewModels
 
         public RelayCommand<string> OpenFileCommand => _openFileCommand;
 
+        public Dictionary<string, MessageModel> AllMessagesDictionary { get => _allMessagesDictionary; }
+
         private Dictionary<string, MessageModel> _allMessagesDictionary = new Dictionary<string, MessageModel>();
         private Dictionary<string, StorageFile> _allStoregeFilesDictionary = new Dictionary<string, StorageFile>();
         private Dictionary<string, Stream> _allStreamsDictionary = new Dictionary<string, Stream>();

@@ -25,7 +25,7 @@
           VerticalAlignment="Stretch"
           HorizontalAlignment="Stretch"
           Margin="7"
-          Background="#BDBDBD"
+          Background="Black"
           CornerRadius="{StaticResource ControlCornerRadius}"
           BorderBrush="{ThemeResource CheckBoxBorderThemeBrush}"
           BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}">
@@ -50,10 +50,11 @@
 
 
         </Grid>
-        <ListView Name="FileList"
+        <ListView Name="FileListView"
                   Grid.Row="1"
                   ItemsSource="{Binding AllFilesOnInterfaceCollection}"
-                  SelectionMode="None">
+                  SelectionMode="None"
+                  >
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel VerticalAlignment="Bottom"
@@ -66,10 +67,10 @@
                     <Grid Name="FileGrid"
                           Background="#5E609E"
                           CornerRadius="{StaticResource ControlCornerRadius}"
-                          BorderBrush="Gray"
-                          BorderThickness="{StaticResource GridViewItemRevealBorderThemeThickness}"
+                          BorderThickness="{StaticResource ButtonBorderThemeThickness}"
+                          BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
                           HorizontalAlignment="Stretch"
-                          Margin="0,0,0,3">
+                          Margin="0,5,0,5">
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="90" />
@@ -139,9 +140,11 @@
                                     </Grid.RowDefinitions>
                                     <muxc:ProgressBar Maximum="{Binding TotalSize}"
                                                       Value="{Binding ProgressedSize}"
-                                                      Height="5"
+                                                      Height="10"
                                                       Margin="5"
-                                                      Foreground="Green"
+                                                      BorderBrush="{StaticResource ProgressBarBorderThemeBrush}"
+                                                      BorderThickness="1"
+                                                      Foreground="#25c031"
                                                       HorizontalAlignment="Stretch"
                                                       Visibility="{Binding ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='Progressing'}" />
                                     <Button Name="OpenFolder"

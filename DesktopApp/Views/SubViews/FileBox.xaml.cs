@@ -26,7 +26,14 @@ namespace DesktopApp.Views.SubViews
         public FileBox()
         {
             this.InitializeComponent();
+            Loaded += FileBox_Loaded;
         }
+
+        private void FileBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel._fileListView = FileListView;
+        }
+
         private void SubmitedReceivedMessageBodyFile_Click(object sender, RoutedEventArgs e)
         {
             Button button = (Button)sender;

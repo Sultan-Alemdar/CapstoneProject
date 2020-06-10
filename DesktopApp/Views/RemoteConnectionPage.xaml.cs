@@ -20,6 +20,7 @@ using Windows.Storage;
 using Windows.Storage.Provider;
 using System.IO;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Globalization;
 
 namespace DesktopApp.Views
 {
@@ -163,10 +164,67 @@ namespace DesktopApp.Views
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            fileModel.SetStartedStateConfig();
-            MessageModel messageModel = new MessageModel("Dnk", "10:10:10", MessageModel.EnumEvent.Send, "", fileModel);
-            ViewModel.AllFilesOnInterfaceCollection.Add(fileModel);
-            ViewModel.AllMessagesOnInterfaceCollection.Add(messageModel);
+            FileModel upCompletef = new FileModel("send", "upCompletef file", "pdf", 50064, "Zip Dosyası", "*.pdf");
+            FileModel downCompletef = new FileModel("send", "downCompletef file", "pdf", 50064, "Zip Dosyası", "*.pdf");
+            FileModel senf = new FileModel("send", "Send file", "zip", 50064, "Zip Dosyası", "*.zip");
+            FileModel recf = new FileModel("rec", "recf file", "zip", 50064, "Zip Dosyası", "*.zip");
+            FileModel senf2 = new FileModel("send2", "senf2 file2", "zip", 50064, "Zip Dosyası", "*.zip");
+            FileModel recf2 = new FileModel("rec2", "recf2 file", "zip", 50064, "Zip Dosyası", "*.zip");
+
+            downCompletef.Event = FileModel.EnumEvent.Download;
+            upCompletef.Event = FileModel.EnumEvent.Upload;
+            senf.Event = FileModel.EnumEvent.Upload;
+            senf2.Event = FileModel.EnumEvent.Upload;
+            recf.Event = FileModel.EnumEvent.Download;
+            recf2.Event = FileModel.EnumEvent.Download;
+
+
+            senf.ProgressedSize = 20000;
+
+            upCompletef.ProgressedSize = 50064;
+            downCompletef.ProgressedSize = 50064;
+
+            upCompletef.SetEndedStateConfig();
+            var cul = CultureInfo.CreateSpecificCulture("en-US");
+            var a = DateTime.Now.ToString("t");
+            MessageModel upComplete = new MessageModel("upComplete", a, MessageModel.EnumEvent.Send, "", upCompletef);
+            ViewModel.AllFilesOnInterfaceCollection.Add(upCompletef);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(upComplete);
+
+            downCompletef.SetEndedStateConfig();
+            MessageModel downComplete = new MessageModel("downComplete", a, MessageModel.EnumEvent.Received, "", downCompletef);
+            ViewModel.AllFilesOnInterfaceCollection.Add(downCompletef);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(downComplete);
+
+
+            senf.SetStartedStateConfig();
+            MessageModel send = new MessageModel("send", a, MessageModel.EnumEvent.Send, "", senf);
+            ViewModel.AllFilesOnInterfaceCollection.Add(senf);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(send);
+
+            MessageModel t1 = new MessageModel("t1", a, MessageModel.EnumEvent.Send, "Hello World! What are you doing", null);
+            // ViewModel.AllFilesOnInterfaceCollection.Add(fileModel);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(t1);
+
+            recf.SetAcceptedStateConfig();
+            MessageModel rec = new MessageModel("rec", a, MessageModel.EnumEvent.Received, "", recf);
+            ViewModel.AllFilesOnInterfaceCollection.Add(recf);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(rec);
+
+            MessageModel t2 = new MessageModel("t2", a, MessageModel.EnumEvent.Received, "Hiiiiiiii I am using desktop app!", null);
+            //  ViewModel.AllFilesOnInterfaceCollection.Add(fileModel);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(t2);
+
+            senf2.SetAcceptedStateConfig();
+            MessageModel send2 = new MessageModel("send2", a, MessageModel.EnumEvent.Send, "", senf2);
+            ViewModel.AllFilesOnInterfaceCollection.Add(senf2);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(send2);
+
+
+            recf2.SetOfferedStateConfig();
+            MessageModel rec2 = new MessageModel("rec2", a, MessageModel.EnumEvent.Received, "", recf2);
+            ViewModel.AllFilesOnInterfaceCollection.Add(recf2);
+            ViewModel.AllMessagesOnInterfaceCollection.Add(rec2);
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
@@ -176,34 +234,6 @@ namespace DesktopApp.Views
             fileModel.ShowPercent();
         }
 
-        private async void Button_Click_5(object sender, RoutedEventArgs e)
-        {
-            var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
-            picker.FileTypeFilter.Add(".jpg");
-            picker.FileTypeFilter.Add(".jpeg");
-            picker.FileTypeFilter.Add(".png");
-            picker.FileTypeFilter.Add(".txt");
-            picker.FileTypeFilter.Add(".doc");
-            picker.FileTypeFilter.Add(".docx");
-            picker.FileTypeFilter.Add(".7z");
-            picker.FileTypeFilter.Add(".");
 
-            var file = await picker.PickSingleFileAsync();
-            var props = await file.GetBasicPropertiesAsync();
-            #region ThumtoBitmap
-            var tumb = await file.GetThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.SingleItem);
-
-            //     var thumb = await file.GetScaledImageAsThumbnailAsync(Windows.Storage.FileProperties.ThumbnailMode.PicturesView);
-            if (tumb != null)
-            {
-                BitmapImage img = new BitmapImage();
-                await img.SetSourceAsync(tumb);
-                Thum.Source = img;
-            }
-
-            #endregion
-        }
     }
 }

@@ -20,5 +20,12 @@ namespace DesktopApp.Constants
         public static readonly int MAX_ONE_CHUNK_SIZE = 254 * 1024; //byte cinsinden;
         public static readonly int CHUNK_SIZE = 16 * 1024; // for multi sending.
         public static readonly ulong DC_SAFE_BUFFER_SIZE = 15 * 1024 * 1024; // DC buffer size aslı 16 mb
+        public static readonly string PLAIN_SENDED_COLOR = "#2D92BD";
+        public static readonly string PLAIN_RECEIVED_COLOR = "#8f0540";
+      
+        public static readonly string INQUEUE_FILE_COLOR = "#3397fb";
+        public static readonly string PROGRESSİNG_FILE_COLOR = "#b7a004";
+        public static readonly string COMPLETED_FILE_COLOR = "#1a8221 ";
+
     }
 }

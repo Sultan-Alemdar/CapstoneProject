@@ -20,7 +20,7 @@ namespace DesktopApp.ViewModels
         public System.Type EnumProccesStatus => typeof(FileModel.EnumProccesStatus);
         public System.Type TypeOfMessageEnumEvent => typeof(MessageModel.EnumEvent);
 
-
+        public ListView _fileListView { get; set; }
         private StackPanel _pastInteractionStackPanel;
         public StackPanel PastInteractionStackPanel { get => _pastInteractionStackPanel; set => Set<StackPanel>("PastInteractionStackPanel", ref this._pastInteractionStackPanel, value); }
 

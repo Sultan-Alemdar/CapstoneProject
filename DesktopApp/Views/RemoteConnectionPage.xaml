@@ -77,54 +77,20 @@
                 </Grid>
 
                 <subViews:TopBar />
-                <Button Content="Button"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Width="305"
-                        Height="200"
-                        Margin="570,222,0,0"
-                        Click="Button_Click_1" />
-                <Button Content="Button"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top"
-                        Width="305"
-                        Height="200"
-                        Margin="1002,222,0,0"
-                        Click="Button_Click_2" />
-                <Button Content="File ekle&#xD;&#xA;"
+                <Button Content="GeneretaFiles&#xD;&#xA;&#xD;&#xA;"
                         HorizontalAlignment="Left"
                         Height="159"
-                        Margin="774,492,0,0"
+                        Margin="579,249,0,0"
                         VerticalAlignment="Top"
                         Width="381"
                         Click="Button_Click_3" />
                 <Button Content="prop arttır&#xD;&#xA;"
                         HorizontalAlignment="Left"
                         Height="114"
-                        Margin="801,747,0,0"
+                        Margin="593,487,0,0"
                         VerticalAlignment="Top"
                         Width="354"
                         Click="Button_Click_4" />
-                <Button Content="GEt Fileand show thumb3&#xD;&#xA;&#xD;&#xA;"
-                        HorizontalAlignment="Left"
-                        Height="79"
-                        Margin="198,522,0,0"
-                        VerticalAlignment="Top"
-                        Width="228"
-                        Click="Button_Click_5" />
-                <Image HorizontalAlignment="Left"
-                       Height="177"
-                       Margin="144,684,0,0"
-                       VerticalAlignment="Top"
-                       Width="360"
-                       Name="Thum" />
-                <controls:RadialProgressBar  Thickness="3"
-                                             Value="50"
-                                             Maximum="110"
-                                             Width="18"
-                                             Height="18"
-                                             VerticalAlignment="Center"
-                                             HorizontalAlignment="Left"></controls:RadialProgressBar>
 
             </Grid>
 

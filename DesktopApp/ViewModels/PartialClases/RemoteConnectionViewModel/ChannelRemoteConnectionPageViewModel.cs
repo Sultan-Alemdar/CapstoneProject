@@ -353,7 +353,7 @@ namespace DesktopApp.ViewModels
                     return;
                 var stream = await storageFile.OpenStreamForReadAsync();
                 _allStreamsDictionary.Add(fileModel.Id, stream);
-
+                _uploadSize = 0;
 
                 if (fileModel.TotalSize <= MyConstants.MAX_ONE_CHUNK_SIZE)
                 {//küçük dosya
@@ -406,30 +406,8 @@ namespace DesktopApp.ViewModels
             }
             var total = fileModel.TotalSize;
             var bufferSize = MyConstants.CHUNK_SIZE;
-            _timer = new System.Timers.Timer(1000)
-            {
-                AutoReset = true
-            };
-            _timer.Elapsed += async (sender, e) =>
-            {
-                await RunOnUI(CoreDispatcherPriority.Normal, () =>
-                {
-                    fileModel.ActionSpeed = stream.Position - fileModel.ProgressedSize;
-                    fileModel.ProgressedSize = stream.Position;
 
-                });
-            };
             _timer.Enabled = true;
-            _t = new System.Timers.Timer(1000)
-            {
-                AutoReset = true
-            };
-
-            _t.Elapsed += (s, e) =>
-            {
-                Debug.WriteLine("[BUffered Amount] : " + Conductor.Instance.FileChannel.BufferedAmount);
-            };
-            _t.Enabled = true;
             Task task = Task.Run(async () =>
              {
 
@@ -446,20 +424,28 @@ namespace DesktopApp.ViewModels
                      }
 
                      byte[] buffer = new byte[bufferSize];
+                     if (cancellationToken.IsCancellationRequested)
+                     {
+                         _uploading = false;
+                         return;
+                     }
                      await stream.ReadAsync(buffer, 0, bufferSize);
+                     if (cancellationToken.IsCancellationRequested)
+                     {
+                         _uploading = false;
+                         return;
+                     }
                      if (stream.Position + bufferSize > total)
                          bufferSize = (int)(total - stream.Position);
-
                      Conductor.Instance.FileChannel.Send(buffer);
-
-
+                     _uploadSize += bufferSize;
                      if ((Conductor.Instance.FileChannel.BufferedAmount + (ulong)bufferSize) > 15 * 1024 * 1024)
                      {
 
-                         Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : FileChannel buffer is full, Operation is going to sleep until channel will be ready :" + fileModel);
+                         //  Debug.WriteLine("[Information] ChannelRemoteConnectionViewModel : FileChannel buffer is full, Operation is going to sleep until channel will be ready :" + fileModel);
                          ////cancellationTokenSource.Cancel();
-                         //_uploading = false;
-                         //return;
+                         _uploading = false;
+                         return;
                      }
                  }
 
@@ -474,9 +460,6 @@ namespace DesktopApp.ViewModels
 
              });
         }
-        private System.Timers.Timer _t;
-
-
 
         private void MessageChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
         {
@@ -530,7 +513,7 @@ namespace DesktopApp.ViewModels
              });
 
         }
-
+        private long _uploadSize = 0;
         private void FileChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
         {
             // Debug.WriteLine("Message From File Channel..................");
@@ -574,10 +557,11 @@ namespace DesktopApp.ViewModels
                                  return;
                              }
                              StorageFile currentStorageFile = LoadFileResourcesAndApplyConfiguration(startedMessage.File, FileModel.EnumFileState.Started);
-                             //  Debug.Assert(_downloadStream == null);
+
                              _cancellationTokenSource = new CancellationTokenSource();
                              _downloadCancellationTokenSource = new CancellationTokenSource();
                              _downloadStream = await currentStorageFile.OpenStreamForWriteAsync();
+                             _downloadedSize = 0;
                              _bufferQueue = new ConcurrentQueue<byte[]>();
                              _allStreamsDictionary.Add(id, _downloadStream);
                              Task sendOkTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetOkType(id));
@@ -589,12 +573,8 @@ namespace DesktopApp.ViewModels
                              {
                                  Task updateUI = RunOnUI(CoreDispatcherPriority.Normal, () =>
                                   {
-                                      //startedFileModel.ActionSpeed = _downloadStream.Position - startedFileModel.ProgressedSize;
-                                      //startedFileModel.ProgressedSize = _downloadStream.Position;
-                                      //startedFileModel.ShowPercent();
                                       startedFileModel.ActionSpeed = _downloadedSize - startedFileModel.ProgressedSize;
                                       startedFileModel.ProgressedSize = _downloadedSize;
-                                      //startedFileModel.ShowPercent();
                                   });
                              };
                              break;
@@ -605,6 +585,20 @@ namespace DesktopApp.ViewModels
                                  break;
                              }
                              var okFileModel = okMessage.File;
+                             _timer = new System.Timers.Timer(1000)
+                             {
+                                 AutoReset = true
+                             };
+                             _timer.Elapsed += async (sender, e) =>
+                             {
+                                 await RunOnUI(CoreDispatcherPriority.Normal, () =>
+                                 {
+                                     okFileModel.ActionSpeed = _uploadSize - okFileModel.ProgressedSize;
+                                     okFileModel.ProgressedSize = _uploadSize;
+
+                                 });
+                             };
+
                              _downloadCancellationTokenSource = new CancellationTokenSource();
                              _cancellationTokenSource = new CancellationTokenSource();
                              Task uploadTask = StartUpload();
@@ -682,7 +676,7 @@ namespace DesktopApp.ViewModels
                                  await SendErrorMessageAsync(id, "");
                                  return;
                              }
-                             if (canceledMessage.File.IsStarted )
+                             if (canceledMessage.File.IsStarted)
                              {
                                  _cancellationTokenSource.Cancel();
                                  Task release = ReleaseFileResourcesAndApplyConfiguration(canceledMessage.File, FileModel.EnumFileState.Canceled);
@@ -699,8 +693,6 @@ namespace DesktopApp.ViewModels
                                                     next.SetStartedStateConfig();
                                                 });
                                                Task sendFileNotifyTask2 = SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(next.Id));
-                                               //Task startUpload2 = StartUpload();
-
                                            }
                                            else
                                            {
@@ -722,17 +714,13 @@ namespace DesktopApp.ViewModels
                               {
                                   requested.SetStartedStateConfig();
                               });
-                             //  Task sendNexStartTask = SendFileNotifyMessageAsync(TreatmentMessageModel.GetStartType(requested.Id));
-                             //Task startUpload = StartUpload();
-
                              break;
                      }
                  });
             }
             else
             {
-                //await _downloadStream.WriteAsync(Event.Binary, 0, Event.Binary.Length);
-                //  await _memo.ReadAsync(Event.Binary, 0, Event.Binary.Length);
+
                 var downloadCancelationToken = _downloadCancellationTokenSource.Token;
                 if (downloadCancelationToken.IsCancellationRequested)
                 {
@@ -950,7 +938,7 @@ namespace DesktopApp.ViewModels
                     if (fileModel == null)
                         return;
 
-                    Debug.Assert(!fileModel.IsStarted, "[OnBUfferedAmontLow] Message is not at stated state :" + fileModel);
+                    //  Debug.Assert(!fileModel.IsStarted, "[OnBUfferedAmontLow] Message is not at stated state :" + fileModel);
                     if (!fileModel.IsStarted)
                         return;
 

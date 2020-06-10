@@ -57,6 +57,7 @@ namespace DesktopApp.ViewModels
                 Conductor.Instance.MessageChannel.OnError += MessageChannel_OnError;
                 Conductor.Instance.MessageChannel.OnMessage += MessageChannel_OnMessage; ;
 
+                Conductor.Instance.FileChannel.BufferedAmountLowThreshold = 6 * 1024 * 1024;
                 Conductor.Instance.FileChannel.OnBufferedAmountLow += FileChannel_OnBufferedAmountLow; ;
                 Conductor.Instance.FileChannel.OnOpen += FileChannel_OnOpen; ;
                 Conductor.Instance.FileChannel.OnClose += FileChannel_OnClose; ;
@@ -74,6 +75,7 @@ namespace DesktopApp.ViewModels
             Conductor.Instance.MessageChannel.OnError += MessageChannel_OnError;
             Conductor.Instance.MessageChannel.OnMessage += MessageChannel_OnMessage; ;
 
+            Conductor.Instance.FileChannel.BufferedAmountLowThreshold = 6 * 1024 * 1024;
             Conductor.Instance.FileChannel.OnBufferedAmountLow += FileChannel_OnBufferedAmountLow; ;
             Conductor.Instance.FileChannel.OnOpen += FileChannel_OnOpen; ;
             Conductor.Instance.FileChannel.OnClose += FileChannel_OnClose; ;

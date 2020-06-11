@@ -84,8 +84,8 @@ namespace DesktopApp.ViewModels
                                 {
                                     await RunOnUI(CoreDispatcherPriority.High, () =>
                                      {
-                                         _viewModelLocator.NavigationService.Navigate(MyConstants.REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME);
                                          AdapterViewModel.ConnectToPeerCommand.Execute(this);
+                                         _viewModelLocator.NavigationService.Navigate(MyConstants.REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME);
 
 
                                      });

@@ -356,16 +356,17 @@ namespace PeerConnectionClientOperators.Signalling
                     // corectly, only by setting SelfVideo.Source to null.
 #if !UNITY && !ORTCLIB
 
-                    try
-                    {
-                        if (_selfVideoTrack != null)
-                            _selfVideoTrack.Element = null; // Org.WebRtc.MediaElementMaker.Bind(obj)
-                    }
-                    catch (Exception e)
-                    {
+                    //try
+                    //{
+                    //    if (_selfVideoTrack != null)
+                    //        _selfVideoTrack.Element = null; // Org.WebRtc.MediaElementMaker.Bind(obj)
+                    //}
+                    //catch (Exception e)
+                    //{
 
-                        Debug.WriteLine("[Info] Conductor : Loopback video trick : " + e.Message);
-                    }
+                    //    Debug.WriteLine("[Info] Conductor : Loopback video trick : " + e.Message);
+                    //}
+                    _selfVideoTrack.Element = null; // Org.WebRtc.MediaElementMaker.Bind(obj)
 #endif
                     GC.Collect(); // Ensure all references are truly dropped.
                 }
@@ -1195,7 +1196,7 @@ namespace PeerConnectionClientOperators.Signalling
                 if (VideoLoopbackEnabled)
                 {
 #if !UNITY && !ORTCLIB
-                    _selfVideoTrack.Element = Org.WebRtc.MediaElementMaker.Bind(SelfVideo);
+                    _selfVideoTrack.Element = Org.WebRtc.MediaElementMaker.Bind(SelfVideo);//////burası//////
                     ((MediaStreamTrack)_selfVideoTrack).OnFrameRateChanged += (float frameRate) =>
                     {
                         FramesPerSecondChanged?.Invoke("SELF", frameRate.ToString("0.0"));
@@ -1275,6 +1276,7 @@ namespace PeerConnectionClientOperators.Signalling
                     OnReadyToConnect?.Invoke();
 
                     GC.Collect(); // Ensure all references are truly dropped.
+                    //OnSafe.Invoke();
                 }
             }
         }
@@ -1420,7 +1422,14 @@ namespace PeerConnectionClientOperators.Signalling
             //_signalingMode = RTCPeerConnectionSignalingMode.Sdp;
 #endif
             _signaller = new Signaller();
+            OnSafe += () =>
+            {
 
+            };
+            Signaller.OnSignallerSafe += () =>
+            {
+                OnSafe.Invoke();
+            };
             Signaller.OnDisconnected += Signaller_OnDisconnected;
             Signaller.OnMessageFromPeer += Signaller_OnMessageFromPeer;
             Signaller.OnPeerConnected += Signaller_OnPeerConnected;
@@ -1450,12 +1459,17 @@ namespace PeerConnectionClientOperators.Signalling
             if (SC.callStatsClient == null)
                 ClosePeerConnection();
             else
+            {
                 PeerConnection = null;
+
+            }
+            OnSafe.Invoke();///hile///
 #else
             ClosePeerConnection();
 #endif
         }
-
+        public delegate void SafetyWay();
+        public event SafetyWay OnSafe;
         /// <summary>
         /// Handler for Signaller's OnSignedIn event.
         /// </summary>
@@ -1793,7 +1807,7 @@ namespace PeerConnectionClientOperators.Signalling
                 var offerOptions = new RTCOfferOptions();
                 offerOptions.OfferToReceiveAudio = true;
                 offerOptions.OfferToReceiveVideo = true;
-               
+
                 var offer = await PeerConnection.CreateOffer(offerOptions);
 
                 if (IsNullOrEmpty(offer.Sdp))
@@ -1840,7 +1854,11 @@ namespace PeerConnectionClientOperators.Signalling
             if (SC.callStatsClient == null)
                 ClosePeerConnection();
             else
+            {
                 PeerConnection = null;
+                // OnSafe.Invoke();///hile///
+            }
+
 #else
             ClosePeerConnection();
 #endif

@@ -49,7 +49,8 @@ namespace DesktopApp.ViewModels
         private CoreDispatcher _coreDispatcher = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
         public OperationsViewModel()
         {
-            ConnectTo();
+            if (_isConnected == false)
+                ConnectTo();
             OpenSettingsPageCommand = new RelayCommand(OpenSettingsPage);
             TryReConnectToServerCommand = new RelayCommand(TryReConnectToServer);
             CopyToClipboardCommand = new RelayCommand(CopyToClipboard, CopyToClipboardCanExecute);
@@ -84,8 +85,8 @@ namespace DesktopApp.ViewModels
                                 {
                                     await RunOnUI(CoreDispatcherPriority.High, () =>
                                      {
-                                         AdapterViewModel.ConnectToPeerCommand.Execute(this);
                                          _viewModelLocator.NavigationService.Navigate(MyConstants.REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME);
+
 
 
                                      });
@@ -161,7 +162,7 @@ namespace DesktopApp.ViewModels
             });
         }
 
-    
+
 
         private async void Instance_OnInitialized()
         {
@@ -182,8 +183,8 @@ namespace DesktopApp.ViewModels
                  }
                  AdapterViewModel.IsConnecting = true;
                  Conductor.Instance.StartLogin(ip, port);
-                 
-            
+
+
              });
         }
 
@@ -216,23 +217,7 @@ namespace DesktopApp.ViewModels
                 AdapterViewModel.ConnectCommand.Execute(this);
 
         }
-        public void TryConnectToPeerCommand()
-        {
-            //RunOnUiThread(() =>
-            //{
-            //    IsConnected = true;
-            //    IsMicrophoneEnabled = true;
-            //    IsCameraEnabled = true;
-            //    IsConnecting = false;
-            //});
 
-
-
-        }
-        public bool TryConnectToPeerCommandCanExecute()
-        {
-            return IsConnected;
-        }
 
         public void OpenSettingsPage()
         {

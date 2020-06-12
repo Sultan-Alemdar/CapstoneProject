@@ -162,7 +162,7 @@ namespace WebRTCAdapter.Adapters
         }
 
         // Help to make sure the screen is not locked while on call
-        readonly DisplayRequest _keepScreenOnRequest = new DisplayRequest();
+        private readonly DisplayRequest _keepScreenOnRequest = new DisplayRequest();
         private bool _keepOnScreenRequested;
 
         private readonly TimeSpan _maxWaitForSocketToBeAvailable = new TimeSpan(0, 0, 60);
@@ -467,6 +467,7 @@ namespace WebRTCAdapter.Adapters
                         _keepOnScreenRequested = false;
                     }
                     UpdateScrollBarVisibilityTypeHelper();
+
                 });
             };
 
@@ -1199,7 +1200,7 @@ namespace WebRTCAdapter.Adapters
             set { SetProperty(ref _scrollBarVisibility, value); }
         }
 
-        private bool _cameraEnabled = false;
+        private bool _cameraEnabled = false;//////////cam/////////////
 
         /// <summary>
         /// Camera on/off toggle button.
@@ -1229,7 +1230,7 @@ namespace WebRTCAdapter.Adapters
             }
         }
 
-        private bool _microphoneIsOn = false;
+        private bool _microphoneIsOn = false;//////////mic/////////////
 
         /// <summary>
         /// Microphone on/off toggle button.
@@ -2049,7 +2050,7 @@ namespace WebRTCAdapter.Adapters
         /// <returns>True if the application is ready to disconnect from a peer.</returns>
         private bool DisconnectFromPeerCommandCanExecute(object obj)
         {
-            return IsConnectedToPeer && IsReadyToDisconnect;
+            return true;// IsConnectedToPeer && IsReadyToDisconnect;
         }
 
         /// <summary>
@@ -2215,7 +2216,7 @@ namespace WebRTCAdapter.Adapters
         /// screen size.
         /// The UI is not scrollable if connected to a peer.
         /// </summary>
-        private void UpdateScrollBarVisibilityTypeHelper()
+        public void UpdateScrollBarVisibilityTypeHelper()
         {
             if (SettingsButtonChecked)
             {

@@ -142,7 +142,7 @@
                 <Button Name="DisconnectButton"
                         Style="{StaticResource OperationImageButton}"
                         Margin="20,0,0,0"
-                        Command="{Binding DisconnectFromPeerCommand}">
+                        Command="{Binding AdapterViewModel.DisconnectFromPeerCommand}">
 
                     <Image Stretch="Fill"
                            Height="40"

@@ -22,7 +22,7 @@ namespace DesktopApp.ViewModels
             set
             {
                 _selfVideo = value;
-                Conductor.Instance.SelfVideo = _selfVideo;
+                AdapterViewModel.SelfVideo = _selfVideo;
             }
         }
 
@@ -34,7 +34,7 @@ namespace DesktopApp.ViewModels
             set
             {
                 _peerVideo = value;
-                Conductor.Instance.PeerVideo = _peerVideo;
+                AdapterViewModel.PeerVideo = _peerVideo;
             }
         }
         /// <summary>
@@ -43,7 +43,7 @@ namespace DesktopApp.ViewModels
         /// <param name="uiElement">Main page UI element.</param>
         public void SetupScreenCapturer(UIElement uiElement)
         {
-            Conductor.Instance.SetupScreenCapturer(uiElement);
+            AdapterViewModel.SetupScreenCapturer(uiElement);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace DesktopApp.ViewModels
             Debug.WriteLine("PeerVideo_MediaFailed");
         }
 
-        public PointerPoint MousePosition
-        {
-            set { Conductor.Instance.MousePosition = value.Position; }
-        }
+        //public Windows.UI.Input.PointerPoint MousePosition
+        //{
+        //  //  set { AdapterViewModel.MousePosition = value.Position; }
+        //}
     }
 }

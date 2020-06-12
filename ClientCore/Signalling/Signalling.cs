@@ -444,10 +444,13 @@ namespace PeerConnectionClientOperators.Signalling
                 {
                     _state = State.CONNECTED;
                 }
+             
             }
 
             return true;
         }
+        public delegate void SignallerSafety();
+        public event SignallerSafety OnSignallerSafe;
 
         /// <summary>
         /// Long lasting loop to get notified about connected/disconnected peers.

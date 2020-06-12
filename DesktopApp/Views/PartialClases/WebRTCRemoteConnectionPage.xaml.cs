@@ -19,9 +19,9 @@ namespace DesktopApp.Views
         {
             //ViewModel = (RemoteConnectionViewModel)e.Parameter;
             //this.DataContext = ViewModel;
-            ViewModel.PeerVideo = PeerVideo;
-            ViewModel.SelfVideo = SelfVideo;
-            ViewModel.SetupScreenCapturer(this);
+            ViewModel.AdapterViewModel.PeerVideo = PeerVideo;
+            ViewModel.AdapterViewModel.SelfVideo = SelfVideo;
+            ViewModel.AdapterViewModel.SetupScreenCapturer(this);
         }
         /// <summary>
         /// Media Failed event handler for remote/peer video.
@@ -33,7 +33,7 @@ namespace DesktopApp.Views
         {
             if (ViewModel != null)
             {
-                ViewModel.PeerVideo_MediaFailed(sender, e);
+                ViewModel.AdapterViewModel.PeerVideo_MediaFailed(sender, e);
             }
         }
 
@@ -47,7 +47,7 @@ namespace DesktopApp.Views
         {
             if (ViewModel != null)
             {
-                ViewModel.SelfVideo_MediaFailed(sender, e);
+                ViewModel.AdapterViewModel.SelfVideo_MediaFailed(sender, e);
             }
         }
 
@@ -58,7 +58,7 @@ namespace DesktopApp.Views
         /// <param name="e">Details about the pointer routed event.</param>
         private void Page_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            ViewModel.MousePosition = e.GetCurrentPoint(this);
+            ViewModel.AdapterViewModel.MousePosition = e.GetCurrentPoint(this);
         }
     }
 }

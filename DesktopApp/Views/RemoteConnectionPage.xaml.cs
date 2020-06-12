@@ -21,6 +21,7 @@ using Windows.Storage.Provider;
 using System.IO;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Globalization;
+using WebRTCAdapter.Adapters;
 
 namespace DesktopApp.Views
 {
@@ -41,6 +42,7 @@ namespace DesktopApp.Views
             InitializeComponent();
             Loaded += RemoteConnectionPage_Loaded;
 
+
         }
 
         private async void RemoteConnectionPage_Loaded(object sender, RoutedEventArgs e)
@@ -52,7 +54,13 @@ namespace DesktopApp.Views
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             });
-
+            ViewModel.PeerVideo = PeerVideo;
+            ViewModel.SelfVideo = SelfVideo;
+            ViewModel.SetupScreenCapturer(this);
+            if (AdapterViewModel.Instance.ConnectToPeerCommand.CanExecute(this))
+            {
+                AdapterViewModel.Instance.ConnectToPeerCommand.Execute(this);
+            }
         }
 
         private void OnPropertyChanged(string propertyName)
@@ -234,6 +242,12 @@ namespace DesktopApp.Views
             fileModel.ShowPercent();
         }
 
-
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            if (ViewModelLocator.Current.NavigationService.CanGoBack)
+            {
+                ViewModelLocator.Current.NavigationService.GoBack();
+            }
+        }
     }
 }

@@ -33,17 +33,17 @@ namespace DesktopApp.ViewModels
         }
 
 
-        private async void DiscconectFromPeer()
+        private  void DiscconectFromPeer()
         {
-            await Conductor.Instance.DisconnectFromPeer();
-            await RunOnUI(Windows.UI.Core.CoreDispatcherPriority.High, () =>
-              {
-                  ViewModelLocator.Current.NavigationService.Navigate(MyConstants.OPERATIONS_VIEW_MODEL_FULL_NAME);
-              });
+            AdapterViewModel.DisconnectFromPeerCommand.Execute(this);
+            Task goback = RunOnUI(Windows.UI.Core.CoreDispatcherPriority.High, () =>
+               {
+                   ViewModelLocator.Current.NavigationService.Navigate(MyConstants.OPERATIONS_VIEW_MODEL_FULL_NAME);
+               });
         }
         private bool DiscconectFromPeerCanExecute()
         {
-            return true;
+            return AdapterViewModel.DisconnectFromPeerCommand.CanExecute(this);
         }
 
     }

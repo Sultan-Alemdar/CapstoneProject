@@ -140,7 +140,7 @@ namespace DesktopApp.ViewModels
             {
                 var id = CreateId(out int myId, out int messageId);
                 MessageModel messageModel = null;
-                messageModel = new MessageModel(id, DateTime.Now.ToString("hh:mm:ss"), MessageModel.EnumEvent.Send, MessageText);
+                messageModel = new MessageModel(id, DateTime.Now.ToString("t"), MessageModel.EnumEvent.Send, MessageText);
                 Task update = RunOnUI(CoreDispatcherPriority.High, () =>
                  {
                      MessageText = "";

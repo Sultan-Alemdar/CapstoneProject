@@ -149,6 +149,7 @@
     <Compile Include="Helpers\EnumToHorzontalConverter.cs" />
     <Compile Include="Helpers\IntToInformationConverter.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
+    <Compile Include="Helpers\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Helpers\InvertedEnumToBoolenConverter.cs" />
     <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Helpers\StringToColorConverter.cs" />
@@ -263,6 +264,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Arrows\filled_minimize.svg" />
+    <Content Include="Assets\Arrows\go-back.svg" />
     <Content Include="Assets\Arrows\minimize.svg" />
     <Content Include="Assets\bars.svg" />
     <Content Include="Assets\File_Operations_Svg\cancel.svg" />

@@ -368,7 +368,7 @@ namespace PeerConnectionClientOperators.Signalling
                     //}
                     _selfVideoTrack.Element = null; // Org.WebRtc.MediaElementMaker.Bind(obj)
 #endif
-                    GC.Collect(); // Ensure all references are truly dropped.
+                     GC.Collect(); // Ensure all references are truly dropped.
                 }
             }
         }
@@ -1265,7 +1265,7 @@ namespace PeerConnectionClientOperators.Signalling
                     _peerAudioTrack = null;
                     _selfAudioTrack = null;
 
-                    OnPeerConnectionClosed?.Invoke();
+                    OnPeerConnectionClosed?.Invoke();///1////
 
 #if ORTCLIB
                     SessionId = null;
@@ -1273,12 +1273,12 @@ namespace PeerConnectionClientOperators.Signalling
 #endif
                     PeerConnection = null;
 
-                    OnReadyToConnect?.Invoke();
+                    OnReadyToConnect?.Invoke();///2///
 
                     GC.Collect(); // Ensure all references are truly dropped.
-                    //OnSafe.Invoke();
                 }
             }
+
         }
 
         public void AddPeer(Peer peer)
@@ -1426,10 +1426,8 @@ namespace PeerConnectionClientOperators.Signalling
             {
 
             };
-            Signaller.OnSignallerSafe += () =>
-            {
-                OnSafe.Invoke();
-            };
+
+
             Signaller.OnDisconnected += Signaller_OnDisconnected;
             Signaller.OnMessageFromPeer += Signaller_OnMessageFromPeer;
             Signaller.OnPeerConnected += Signaller_OnPeerConnected;
@@ -1856,8 +1854,8 @@ namespace PeerConnectionClientOperators.Signalling
             else
             {
                 PeerConnection = null;
-                // OnSafe.Invoke();///hile///
             }
+            OnSafe.Invoke();///hile///
 
 #else
             ClosePeerConnection();

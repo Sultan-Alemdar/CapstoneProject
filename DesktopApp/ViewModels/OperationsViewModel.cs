@@ -85,6 +85,7 @@ namespace DesktopApp.ViewModels
                                 {
                                     await RunOnUI(CoreDispatcherPriority.High, () =>
                                      {
+                                         ViewModelLocator.Current.RemoteConnectionViewModel.GoBackButtonVisibility = false;
                                          _viewModelLocator.NavigationService.Navigate(MyConstants.REMOTE_CONNECTION_VIEW_MODEL_FULL_NAME);
 
 

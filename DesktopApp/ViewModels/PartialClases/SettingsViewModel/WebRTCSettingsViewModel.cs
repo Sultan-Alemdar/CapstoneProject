@@ -19,7 +19,7 @@ namespace DesktopApp.ViewModels
 
         private object InstanceLock = new object();
 
-        private ICommand _reRonnectCommand;
+        private static ICommand _reRonnectCommand;
 
         public ICommand ReConnectCommand
         {

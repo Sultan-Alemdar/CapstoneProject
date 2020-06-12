@@ -267,7 +267,7 @@
                                                               IsActive="{Binding File.ProccesStatus,Converter={StaticResource EnumStatusToBooleanConverter},ConverterParameter='InQueue'}" />
                                                 <muxc:ProgressBar Maximum="{Binding File.TotalSize}"
                                                                   Value="{Binding File.ProgressedSize}"
-                                                                  Height="5"
+                                                                  Height="11"
                                                                   Width="120"
                                                                   Margin="3,0,3,0"
                                                                   BorderBrush="{StaticResource ProgressBarBorderThemeBrush}"

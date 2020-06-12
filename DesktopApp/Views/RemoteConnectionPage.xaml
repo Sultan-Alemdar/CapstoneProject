@@ -12,7 +12,9 @@
       Background="{ThemeResource RegionBrush}"
       DataContext="{x:Bind ViewModel}"
       mc:Ignorable="d">
-
+    <Page.Resources>
+        <helpers:BoolToVisConverter x:Key="BoolToVisConverter" />
+    </Page.Resources>
 
 
     <SplitView x:Name="SplitView"
@@ -77,21 +79,35 @@
                 </Grid>
 
                 <subViews:TopBar />
+
                 <Button Content="GeneretaFiles&#xD;&#xA;&#xD;&#xA;"
                         HorizontalAlignment="Left"
                         Height="159"
                         Margin="579,249,0,0"
                         VerticalAlignment="Top"
                         Width="381"
-                        Click="Button_Click_3" />
+                        Click="Button_Click_3"
+                        Visibility="Collapsed"/>
                 <Button Content="prop arttır&#xD;&#xA;"
                         HorizontalAlignment="Left"
                         Height="114"
                         Margin="593,487,0,0"
                         VerticalAlignment="Top"
                         Width="354"
-                        Click="Button_Click_4" />
-
+                        Click="Button_Click_4"
+                        Visibility="Collapsed"/>
+                <Button Style="{StaticResource SettingsIconButton}"
+                        HorizontalAlignment="Left"
+                        Margin="10"
+                        Height="60"
+                        Width="70"
+                        BorderThickness="{StaticResource ButtonBorderThemeThickness}"
+                        CornerRadius="{StaticResource ControlCornerRadius}"
+                        BorderBrush="{StaticResource SystemControlBackgroundListMediumRevealBorderBrush}"
+                        Command="{Binding GoBackCommand}"
+                        Visibility="{Binding GoBackButtonVisibility,Converter={StaticResource BoolToVisConverter}}">
+                    <Image Stretch="Fill" Source="../../Assets/Arrows/go-back.svg"/>
+                </Button>
             </Grid>
 
 

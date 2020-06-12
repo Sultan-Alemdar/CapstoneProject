@@ -166,7 +166,7 @@ namespace WebRTCAdapter.Adapters
         private bool _keepOnScreenRequested;
 
         private readonly TimeSpan _maxWaitForSocketToBeAvailable = new TimeSpan(0, 0, 60);
-
+        public bool sen1 = false, sen2 = false;
         /// <summary>
         /// The initializer for AdapterViewModel.
         /// </summary>
@@ -467,12 +467,12 @@ namespace WebRTCAdapter.Adapters
                         _keepOnScreenRequested = false;
                     }
                     UpdateScrollBarVisibilityTypeHelper();
-
+                    sen1 = true;
                 });
             };
 
             // Ready to connect to the server event handler
-            Conductor.Instance.OnReadyToConnect += () => { RunOnUiThread(() => { IsReadyToConnect = true; }); };
+            Conductor.Instance.OnReadyToConnect += () => { RunOnUiThread(() => { IsReadyToConnect = true; sen2 = true; }); };
 
             // Initialize the Ice servers list
             IceServers = new ObservableCollection<IceServer>();
@@ -1089,7 +1089,7 @@ namespace WebRTCAdapter.Adapters
             set { SetProperty(ref _hasServer, value); }
         }
 
-        private bool _isConnected=false;
+        private bool _isConnected = false;
 
         /// <summary>
         /// Indicator if the user is connected to the server.

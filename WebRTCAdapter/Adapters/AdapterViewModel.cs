@@ -2050,7 +2050,7 @@ namespace WebRTCAdapter.Adapters
         /// <returns>True if the application is ready to disconnect from a peer.</returns>
         private bool DisconnectFromPeerCommandCanExecute(object obj)
         {
-            return true;// IsConnectedToPeer && IsReadyToDisconnect;
+            return IsConnectedToPeer && IsReadyToDisconnect;
         }
 
         /// <summary>

@@ -14,37 +14,25 @@ namespace DesktopApp.ViewModels
 {//For WebRTC
     public sealed partial class RemoteConnectionViewModel : ViewModelBase
     {
-        private MediaElement _selfVideo;
+
 
         public MediaElement SelfVideo
         {
-            get { return _selfVideo; }
             set
             {
-                _selfVideo = value;
-                AdapterViewModel.SelfVideo = _selfVideo;
+                AdapterViewModel.SelfVideo = value;
             }
         }
 
-        private MediaElement _peerVideo;
 
         public MediaElement PeerVideo
         {
-            get { return _peerVideo; }
             set
             {
-                _peerVideo = value;
-                AdapterViewModel.PeerVideo = _peerVideo;
+                AdapterViewModel.PeerVideo = value;
             }
         }
-        /// <summary>
-        /// Sets up a screen capturer.
-        /// </summary>
-        /// <param name="uiElement">Main page UI element.</param>
-        public void SetupScreenCapturer(UIElement uiElement)
-        {
-            AdapterViewModel.SetupScreenCapturer(uiElement);
-        }
+       
 
         /// <summary>
         /// Media Failed event handler for the self video.

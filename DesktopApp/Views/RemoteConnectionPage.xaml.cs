@@ -54,9 +54,8 @@ namespace DesktopApp.Views
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             });
-            //ViewModel.AdapterViewModel.PeerVideo = PeerVideo;
-            //ViewModel.AdapterViewModel.SelfVideo = SelfVideo;
-            ViewModel.AdapterViewModel.SetupScreenCapturer(this);
+
+         
             if (AdapterViewModel.Instance.ConnectToPeerCommand.CanExecute(this))
             {
                 AdapterViewModel.Instance.ConnectToPeerCommand.Execute(this);

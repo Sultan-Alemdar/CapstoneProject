@@ -18,7 +18,7 @@ namespace DesktopApp.Views
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             //ViewModel = (RemoteConnectionViewModel)e.Parameter;
-            //this.DataContext = ViewModel;
+            this.DataContext = ViewModel;
             ViewModel.AdapterViewModel.PeerVideo = PeerVideo;
             ViewModel.AdapterViewModel.SelfVideo = SelfVideo;
             ViewModel.AdapterViewModel.SetupScreenCapturer(this);

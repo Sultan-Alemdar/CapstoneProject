@@ -21,30 +21,30 @@ namespace DesktopApp.ViewModels
                 Set<bool>(ref _isPaneOpen, value, "IsPaneOpen");
             }
         }
-        private RelayCommand _disconnectFromPeerCommand;
+        //private RelayCommand _disconnectFromPeerCommand;
 
-        public RelayCommand DisconnectFromPeerCommand
-        {
-            get => _disconnectFromPeerCommand;
-            set
-            {
-                Set<RelayCommand>(ref _disconnectFromPeerCommand, value, "DisconnectFromPeerCommand");
-            }
-        }
+        //public RelayCommand DisconnectFromPeerCommand
+        //{
+        //    get => _disconnectFromPeerCommand;
+        //    set
+        //    {
+        //        Set<RelayCommand>(ref _disconnectFromPeerCommand, value, "DisconnectFromPeerCommand");
+        //    }
+        //}
 
 
-        private  void DiscconectFromPeer()
-        {
-            AdapterViewModel.DisconnectFromPeerCommand.Execute(this);
-            Task goback = RunOnUI(Windows.UI.Core.CoreDispatcherPriority.High, () =>
-               {
-                   ViewModelLocator.Current.NavigationService.Navigate(MyConstants.OPERATIONS_VIEW_MODEL_FULL_NAME);
-               });
-        }
-        private bool DiscconectFromPeerCanExecute()
-        {
-            return AdapterViewModel.DisconnectFromPeerCommand.CanExecute(this);
-        }
+        //private  void DiscconectFromPeer()
+        //{
+        //    AdapterViewModel.DisconnectFromPeerCommand.Execute(this);
+        //    Task goback = RunOnUI(Windows.UI.Core.CoreDispatcherPriority.High, () =>
+        //       {
+        //           ViewModelLocator.Current.NavigationService.Navigate(MyConstants.OPERATIONS_VIEW_MODEL_FULL_NAME);
+        //       });
+        //}
+        //private bool DiscconectFromPeerCanExecute()
+        //{
+        //    return AdapterViewModel.DisconnectFromPeerCommand.CanExecute(this);
+        //}
 
     }
 }

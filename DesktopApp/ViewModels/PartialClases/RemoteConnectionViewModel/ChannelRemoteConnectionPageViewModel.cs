@@ -518,11 +518,11 @@ namespace DesktopApp.ViewModels
         private long _uploadSize = 0;
         private void FileChannel_OnMessage(Org.WebRtc.IMessageEvent Event)
         {
-            // Debug.WriteLine("Message From File Channel..................");
-            //try
-            //{
+          //  Debug.WriteLine("Message From File Channel..................");
+            try
+            {
 
-            if (Event.Text != "")
+                if (Event.Text != "")
             {
                 Task task = Task.Run(async () =>
                  {
@@ -784,14 +784,14 @@ namespace DesktopApp.ViewModels
                 }
             }
 
-            //            }
-            //catch (Exception e)
-            //{
-            //    Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Error was occcured in FileChannel on message :" + e.Message);
-            //}
-
-
         }
+            catch (Exception e)
+            {
+                Debug.WriteLine("[Error] ChannelRemoteConnectionPageViewModel : Error was occcured in FileChannel on message :" + e.Message);
+            }
+
+
+}
         private long _downloadedSize = 0;
         private CancellationTokenSource _downloadCancellationTokenSource;
         private static object _writingObject = new object();
